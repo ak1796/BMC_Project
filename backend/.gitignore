@@ -1,0 +1,22 @@
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Reports and temporary files
+*.xlsx
+prd.json/
+prd_text.txt
+
+# Testing
+coverage/
