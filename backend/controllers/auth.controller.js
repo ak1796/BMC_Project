@@ -10,20 +10,25 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { shop_id, shop_name, location, password, role } = req.body;
+        const { shop_name, shopkeeper_name, location, contact_number, password, role } = req.body;
 
-        const userExists = await Shopkeeper.findOne({ shop_id });
+        const { v4: uuidv4 } = require('uuid');
+        const generatedShopId = `SHP-${uuidv4().substring(0,8)}-${uuidv4().substring(9,13)}`.toUpperCase();
+
+        const userExists = await Shopkeeper.findOne({ shop_id: generatedShopId });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'System fault: duplicate ID generated. Re-attempt registration.' });
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const user = await Shopkeeper.create({
-            shop_id,
+            shop_id: generatedShopId,
             shop_name,
+            shopkeeper_name,
             location,
+            contact_number,
             password: hashedPassword,
             role: role || 'shopkeeper'
         });
@@ -70,16 +75,29 @@ const Admin = require('../models/Admin');
 
 const registerAdmin = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { username, admin_name, office_location, contact_number, email, password } = req.body;
         const adminExists = await Admin.findOne({ username });
         if (adminExists) return res.status(400).json({ message: 'Admin exists' });
 
         const salt = await bcrypt.genSalt(10);
         const admin = await Admin.create({
             username,
+            admin_name,
+            office_location,
+            contact_number,
+            email,
             password: await bcrypt.hash(password, salt)
         });
-        res.status(201).json({ _id: admin._id, username: admin.username, role: admin.role, token: generateToken(admin._id) });
+        res.status(201).json({ 
+            _id: admin._id, 
+            username: admin.username, 
+            admin_name: admin.admin_name,
+            office_location: admin.office_location,
+            contact_number: admin.contact_number,
+            email: admin.email,
+            role: admin.role, 
+            token: generateToken(admin._id) 
+        });
     } catch (error) { res.status(500).json({ message: error.message }); }
 };
 

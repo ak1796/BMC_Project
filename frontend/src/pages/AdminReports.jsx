@@ -1,0 +1,127 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { FileSpreadsheet, Download, RefreshCw, CheckCircle, Info, Calendar, FileText, Activity, ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const AdminReports = () => {
+  const [exporting, setExporting] = useState(null);
+
+  const handleExport = async (type) => {
+    setExporting(type);
+    try {
+      const response = await axios.get(`/api/wastelogs/export/${type}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${type}_report_${new Date().toLocaleDateString()}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (err) {
+      alert('Transmission Error: Check link protocols.');
+    } finally {
+      setExporting(null);
+    }
+  };
+
+  const reportCards = [
+    { 
+      id: 'logged', 
+      title: 'Waste Collection Report', 
+      desc: 'Detailed list of all successful waste collection entries for the selected period.',
+      icon: <Activity className="text-emerald-500" size={40} />,
+      gradient: 'from-emerald-500/10 to-transparent'
+    },
+    { 
+      id: 'unlogged', 
+      title: 'Defaulters List', 
+      desc: 'List of shops that have failed to log waste for 3 consecutive days.',
+      icon: <ShieldCheck className="text-blue-500" size={40} />,
+      gradient: 'from-blue-500/10 to-transparent'
+    }
+  ];
+
+  return (
+    <div className="space-y-12 max-w-6xl mx-auto">
+      <motion.header 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center space-y-4"
+      >
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-900 border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 shadow-inner">
+           <FileText size={14} /> Reports
+        </div>
+        <h1 className="text-5xl font-black font-outfit text-white tracking-tighter uppercase">System Reports</h1>
+        <p className="text-slate-500 font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
+          Generate and download Excel reports for waste collection and compliance monitoring.
+        </p>
+      </motion.header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        {reportCards.map((report, idx) => (
+          <motion.div 
+            key={report.id}
+            initial={{ opacity: 0, x: idx === 0 ? -20 : 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 + idx * 0.1 }}
+            whileHover={{ y: -8, scale: 1.01 }}
+            className={`glass-card p-10 flex flex-col items-center text-center space-y-8 bg-gradient-to-br ${report.gradient} border-white/[0.03] group transition-all duration-500 overflow-hidden relative`}
+          >
+            <div className="p-6 bg-slate-900 rounded-[2.5rem] border border-white/5 shadow-2xl relative z-10 group-hover:rotate-12 transition-transform duration-700">
+              {report.icon}
+            </div>
+            <div className="relative z-10 space-y-3">
+              <h3 className="text-2xl font-black text-white font-outfit uppercase tracking-tight">{report.title}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto font-medium">{report.desc}</p>
+            </div>
+            
+            <div className="flex gap-4 w-full pt-6 relative z-10">
+              <div className="flex-1 flex items-center justify-center gap-3 bg-slate-950/50 rounded-2xl px-4 py-4 text-[10px] font-black text-slate-600 border border-white/[0.02] shadow-inner uppercase tracking-widest">
+                <Calendar size={16} /> Operative: Today
+              </div>
+              <button 
+                onClick={() => handleExport(report.id)}
+                disabled={!!exporting}
+                className="flex-[2] btn-primary h-14 flex items-center justify-center gap-3 active:scale-95 group/btn overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
+                {exporting === report.id ? (
+                  <RefreshCw className="animate-spin" size={24} />
+                ) : (
+                  <>
+                    <Download size={20} className="stroke-[2.5px] transition-transform group-hover/btn:translate-y-1" />
+                    <span className="text-xs font-black uppercase tracking-[0.2em] relative z-10">Download Excel</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/[0.01] blur-3xl pointer-events-none -mr-24 -mt-24" />
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="glass-card p-10 border-blue-500/10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden group"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="w-20 h-20 rounded-[2rem] bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20 shadow-inner group-hover:scale-110 transition-transform duration-500 shrink-0 relative z-10">
+           <Info size={40} strokeWidth={1.5} />
+        </div>
+        <div className="space-y-4 flex-1 relative z-10">
+          <h4 className="text-xl font-black font-outfit uppercase tracking-tight text-blue-200">Report Information</h4>
+          <p className="text-sm text-slate-500 font-medium leading-relaxed">
+            Reports are generated in real-time. For large datasets, the download may take a few seconds. All reports include shop details, timestamps, and collection status.
+          </p>
+          <div className="flex items-center gap-3 text-[9px] font-black text-blue-500/40 uppercase tracking-[0.3em] pt-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+            LIVE LINK ACQUISITION: SUCCESSFUL
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+export default AdminReports;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { generateAlert, getAlerts, updateAlertStatus } = require('../controllers/alert.controller');
+const { generateAlert, getAlerts, updateAlertStatus, deleteAlert } = require('../controllers/alert.controller');
 const { protect } = require('../middlewares/auth.middleware');
 const { adminOnly } = require('../middlewares/role.middleware');
 
@@ -9,6 +9,7 @@ router.route('/')
     .get(protect, adminOnly, getAlerts);
 
 router.route('/:id')
-    .put(protect, adminOnly, updateAlertStatus);
+    .put(protect, adminOnly, updateAlertStatus)
+    .delete(protect, adminOnly, deleteAlert);
 
 module.exports = router;

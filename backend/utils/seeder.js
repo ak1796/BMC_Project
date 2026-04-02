@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
 const Shopkeeper = require('../models/Shopkeeper');
+const Dustbin = require('../models/Dustbin');
 
 dotenv.config();
 
@@ -40,6 +41,19 @@ const seed = async () => {
             console.log('Shopkeeper seeded: SHOP001 / ak1796');
         } else {
             console.log('Shopkeeper already exists.');
+        }
+
+        // Seed Dustbin
+        const dustbinExists = await Dustbin.findOne({ dustbin_id: 'BIN001' });
+        if (!dustbinExists) {
+            await Dustbin.create({
+                dustbin_id: 'BIN001',
+                location: 'Main Block Gate',
+                qr_code_link: `${process.env.BASE_URL || 'http://localhost:5000'}/api/alerts/scan?dustbin=BIN001`
+            });
+            console.log('Dustbin seeded: BIN001 at Main Block Gate');
+        } else {
+            console.log('Dustbin already exists.');
         }
 
         console.log('Seeding completed successfully!');

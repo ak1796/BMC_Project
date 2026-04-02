@@ -12,9 +12,17 @@ const shopkeeperSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    shopkeeper_name: {
+        type: String,
+        trim: true
+    },
     location: {
         type: String,
         required: true
+    },
+    contact_number: {
+        type: String,
+        trim: true
     },
     password: {
         type: String,

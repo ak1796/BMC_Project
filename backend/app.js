@@ -9,8 +9,13 @@ const dustbinRoutes = require('./routes/dustbin.routes');
 const wasteRoutes = require('./routes/waste.routes');
 const alertRoutes = require('./routes/alert.routes');
 const fineRoutes = require('./routes/fine.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
 
 app.use(cors());
 app.use(express.json());
@@ -26,6 +31,7 @@ app.use('/api/dustbins', dustbinRoutes);
 app.use('/api/wastelogs', wasteRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/fines', fineRoutes);
+app.use('/api/admins', adminRoutes);
 
 // Error Middleware
 app.use(notFound);
