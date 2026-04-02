@@ -18,7 +18,7 @@ const AdminQRGenerator = () => {
 
   const generateRandomID = () => {
     const chars = '0123456789ABCDEF';
-    let id = 'BMC-DB-';
+    let id = 'SMW-DB-';
     for (let i = 0; i < 6; i++) {
       id += chars[Math.floor(Math.random() * chars.length)];
     }
@@ -75,7 +75,7 @@ const AdminQRGenerator = () => {
         ctx.drawImage(image, 100, 100, 1000, 1000);
         
         const link = document.createElement("a");
-        link.download = `BMC_QR_${formData.dustbin_id || 'Tag'}.png`;
+        link.download = `SMW_QR_${formData.dustbin_id || 'Tag'}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
       };
@@ -138,11 +138,11 @@ const AdminQRGenerator = () => {
       
       pdf.setFontSize(10);
       pdf.setTextColor(100);
-      pdf.text('BMC Smart Waste Management System', pdfWidth / 2, y + imgHeight + 15, { align: 'center' });
+      pdf.text('Smart Market Waste Management System', pdfWidth / 2, y + imgHeight + 15, { align: 'center' });
       pdf.setTextColor(16, 185, 129); 
       pdf.text('Towards a Cleaner & Greener City', pdfWidth / 2, y + imgHeight + 22, { align: 'center' });
       
-      pdf.save(`BMC_Dustbin_${formData.dustbin_id || 'Tag'}.pdf`);
+      pdf.save(`SMW_Dustbin_${formData.dustbin_id || 'Tag'}.pdf`);
     } catch (err) {
       console.error("PDF generation failed", err);
       alert("Failed to generate PDF.");
@@ -379,7 +379,7 @@ const AdminQRGenerator = () => {
                       </span>
                    </div>
                    <p style={{ color: '#94a3b8' }} className="text-[10px] font-black uppercase tracking-[0.4em] pt-4">
-                      towards a cleaner, greener mumbai
+                      towards a cleaner, greener city
                    </p>
                 </div>
              </div>

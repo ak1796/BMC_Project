@@ -168,7 +168,7 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">BMC Office Location</label>
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Office Location</label>
                   <div className="relative group/input">
                     <MapPin size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
                     <input

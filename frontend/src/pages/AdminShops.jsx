@@ -255,7 +255,7 @@ const AdminShops = () => {
                 </div>
                 
                 <div className="pt-4">
-                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest text-center italic">Verified by BMC Smart Management Oracle</p>
+                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest text-center italic">Verified by Smart Market Management Oracle</p>
                 </div>
               </div>
             </motion.div>

@@ -1,6 +1,6 @@
-# Smart Waste Management System (BMC Project)
+# Smart Market Waste Management System
 
-A comprehensive Smart Waste Management System designed for the Brihanmumbai Municipal Corporation (BMC). This system streamlines waste logging for shopkeepers and provides administrative oversight, real-time alerts, and automated fine management for BMC officials.
+A comprehensive Smart Market Waste Management System. This system streamlines waste logging for shopkeepers and provides administrative oversight, real-time alerts, and automated fine management for market officials.
 
 ---
 
@@ -13,7 +13,7 @@ A comprehensive Smart Waste Management System designed for the Brihanmumbai Muni
 - **Personal Dashboard**: View history and statistics of waste logs.
 - **Profile Management**: Update shop details.
 
-### For BMC Admins
+### For Market Admins
 - **Real-time Alerts**: Monitor waste collection status via Socket.io.
 - **Automated Fine Management**: System tracks unlogged shops and issues fines for non-compliance.
 - **QR Generator**: Generate and export QR codes for shop dustbins.
@@ -151,5 +151,5 @@ BMC_Project/
 ```
 
 ---
-*Developed for the BMC Smart Waste Management Initiative.*
+*Developed for the Market Smart Waste Management Initiative.*
 

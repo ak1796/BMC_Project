@@ -120,7 +120,7 @@ const ShopkeeperAlert = () => {
           Lodge Complaint
         </h1>
         <p className="text-slate-500 font-medium">
-          Scan the QR code on any dustbin to instantly raise an overflow or anomaly alert to the BMC Admin.
+          Scan the QR code on any dustbin to instantly raise an overflow or anomaly alert to the Market Admin.
         </p>
       </motion.header>
 
@@ -263,7 +263,7 @@ const ShopkeeperAlert = () => {
                 ) : (
                   <>
                     <Send size={18} />
-                    <span className="text-sm font-black uppercase tracking-[0.3em]">Lodge Alert to BMC</span>
+                    <span className="text-sm font-black uppercase tracking-[0.3em]">Lodge Alert to Office</span>
                   </>
                 )}
               </button>
@@ -281,7 +281,7 @@ const ShopkeeperAlert = () => {
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
             className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-emerald-500 text-slate-950 rounded-2xl font-black text-sm shadow-2xl shadow-emerald-500/40 z-50"
           >
-            <CheckCircle2 size={20} /> Alert sent to BMC Admin!
+            <CheckCircle2 size={20} /> Alert sent to Market Admin!
           </motion.div>
         )}
         {status === 'error' && (

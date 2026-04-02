@@ -117,7 +117,7 @@ const AdminOverview = () => {
              </div>
              <div>
                 <h1 className="text-4xl font-black font-outfit text-white tracking-tighter uppercase leading-none mb-2">Command Center</h1>
-                <p className="text-slate-500 font-medium tracking-wide">Brihanmumbai Waste Management • Oversight Dashboard v4.1</p>
+                <p className="text-slate-500 font-medium tracking-wide">Smart Market Waste Management • Oversight Dashboard v4.1</p>
              </div>
           </div>
           
@@ -293,7 +293,7 @@ const AdminOverview = () => {
                 </div>
                 <div>
                    <p className="text-sm font-black text-white uppercase tracking-tight">Active Operation</p>
-                   <p className="text-[11px] font-medium text-slate-500 mt-1">All data points are synchronized with the central BMC database.</p>
+                   <p className="text-[11px] font-medium text-slate-500 mt-1">All data points are synchronized with the central database.</p>
                 </div>
             </div>
          </motion.div>

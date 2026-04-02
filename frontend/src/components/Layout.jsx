@@ -51,9 +51,9 @@ const Layout = ({ children }) => {
           </div>
           <div>
             <span className="text-xl font-bold font-outfit uppercase tracking-tighter bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent">
-              BMC Smart
+              Smart Market
             </span>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Waste Mgmt v4.0</p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Waste Management System</p>
           </div>
         </motion.div>
 
@@ -122,7 +122,7 @@ const Layout = ({ children }) => {
         <header className="lg:hidden flex items-center justify-between p-5 bg-slate-900 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-lg bg-opacity-80">
           <div className="flex items-center gap-2">
              <Store size={22} className="text-emerald-500" />
-             <span className="font-bold font-outfit uppercase tracking-tighter">BMC Smart</span>
+             <span className="font-bold font-outfit uppercase tracking-tighter">Smart Market</span>
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
@@ -170,7 +170,7 @@ const Layout = ({ children }) => {
                 <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
                   <Store size={32} />
                 </div>
-                <h3 className="text-xl font-bold font-outfit uppercase">BMC Smart</h3>
+                <h3 className="text-xl font-bold font-outfit uppercase">Smart Market</h3>
               </div>
 
               <nav className="flex-1 space-y-3">
