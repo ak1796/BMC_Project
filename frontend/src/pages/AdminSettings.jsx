@@ -108,6 +108,20 @@ const AdminSettings = () => {
               </div>
             </div>
 
+            <div className="space-y-2 md:col-span-2 mb-2">
+              <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">Internal Reference ID (Immutable)</label>
+              <div className="relative group/input">
+                <ShieldCheck size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500/70" />
+                <input
+                  type="text"
+                  readOnly
+                  disabled
+                  value={user?._id || 'Generating...'}
+                  className="w-full !pl-12 h-14 text-sm font-black tracking-widest bg-emerald-500/5 text-emerald-400 border-emerald-500/30 cursor-not-allowed shadow-inner"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Admin Full Name</label>
               <div className="relative group/input">
@@ -159,11 +173,11 @@ const AdminSettings = () => {
                 <StoreIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
                 <input
                   type="email"
-                  readOnly
-                  disabled
+                  required
                   placeholder="Municipal Email"
-                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-slate-900/50 cursor-not-allowed opacity-70"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide"
                   value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
                 />
               </div>
             </div>

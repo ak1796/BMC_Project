@@ -33,9 +33,15 @@ const AdminAlerts = () => {
   }, []);
 
   const handleResolve = async (id) => {
+    const eta = window.prompt('Enter ETA for collection (e.g. "1-2 hours", "Today by 5PM")');
+    if (eta === null) return; // User cancelled
+    
     setActionLoading(id);
     try {
-      await axios.put(`/api/alerts/${id}`, { status: 'Resolved' });
+      await axios.put(`/api/alerts/${id}`, { 
+        status: 'Resolved', 
+        resolution_message: eta.trim() ? `Your waste will be collected in ${eta.trim()}.` : 'Your issue has been resolved and pickup is scheduled.' 
+      });
       setAlerts(prev => prev.filter(a => a._id !== id));
     } catch (err) {
       console.error('Failed to resolve alert', err);
@@ -66,15 +72,15 @@ const AdminAlerts = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
             <ActivityIcon size={12} /> Live Alerts
           </div>
-          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Waste Entry History</h1>
-          <p className="text-slate-500 font-medium tracking-wide mt-1">History of all your waste collection entries.</p>
+          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Admin Alerts</h1>
+          <p className="text-slate-500 font-medium tracking-wide mt-1">Live updates of all emergency bounds and bulky waste dispatch items.</p>
         </div>
 
         <div className="flex bg-slate-900 border border-white/5 rounded-2xl px-5 py-3 items-center gap-4 shadow-inner group">
           <Search size={20} className="text-slate-600 group-focus-within:text-blue-500 transition-colors" />
           <input
             type="text"
-            placeholder="Search entries..."
+            placeholder="Search alerts..."
             className="bg-transparent border-none p-0 text-sm font-bold uppercase tracking-widest focus:ring-0 w-72 placeholder:text-slate-700"
           />
         </div>
@@ -89,7 +95,7 @@ const AdminAlerts = () => {
         ) : (
           <div className="space-y-6">
             <div className="flex items-center gap-3 px-2">
-              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-500">Entries ({alerts.length})</h2>
+              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-500">Alerts Queue ({alerts.length})</h2>
               <div className="flex-1 h-px bg-slate-900" />
             </div>
 
@@ -161,12 +167,12 @@ const AdminAlerts = () => {
               <CheckCircle2 size={48} className="relative z-10" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold font-outfit text-slate-200 uppercase">No Records Found</h3>
-              <p className="text-slate-600 text-sm max-w-xs mx-auto font-medium">No entries found for the selected filter or the registry is empty.</p>
+              <h3 className="text-xl font-bold font-outfit text-slate-200 uppercase">No Active Alerts</h3>
+              <p className="text-slate-600 text-sm max-w-xs mx-auto font-medium">All clear! No pending emergency alerts or bulky waste requests in your jurisdiction.</p>
             </div>
             <div className="pt-4">
               <button className="px-10 py-4 bg-slate-900 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-white transition-all">
-                View History
+                Refresh Queue
               </button>
             </div>
           </motion.div>

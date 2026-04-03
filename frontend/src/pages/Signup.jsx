@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Store, User, Lock, ArrowRight, Loader2, ShieldCheck, MapPin, Phone } from 'lucide-react';
+import { Store, User, Lock, ArrowRight, Loader2, ShieldCheck, MapPin, Phone, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Signup = () => {
@@ -12,12 +12,44 @@ const Signup = () => {
     shop_name: '',
     shopkeeper_name: '',
     location: '',
+    admin_id: '',
+    dustbin_id: '',
     contact_number: '',
     admin_name: '',
     office_location: '',
     email: ''
   });
   
+  const [admins, setAdmins] = useState([]);
+  const [loadingAdmins, setLoadingAdmins] = useState(false);
+
+
+  const fetchAdmins = async () => {
+    setLoadingAdmins(true);
+    try {
+      const response = await fetch('/api/admins'); // Usually this should be public or handle auth if needed
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setAdmins(data);
+        if (data.length > 0) {
+          setFormData(prev => ({ ...prev, admin_id: data[0]._id }));
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch admins", err);
+    } finally {
+      setLoadingAdmins(false);
+    }
+  };
+
+  useEffect(() => {
+    if (role === 'shopkeeper') {
+      fetchAdmins();
+    }
+  }, [role]);
+
+
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
@@ -222,6 +254,22 @@ const Signup = () => {
 
             {role === 'shopkeeper' && (
               <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Shop Username</label>
+                  <div className="relative group/input">
+                    <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                    <input
+                      name="username"
+                      type="text"
+                      required
+                      placeholder="Choose a unique username"
+                      className="w-full !pl-11 h-14 text-sm font-semibold tracking-wide"
+                      value={formData.username}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
                      <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Shop Name</label>
@@ -254,6 +302,37 @@ const Signup = () => {
                        />
                      </div>
                    </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-widest ml-1">Assigned BMC / Admin</label>
+                  <div className="relative group/input">
+                    <ShieldCheck size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 z-10" />
+                    <select
+                      name="admin_id"
+                      style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#ffffff' }}
+                      className="w-full !pl-12 pr-10 h-14 text-sm font-bold tracking-widest appearance-none outline-none border rounded-2xl relative z-0 focus:border-emerald-500/50 transition-colors"
+                      value={formData.admin_id}
+                      required
+                      onChange={handleInputChange}
+                    >
+                      <option value="" disabled>Select assigned BMC</option>
+                      {loadingAdmins ? (
+                        <option disabled>Loading BMCs...</option>
+                      ) : (
+                        admins.length > 0 ? (
+                          admins.map(admin => (
+                            <option key={admin._id} value={admin._id} style={{ backgroundColor: '#0f172a' }}>
+                              {admin.admin_name || admin.username} ({admin.office_location || 'Sector 0'})
+                            </option>
+                          ))
+                        ) : (
+                          <option disabled>No BMCs available</option>
+                        )
+                      )}
+                    </select>
+                    <ArrowRight size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 rotate-90 pointer-events-none" />
+                  </div>
                 </div>
 
                 <div className="space-y-2">

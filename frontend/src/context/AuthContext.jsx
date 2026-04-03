@@ -51,10 +51,7 @@ export const AuthProvider = ({ children }) => {
     try {
       let response;
       if (role === 'admin') {
-         response = await axios.post('/api/auth/admin/register', {
-            username: formData.username,
-            password: formData.password
-         });
+         response = await axios.post('/api/auth/admin/register', formData);
       } else {
          response = await axios.post('/api/auth/register', formData);
       }

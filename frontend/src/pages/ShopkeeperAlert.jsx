@@ -51,18 +51,35 @@ const ShopkeeperAlert = () => {
           
           if (code && code.data) {
             const url = code.data;
-            // Parse dustbin ID from QR URL like: /api/alerts/scan?dustbin=BIN001
+            // Parse dustbin ID from QR URL like: /api/alerts/scan?dustbin=SMW-DB-000001
             const match = url.match(/dustbin=([^&]+)/i);
+            
+            let extractedId = '';
+            let message = '';
+            
             if (match) {
-              setDustbinId(match[1]);
-              setMode('manual');
-              setMessage(`QR scanned! Dustbin ${match[1]} detected.`);
+              extractedId = match[1];
+              message = `QR scanned! Dustbin ${extractedId} detected.`;
             } else {
-              // Use the raw value if not a URL format
-              setDustbinId(url.trim());
-              setMode('manual');
-              setMessage(`QR scanned: ${url.trim()}`);
+               // Try parsing JSON if generated via AdminQRGenerator
+               try {
+                  const parsedUrl = JSON.parse(url);
+                  if (parsedUrl.dustbin_id) {
+                     extractedId = parsedUrl.dustbin_id;
+                     message = `QR scanned! Dustbin ${extractedId} detected at ${parsedUrl.location || 'assigned location'}.`;
+                  } else {
+                     throw new Error('Not valid JSON with dustbin_id');
+                  }
+               } catch (e) {
+                  // Use the raw value if not a URL format and not JSON
+                  extractedId = url.trim();
+                  message = `QR scanned: ${url.trim()}`;
+               }
             }
+            
+            setDustbinId(extractedId);
+            setMode('manual');
+            setMessage(message);
             clearInterval(scannerRef.current);
             if (streamRef.current) {
               streamRef.current.getTracks().forEach(t => t.stop());
@@ -229,14 +246,14 @@ const ShopkeeperAlert = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. BIN001 or BIN-001"
+                    placeholder="e.g. SMW-DB-000001"
                     className="w-full !pl-12 h-14 text-sm font-bold tracking-widest"
                     value={dustbinId}
                     onChange={(e) => setDustbinId(e.target.value)}
                   />
                 </div>
                 <p className="text-[10px] text-slate-600 ml-1">
-                  Enter manually or scan the QR on the dustbin. Seeded bin: <span className="text-emerald-500 font-black">BIN001</span>
+                  Enter manually or scan the QR on the dustbin. Seeded bin: <span className="text-emerald-500 font-black">SMW-DB-000001</span>
                 </p>
               </div>
 

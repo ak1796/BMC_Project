@@ -7,6 +7,12 @@ const shopkeeperSchema = new mongoose.Schema({
         unique: true,
         trim: true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
     shop_name: {
         type: String,
         required: true,
@@ -19,6 +25,14 @@ const shopkeeperSchema = new mongoose.Schema({
     location: {
         type: String,
         required: true
+    },
+    admin_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
+    },
+    dustbin_id: {
+        type: String,
+        trim: true
     },
     contact_number: {
         type: String,

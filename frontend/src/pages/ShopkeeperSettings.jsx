@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { Settings, User, Store as StoreIcon, MapPin, Phone, Lock, Save, Loader2, CheckCircle2 } from 'lucide-react';
+import { Settings, User, Store as StoreIcon, MapPin, Phone, Lock, Save, Loader2, CheckCircle2, Building2, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ShopkeeperSettings = () => {
@@ -17,6 +17,19 @@ const ShopkeeperSettings = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [assignedAdmin, setAssignedAdmin] = useState(null);
+
+  // Fetch assigned BMC admin info
+  useEffect(() => {
+    if (user?.admin_id) {
+      axios.get('/api/admins')
+        .then(({ data }) => {
+          const found = data.find(a => a._id === user.admin_id || a._id.toString() === user.admin_id?.toString());
+          if (found) setAssignedAdmin(found);
+        })
+        .catch(() => {});
+    }
+  }, [user]);
 
   // Hydrate form if user prop hydrates later
   useEffect(() => {
@@ -71,6 +84,53 @@ const ShopkeeperSettings = () => {
         </div>
       </motion.header>
 
+      {/* Assigned BMC Admin Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05 }}
+        className="glass-card p-6 border-l-4 border-emerald-500"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20">
+            <ShieldCheck size={20} />
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Assigned Authority</p>
+            <p className="text-sm font-black text-white uppercase tracking-wide">BMC Administrator</p>
+          </div>
+        </div>
+        {assignedAdmin ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Admin Name</p>
+              <div className="flex items-center gap-2">
+                <User size={14} className="text-emerald-500" />
+                <p className="text-sm font-bold text-slate-200">{assignedAdmin.admin_name || '—'}</p>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Office Location</p>
+              <div className="flex items-center gap-2">
+                <Building2 size={14} className="text-emerald-500" />
+                <p className="text-sm font-bold text-slate-200">{assignedAdmin.office_location || '—'}</p>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Contact</p>
+              <div className="flex items-center gap-2">
+                <Phone size={14} className="text-emerald-500" />
+                <p className="text-sm font-bold text-slate-200">{assignedAdmin.contact_number || assignedAdmin.email || '—'}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-slate-600 font-medium">
+            {user?.admin_id ? 'Loading admin info...' : 'No BMC administrator assigned yet.'}
+          </p>
+        )}
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,6 +163,20 @@ const ShopkeeperSettings = () => {
                   disabled
                   title="Your unique identification node cannot be manually altered"
                   value={user?.shop_id || 'Authenticating...'}
+                  className="w-full !pl-12 h-14 text-sm font-black tracking-widest bg-emerald-500/5 text-emerald-400 border-emerald-500/30 cursor-not-allowed shadow-inner"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2 md:col-span-2 mb-2">
+              <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">Shop Username (Immutable)</label>
+              <div className="relative group/input">
+                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500/70" />
+                <input
+                  type="text"
+                  readOnly
+                  disabled
+                  value={user?.username || 'Not assigned'}
                   className="w-full !pl-12 h-14 text-sm font-black tracking-widest bg-emerald-500/5 text-emerald-400 border-emerald-500/30 cursor-not-allowed shadow-inner"
                 />
               </div>
@@ -159,6 +233,7 @@ const ShopkeeperSettings = () => {
                 <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
                 <input
                   type="text"
+                  required
                   placeholder="Phone / Email"
                   className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide"
                   value={formData.contact_number}

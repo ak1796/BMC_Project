@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Shopkeeper = require('../models/Shopkeeper');
+const Admin = require('../models/Admin');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET || 'secret123', {
@@ -10,35 +11,65 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { shop_name, shopkeeper_name, location, contact_number, password, role } = req.body;
+        const { username, shop_name, shopkeeper_name, location, admin_id, dustbin_id, contact_number, password, role } = req.body;
+
+        if (!username) {
+            return res.status(400).json({ message: 'Username is required' });
+        }
+
+        // Check if username taken by shopkeeper
+        const shopkeeperExists = await Shopkeeper.findOne({ username });
+        if (shopkeeperExists) {
+            return res.status(400).json({ message: 'Username already taken by another shop' });
+        }
+
+        // Check if username taken by admin
+        const adminExists = await Admin.findOne({ username });
+        if (adminExists) {
+            return res.status(400).json({ message: 'Username reserved for administrative personnel' });
+        }
 
         const { v4: uuidv4 } = require('uuid');
         const generatedShopId = `SHP-${uuidv4().substring(0,8)}-${uuidv4().substring(9,13)}`.toUpperCase();
 
-        const userExists = await Shopkeeper.findOne({ shop_id: generatedShopId });
-        if (userExists) {
+        const idExists = await Shopkeeper.findOne({ shop_id: generatedShopId });
+        if (idExists) {
             return res.status(400).json({ message: 'System fault: duplicate ID generated. Re-attempt registration.' });
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const user = await Shopkeeper.create({
+        const shopkeeperData = {
             shop_id: generatedShopId,
+            username,
             shop_name,
             shopkeeper_name,
             location,
             contact_number,
             password: hashedPassword,
+            dustbin_id,
             role: role || 'shopkeeper'
-        });
+        };
+
+        if (admin_id && admin_id.trim() !== '') {
+            shopkeeperData.admin_id = admin_id;
+        }
+
+        const user = await Shopkeeper.create(shopkeeperData);
 
         if (user) {
             res.status(201).json({
                 _id: user._id,
                 shop_id: user.shop_id,
+                username: user.username,
                 shop_name: user.shop_name,
+                shopkeeper_name: user.shopkeeper_name,
+                location: user.location,
+                contact_number: user.contact_number,
                 role: user.role,
+                admin_id: user.admin_id,
+                dustbin_id: user.dustbin_id,
                 token: generateToken(user._id),
             });
         } else {
@@ -53,25 +84,37 @@ const loginUser = async (req, res) => {
     try {
         const { shop_id, password } = req.body;
 
-        const user = await Shopkeeper.findOne({ shop_id });
+        // Find by shop_id OR username
+        const user = await Shopkeeper.findOne({
+            $or: [
+                { shop_id: shop_id },
+                { username: shop_id }
+            ]
+        });
 
         if (user && (await bcrypt.compare(password, user.password))) {
             res.json({
                 _id: user._id,
                 shop_id: user.shop_id,
+                username: user.username,
                 shop_name: user.shop_name,
+                shopkeeper_name: user.shopkeeper_name,
+                location: user.location,
+                contact_number: user.contact_number,
                 role: user.role,
+                admin_id: user.admin_id,
+                dustbin_id: user.dustbin_id,
                 token: generateToken(user._id),
             });
         } else {
-            res.status(401).json({ message: 'Invalid shop_id or password' });
+            res.status(401).json({ message: 'Invalid identifiers or password' });
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const Admin = require('../models/Admin');
+
 
 const registerAdmin = async (req, res) => {
     try {
@@ -106,7 +149,16 @@ const loginAdmin = async (req, res) => {
         const { username, password } = req.body;
         const admin = await Admin.findOne({ username });
         if (admin && (await bcrypt.compare(password, admin.password))) {
-            res.json({ _id: admin._id, username: admin.username, role: admin.role, token: generateToken(admin._id) });
+            res.json({ 
+                _id: admin._id, 
+                username: admin.username, 
+                admin_name: admin.admin_name,
+                office_location: admin.office_location,
+                contact_number: admin.contact_number,
+                email: admin.email,
+                role: admin.role, 
+                token: generateToken(admin._id) 
+            });
         } else { res.status(401).json({ message: 'Invalid credentials' }); }
     } catch (error) { res.status(500).json({ message: error.message }); }
 };

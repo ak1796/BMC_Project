@@ -1,17 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   LogOut, LayoutDashboard, ClipboardList, Trash2, 
-  AlertCircle, Users, FileBarChart, Menu, X, Store, Bell, Settings, QrCode 
+  AlertCircle, Users, FileBarChart, Menu, X, Store, Bell, Settings, QrCode, CheckCircle2 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import io from 'socket.io-client';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [resolutionToast, setResolutionToast] = useState(null);
+
+  useEffect(() => {
+    if (user && user.role !== 'admin') {
+       const newSocket = io('http://localhost:5000');
+       newSocket.on('alert_resolved', (alert) => {
+          if (alert.shop_id === user._id || (alert.shop_id && alert.shop_id._id === user._id)) {
+              setResolutionToast(alert.resolution_message || 'Your issue has been resolved and pickup is scheduled.');
+              setTimeout(() => setResolutionToast(null), 10000);
+          }
+       });
+       return () => newSocket.close();
+    }
+  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -146,6 +161,29 @@ const Layout = ({ children }) => {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {/* Global Shopkeeper Notification Toast */}
+        <AnimatePresence>
+          {resolutionToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              className="fixed bottom-8 right-8 z-[100] flex items-start gap-4 p-5 bg-emerald-950 border border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-500/20 max-w-sm"
+            >
+              <div className="w-10 h-10 shrink-0 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center">
+                <CheckCircle2 size={24} />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500">Alert Resolved</h4>
+                <p className="text-xs font-semibold text-emerald-100 leading-relaxed">{resolutionToast}</p>
+              </div>
+              <button onClick={() => setResolutionToast(null)} className="absolute top-4 right-4 text-emerald-500/50 hover:text-emerald-400">
+                <X size={16} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       {/* Mobile Menu Overlay */}

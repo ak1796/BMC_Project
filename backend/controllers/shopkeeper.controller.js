@@ -31,6 +31,7 @@ const updateProfile = async (req, res) => {
             res.json({
                 _id: updatedUser._id,
                 shop_id: updatedUser.shop_id,
+                username: updatedUser.username,
                 shop_name: updatedUser.shop_name,
                 shopkeeper_name: updatedUser.shopkeeper_name,
                 location: updatedUser.location,

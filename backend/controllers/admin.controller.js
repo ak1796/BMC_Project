@@ -35,4 +35,13 @@ const updateProfile = async (req, res) => {
     }
 };
 
-module.exports = { updateProfile };
+const getAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find().select('-password');
+        res.json(admins);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { updateProfile, getAdmins };

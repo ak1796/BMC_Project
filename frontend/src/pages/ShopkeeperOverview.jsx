@@ -3,13 +3,17 @@ import axios from 'axios';
 import { QrCode, ClipboardList, Send, Trash2, ArrowRight, Clock, Plus, BarChart3, TrendingUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ShopkeeperOverview = () => {
+  const { user } = useAuth();
   const [logs, setLogs] = useState([]);
   const [showLogForm, setShowLogForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dustbins, setDustbins] = useState([]);
+  const [loadingDustbins, setLoadingDustbins] = useState(false);
   const [formData, setFormData] = useState({
-    dustbin_id: '',
+    dustbin_id: user?.dustbin_id || '',
     waste_type: 'Dry',
     no_of_bags: 1,
     bulky_request: false
@@ -24,9 +28,41 @@ const ShopkeeperOverview = () => {
     }
   };
 
+  const fetchDustbins = async () => {
+    setLoadingDustbins(true);
+    try {
+      let response;
+      if (user?.admin_id) {
+        response = await axios.get(`/api/dustbins/admin/${user.admin_id}`);
+      } else {
+        // Fallback: fetch all dustbins
+        response = await axios.get('/api/dustbins/all');
+      }
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        setDustbins(response.data);
+        // Auto-select first available dustbin if none already selected
+        setFormData(prev => ({
+          ...prev,
+          dustbin_id: prev.dustbin_id || response.data[0].dustbin_id
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching dustbins:', err.response?.data || err.message);
+    } finally {
+      setLoadingDustbins(false);
+    }
+  };
+
   useEffect(() => {
     fetchLogs();
-  }, []);
+    fetchDustbins();
+  }, [user]);
+
+  useEffect(() => {
+    if (showLogForm && dustbins.length > 0 && !formData.dustbin_id) {
+      setFormData(prev => ({ ...prev, dustbin_id: dustbins[0].dustbin_id }));
+    }
+  }, [showLogForm, dustbins]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +75,7 @@ const ShopkeeperOverview = () => {
       await axios.post('/api/wastelogs', payload);
       setShowLogForm(false);
       fetchLogs();
-      setFormData({ dustbin_id: '', waste_type: 'Dry', no_of_bags: 1, bulky_request: false });
+      setFormData({ dustbin_id: user?.dustbin_id || '', waste_type: 'Dry', no_of_bags: 1, bulky_request: false });
     } catch (err) {
       alert('Submission failed: ' + (err.response?.data?.message || 'Server error'));
     }
@@ -254,17 +290,31 @@ const ShopkeeperOverview = () => {
 
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                   <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Dustbin ID</label>
-                      <div className="relative group">
-                         <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors" size={20} />
-                         <input 
-                           type="text" placeholder="e.g. BIN-001" required 
-                           className="w-full !pl-12 h-14 text-sm font-bold tracking-widest"
-                           value={formData.dustbin_id} onChange={(e) => setFormData({...formData, dustbin_id: e.target.value})}
-                         />
-                      </div>
-                   </div>
+                    <div className="space-y-2">
+                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Dustbin ID</label>
+                       <div className="relative group">
+                          <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors z-10" size={20} />
+                          <select 
+                            style={{ backgroundColor: '#0f172a' }}
+                            className="w-full !pl-12 pr-10 h-14 text-sm font-bold tracking-widest appearance-none outline-none border border-white/5 rounded-2xl focus:border-emerald-500/50 transition-colors"
+                            value={formData.dustbin_id} 
+                            required
+                            onChange={(e) => setFormData({...formData, dustbin_id: e.target.value})}
+                          >
+                            <option value="" disabled>Select Bin</option>
+                            {loadingDustbins ? (
+                              <option disabled>Loading nodes...</option>
+                            ) : (
+                              dustbins.map(bin => (
+                                <option key={bin._id} value={bin.dustbin_id}>
+                                  {bin.dustbin_id} - {bin.location}
+                                </option>
+                              ))
+                            )}
+                          </select>
+                          <ArrowRight size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 rotate-90 pointer-events-none" />
+                       </div>
+                    </div>
                    <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Waste Type</label>
                       <select 

@@ -16,6 +16,10 @@ const wasteLogSchema = new mongoose.Schema({
         ref: 'Dustbin',
         required: false
     },
+    admin_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
+    },
     waste_type: {
         type: String,
         enum: ['Dry', 'Wet', 'Electronics'],

@@ -10,8 +10,9 @@ const ShopkeeperBulky = () => {
 
   const fetchBulky = async () => {
     try {
-      const { data } = await axios.get('/api/wastelogs');
-      setRequests(data.filter(l => l.bulky_request));
+      const { data } = await axios.get('/api/alerts');
+      // Show ALL alerts for Shopkeeper on this dashboard (both Bulky and Report Issues)
+      setRequests(data);
     } catch (err) {
       console.error('Error fetching bulky requests', err);
     }
@@ -38,7 +39,7 @@ const ShopkeeperBulky = () => {
   const handleRevoke = async (id) => {
     if (!window.confirm('Are you sure you want to revoke this bulky request?')) return;
     try {
-      await axios.delete(`/api/wastelogs/${id}`);
+      await axios.delete(`/api/alerts/${id}`);
       fetchBulky();
     } catch (err) {
       alert('Failed to revoke request: ' + (err?.response?.data?.message || 'Server error'));
@@ -117,7 +118,7 @@ const ShopkeeperBulky = () => {
       <section className="space-y-6">
         <div className="flex items-center justify-between px-2">
            <h2 className="text-lg font-black font-outfit uppercase tracking-widest text-slate-200 flex items-center gap-3">
-             <Truck size={20} className="text-amber-500" /> Active Service Requests
+             <Truck size={20} className="text-amber-500" /> Active Service & Ticket Requests
            </h2>
            <div className="flex items-center gap-4 text-[10px] font-black uppercase text-slate-500 tracking-widest">
               <span className="flex items-center gap-1.5 bg-green-500/10 text-green-500 px-2.5 py-1 rounded-lg border border-green-500/10">● SYSTEM LIVE</span>
@@ -142,8 +143,16 @@ const ShopkeeperBulky = () => {
                         </div>
                         <div className="space-y-2">
                            <div className="flex items-center gap-3">
-                              <h3 className="text-lg font-black font-outfit uppercase tracking-tight text-white group-hover:text-amber-500 transition-colors">Dispatch Req. #{req._id.slice(-6).toUpperCase()}</h3>
-                              <span className="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-lg text-[9px] font-black tracking-[0.2em] border border-blue-500/20">QUEUED</span>
+                              <h3 className="text-lg font-black font-outfit uppercase tracking-tight text-white group-hover:text-amber-500 transition-colors">
+                                 {req.comments?.includes('BULKY') ? `Dispatch Req. #${(req._id || req.alert_id).slice(-6).toUpperCase()}` : `Issue Tkt. #${(req._id || req.alert_id).slice(-6).toUpperCase()}`}
+                              </h3>
+                              <span className={`px-3 py-1 rounded-lg text-[9px] font-black tracking-[0.2em] border ${
+                                 req.status === 'Resolved' 
+                                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                    : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                              }`}>
+                                 {req.status === 'Resolved' ? 'RESOLVED' : 'QUEUED'}
+                              </span>
                            </div>
                            <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold uppercase tracking-[0.1em] text-slate-600">
                               <span className="flex items-center gap-2 px-3 py-1 bg-slate-800 rounded-full group-hover:text-slate-300 transition-colors">
@@ -161,8 +170,12 @@ const ShopkeeperBulky = () => {
                      
                      <div className="flex items-center gap-3 w-full lg:w-auto">
                         <div className="flex-1 lg:flex-none text-right px-4 space-y-1">
-                           <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest leading-none">Wait Metric</p>
-                           <p className="text-xl font-black text-slate-400 group-hover:text-white transition-colors uppercase">~12.4h</p>
+                           <p className={`text-[10px] font-black uppercase tracking-widest leading-none ${req.status === 'Resolved' ? 'text-emerald-500' : 'text-slate-700'}`}>
+                              {req.status === 'Resolved' ? 'Collection Target / Message' : 'Wait Metric'}
+                           </p>
+                           <p className={`text-sm font-black group-hover:text-white transition-colors capitalize ${req.status === 'Resolved' ? 'text-emerald-400' : 'text-slate-400'}`}>
+                              {req.status === 'Resolved' ? req.resolution_message : '~12.4h'}
+                           </p>
                         </div>
                         <button 
                            onClick={() => handleRevoke(req._id)}

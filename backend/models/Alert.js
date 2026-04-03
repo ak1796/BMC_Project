@@ -16,7 +16,14 @@ const alertSchema = new mongoose.Schema({
         ref: 'Shopkeeper',
         required: true
     },
+    admin_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
+    },
     comments: {
+        type: String
+    },
+    resolution_message: {
         type: String
     },
     status: {

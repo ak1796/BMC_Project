@@ -13,8 +13,33 @@ const AdminQRGenerator = () => {
   const [formData, setFormData] = useState({
     dustbin_id: '',
     location: '',
-    ward: 'Ward A'
+    ward: 'Ward A',
+    admin_id: ''
   });
+
+  const [admins, setAdmins] = useState([]);
+  const [loadingAdmins, setLoadingAdmins] = useState(true);
+
+  const fetchAdmins = async () => {
+    try {
+      const response = await fetch('/api/admins', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setAdmins(data);
+        if (data.length > 0) {
+          setFormData(prev => ({ ...prev, admin_id: data[0]._id }));
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch admins", err);
+    } finally {
+      setLoadingAdmins(false);
+    }
+  };
 
   const generateRandomID = () => {
     const chars = '0123456789ABCDEF';
@@ -27,6 +52,7 @@ const AdminQRGenerator = () => {
 
   useEffect(() => {
     generateRandomID();
+    fetchAdmins();
   }, []);
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -41,17 +67,38 @@ const AdminQRGenerator = () => {
     ward: formData.ward
   });
 
-  const handleGenerate = (e) => {
+  const handleGenerate = async (e) => {
     e.preventDefault();
-    if (!formData.dustbin_id || !formData.location) return;
+    if (!formData.dustbin_id || !formData.location || !formData.admin_id) return;
     
     setIsGenerating(true);
-    // Simulate eco-processing
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/dustbins/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          dustbin_id: formData.dustbin_id,
+          location: formData.location,
+          admin_id: formData.admin_id,
+          qr_code_link: `${window.location.origin}/api/alerts/scan?dustbin=${formData.dustbin_id}`
+        })
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+        setTimeout(() => setIsSuccess(false), 3000);
+      } else {
+        const err = await response.json();
+        alert(err.message || 'Failed to register dustbin');
+      }
+    } catch (err) {
+      console.error("Failed to submit dustbin", err);
+    } finally {
       setIsGenerating(false);
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
-    }, 1500);
+    }
   };
 
   const downloadPNG = () => {
@@ -284,6 +331,27 @@ const AdminQRGenerator = () => {
                    onChange={(e) => setFormData({...formData, location: e.target.value})}
                  />
               </div>
+            </div>
+
+            <div className="space-y-2">
+               <label style={{ color: '#64748b' }} className="text-[10px] font-black uppercase tracking-widest ml-1">Assigned BMC / Admin</label>
+               <select 
+                 style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#ffffff' }}
+                 className="w-full h-14 px-6 text-sm font-bold tracking-widest appearance-none"
+                 value={formData.admin_id}
+                 required
+                 onChange={(e) => setFormData({...formData, admin_id: e.target.value})}
+               >
+                 {loadingAdmins ? (
+                   <option>Loading Admins...</option>
+                 ) : (
+                   admins.map(admin => (
+                     <option key={admin._id} value={admin._id}>
+                       {admin.admin_name || admin.username} ({admin.office_location || 'No Location'})
+                     </option>
+                   ))
+                 )}
+               </select>
             </div>
 
             <div className="space-y-2">
