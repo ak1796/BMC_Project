@@ -43,11 +43,19 @@ const AdminOverview = () => {
   // REAL DATA CALCULATIONS
   const processedMetrics = useMemo(() => {
     if (!data.logs.length) return { 
-        stream: Array(7).fill(0), 
-        velocity: '0%', 
-        compliance: '0%', 
-        mean: 0,
-        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        zones: [
+            { name: 'Sector 01', status: 'Optimal', color: 'emerald' },
+            { name: 'Sector 03', status: 'Optimal', color: 'emerald' },
+            { name: 'Sector 07', status: 'Delayed', color: 'amber' },
+            { name: 'Sector 12', status: 'Critical', color: 'rose' },
+            { name: 'Mumbai West', status: 'Optimal', color: 'emerald' },
+        ],
+        stream: Array(7).fill(0),
+        weeklyStreamData: Array(7).fill(0),
+        velocity: '0%',
+        compliance: '0%',
+        mean: 0
     };
 
     // 7-Day Weekly Distribution
@@ -88,13 +96,49 @@ const AdminOverview = () => {
     // Efficiency: Mean daily logs vs Theoretical capacity (Total Shops)
     const efficiency = data.shops.length > 0 ? Math.round((mean / data.shops.length) * 100) : 0;
 
+    // Zone Monitoring Logic
+    const zoneData = {};
+    data.shops.forEach(shop => {
+        const zone = shop.location || 'Unknown';
+        if (!zoneData[zone]) {
+            zoneData[zone] = { total: 0, logged: 0 };
+        }
+        zoneData[zone].total += 1;
+        
+        // Check if this shop has any logs today
+        const hasLoggedToday = data.logs.some(l => 
+            (l.shop_id?._id || l.shop_id) === shop._id && 
+            new Date(l.timestamp).setHours(0,0,0,0) === today
+        );
+        if (hasLoggedToday) {
+            zoneData[zone].logged += 1;
+        }
+    });
+
+    const dynamicZones = Object.keys(zoneData).map(name => {
+        const ratio = zoneData[name].logged / zoneData[name].total;
+        let status = 'Critical';
+        let color = 'rose';
+        if (ratio > 0.8) { status = 'Optimal'; color = 'emerald'; }
+        else if (ratio > 0.4) { status = 'Delayed'; color = 'amber'; }
+        
+        return { name, status, color, count: zoneData[name].total };
+    }).sort((a, b) => b.count - a.count).slice(0, 5);
+
     return { 
         stream, 
         velocity: `${velocity}%`, 
         compliance: `${Math.min(efficiency, 100)}%`,
         mean,
         weeklyStreamData,
-        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        zones: dynamicZones.length > 0 ? dynamicZones : [
+            { name: 'Sector 01', status: 'Optimal', color: 'emerald' },
+            { name: 'Sector 03', status: 'Optimal', color: 'emerald' },
+            { name: 'Sector 07', status: 'Delayed', color: 'amber' },
+            { name: 'Sector 12', status: 'Critical', color: 'rose' },
+            { name: 'Mumbai West', status: 'Optimal', color: 'emerald' },
+        ]
     };
   }, [data]);
 
@@ -105,13 +149,7 @@ const AdminOverview = () => {
     { label: 'Active Alerts', count: data.alerts.length, color: 'blue', icon: <Activity size={20} />, trend: 'LIVE', path: '/admin/alerts' },
   ];
 
-  const zones = [
-    { name: 'Sector 01', status: 'Optimal', color: 'emerald' },
-    { name: 'Sector 03', status: 'Optimal', color: 'emerald' },
-    { name: 'Sector 07', status: 'Delayed', color: 'amber' },
-    { name: 'Sector 12', status: 'Critical', color: 'rose' },
-    { name: 'Mumbai West', status: 'Optimal', color: 'emerald' },
-  ];
+  const zones = processedMetrics.zones;
 
   if (loading) {
      return (
