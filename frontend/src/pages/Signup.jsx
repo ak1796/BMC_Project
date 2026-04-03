@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Store, User, Lock, ArrowRight, Loader2, ShieldCheck, MapPin, Phone, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../assets/logo.png';
 
 const Signup = () => {
   const [role, setRole] = useState('shopkeeper');
@@ -98,9 +99,9 @@ const Signup = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center justify-center w-20 h-20 rounded-[2.5rem] bg-gradient-to-br from-emerald-500/20 to-blue-500/20 text-emerald-400 mb-6 border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]"
+            className="inline-flex items-center justify-center w-24 h-24 rounded-[2.5rem] overflow-hidden mb-6 border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]"
           >
-            <Store size={40} strokeWidth={1.5} />
+            <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
           </motion.div>
           <motion.h1
             initial={{ opacity: 0 }}

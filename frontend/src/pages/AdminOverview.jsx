@@ -42,30 +42,60 @@ const AdminOverview = () => {
 
   // REAL DATA CALCULATIONS
   const processedMetrics = useMemo(() => {
-    if (!data.logs.length) return { stream: Array(12).fill(0), velocity: '0%', compliance: '0%' };
+    if (!data.logs.length) return { 
+        stream: Array(7).fill(0), 
+        velocity: '0%', 
+        compliance: '0%', 
+        mean: 0,
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    };
 
-    const hours = Array(12).fill(0);
+    // 7-Day Weekly Distribution
+    const dayCounts = Array(7).fill(0);
     const now = new Date();
+    
     data.logs.forEach(log => {
         const logDate = new Date(log.timestamp);
-        const diffHours = Math.floor((now - logDate) / (1000 * 60 * 60));
-        if (diffHours < 12) {
-            hours[11 - diffHours] += 1;
+        const diffDays = Math.floor((now - logDate) / (1000 * 60 * 60 * 24));
+        if (diffDays < 7) {
+            // Get day index (0-6) where 0 is today, 1 is yesterday etc.
+            // But we want to map it to Mon-Sun
+            const dayIndex = logDate.getDay(); // 0 is Sunday, 1 is Monday...
+            dayCounts[dayIndex] += 1;
         }
     });
-    const maxLogs = Math.max(...hours, 1);
-    const stream = hours.map(h => (h / maxLogs) * 100);
 
+    // Reorder dayCounts so they align with a standard week starting Monday
+    // Standard getDay(): 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    // Target order: Mon, Tue, Wed, Thu, Fri, Sat, Sun
+    const weeklyStreamData = [dayCounts[1], dayCounts[2], dayCounts[3], dayCounts[4], dayCounts[5], dayCounts[6], dayCounts[0]];
+    const maxDayLogs = Math.max(...weeklyStreamData, 1);
+    const stream = weeklyStreamData.map(h => (h / maxDayLogs) * 100);
+
+    // Efficiency Calculations
     const today = new Date().setHours(0,0,0,0);
     const uniqueLoggedToday = new Set(
         data.logs
             .filter(l => new Date(l.timestamp).setHours(0,0,0,0) === today)
             .map(l => l.shop_id?._id || l.shop_id)
     ).size;
-    const velocity = data.shops.length > 0 ? Math.round((uniqueLoggedToday / data.shops.length) * 100) : 0;
-    const compliance = data.shops.length > 0 ? Math.round(((data.logs.length / 7) / data.shops.length) * 100) : 0;
 
-    return { stream, velocity: `${velocity}%`, compliance: `${Math.min(compliance, 100)}%` };
+    const velocity = data.shops.length > 0 ? Math.round((uniqueLoggedToday / data.shops.length) * 100) : 0;
+    
+    // Mean Calculation: Average logs per day over available data
+    const mean = Math.round(data.logs.length / Math.max(new Set(data.logs.map(l => new Date(l.timestamp).toDateString())).size, 1));
+    
+    // Efficiency: Mean daily logs vs Theoretical capacity (Total Shops)
+    const efficiency = data.shops.length > 0 ? Math.round((mean / data.shops.length) * 100) : 0;
+
+    return { 
+        stream, 
+        velocity: `${velocity}%`, 
+        compliance: `${Math.min(efficiency, 100)}%`,
+        mean,
+        weeklyStreamData,
+        days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    };
   }, [data]);
 
   const stats = [
@@ -229,20 +259,21 @@ const AdminOverview = () => {
 
             <div className="space-y-6 pt-4">
                 <div className="flex items-center justify-between text-[11px] font-black uppercase text-slate-500 tracking-widest px-2">
-                    <span>Hourly Activity (Last 12 Hours)</span>
+                    <span>Weekly Activity (Mon - Sun Distribution)</span>
                     <span className="text-emerald-500">Live Feedback</span>
                 </div>
-                <div className="h-44 glass-card bg-slate-950/50 p-6 flex items-end justify-between items-stretch gap-2 transition-all">
+                <div className="h-44 glass-card bg-slate-950/50 p-6 flex items-end justify-between items-stretch gap-4 transition-all">
                     {processedMetrics.stream.map((h, i) => (
                         <div key={i} className="flex-1 flex flex-col justify-end gap-2 group/bar">
                             <motion.div 
                                 initial={{ height: 0 }} animate={{ height: `${Math.max(h, 5)}%` }}
                                 transition={{ delay: 0.8 + i * 0.05 }}
+                                title={`${processedMetrics.weeklyStreamData[i]} Logs`}
                                 className={`rounded-t-xl bg-gradient-to-t transition-all cursor-pointer ${
                                     h > 70 ? 'from-emerald-500/40 to-emerald-400 group-hover:scale-x-110 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'from-slate-800 to-slate-700'
                                 }`}
                             />
-                            <span className="text-[8px] font-bold text-center opacity-0 group-hover/bar:opacity-100 transition-opacity">T-{11-i}h</span>
+                            <span className="text-[9px] font-black text-slate-500 text-center uppercase tracking-tighter group-hover/bar:text-white transition-colors">{processedMetrics.days[i]}</span>
                         </div>
                     ))}
                 </div>
@@ -267,9 +298,10 @@ const AdminOverview = () => {
 
             <div className="space-y-6">
                 {[
-                    { l: 'Daily Collection Velocity', v: processedMetrics.velocity, color: 'emerald' },
-                    { l: 'Weekly Aggregate Compliance', v: processedMetrics.compliance, color: 'blue' },
-                    { l: 'Defaulter Ratio', v: data.shops.length > 0 ? `${Math.round((data.defaulters.length / data.shops.length) * 100)}%` : '0%', color: 'rose' },
+                    { l: 'Mean Daily Load (Collection)', v: `${processedMetrics.mean} Pts`, p: `${Math.min((processedMetrics.mean / 50) * 100, 100)}%`, color: 'purple' },
+                    { l: 'Daily Collection Velocity', v: processedMetrics.velocity, p: processedMetrics.velocity, color: 'emerald' },
+                    { l: 'Weekly Efficiency Score', v: processedMetrics.compliance, p: processedMetrics.compliance, color: 'blue' },
+                    { l: 'Defaulter Ratio', v: data.shops.length > 0 ? `${Math.round((data.defaulters.length / data.shops.length) * 100)}%` : '0%', p: data.shops.length > 0 ? `${Math.round((data.defaulters.length / data.shops.length) * 100)}%` : '0%', color: 'rose' },
                 ].map(item => (
                     <div key={item.l} className="space-y-3 group cursor-default">
                         <div className="flex justify-between items-end">
@@ -278,7 +310,7 @@ const AdminOverview = () => {
                         </div>
                         <div className="h-2 w-full bg-slate-950 rounded-full border border-white/[0.03] overflow-hidden">
                             <motion.div 
-                                initial={{ width: 0 }} animate={{ width: item.v }}
+                                initial={{ width: 0 }} animate={{ width: item.p }}
                                 transition={{ delay: 1.2, duration: 1.5 }}
                                 className={`h-full bg-${item.color}-500 shadow-[0_0_10px_rgba(16,185,129,0.2)] rounded-full`}
                             />

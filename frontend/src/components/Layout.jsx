@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import io from 'socket.io-client';
+import logo from '../assets/logo.png';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
@@ -61,8 +62,8 @@ const Layout = ({ children }) => {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-3 px-2 mb-10"
         >
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center border border-emerald-500/20 shadow-inner">
-            <Store size={24} />
+          <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center border border-emerald-500/20 shadow-inner">
+            <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="text-xl font-bold font-outfit uppercase tracking-tighter bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent">
@@ -135,8 +136,10 @@ const Layout = ({ children }) => {
 
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between p-5 bg-slate-900 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-lg bg-opacity-80">
-          <div className="flex items-center gap-2">
-             <Store size={22} className="text-emerald-500" />
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
+                <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
+             </div>
              <span className="font-bold font-outfit uppercase tracking-tighter">Smart Market</span>
           </div>
           <button 
@@ -205,8 +208,8 @@ const Layout = ({ children }) => {
               className="fixed inset-y-0 right-0 w-[85%] max-w-xs bg-slate-900 z-[70] p-8 lg:hidden border-l border-slate-800 shadow-2xl flex flex-col"
             >
               <div className="mb-10 flex flex-col items-center">
-                <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mb-4">
-                  <Store size={32} />
+                <div className="w-20 h-20 rounded-3xl overflow-hidden flex items-center justify-center mb-4">
+                  <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-xl font-bold font-outfit uppercase">Smart Market</h3>
               </div>
