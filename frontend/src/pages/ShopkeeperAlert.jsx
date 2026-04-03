@@ -11,12 +11,15 @@ const ShopkeeperAlert = () => {
   const [status, setStatus] = useState(null); // null | 'loading' | 'success' | 'error'
   const [message, setMessage] = useState('');
   const [scanError, setScanError] = useState('');
+  const [alerts, setAlerts] = useState([]);
+  const [fetchingAlerts, setFetchingAlerts] = useState(true);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const scannerRef = useRef(null);
 
   // Start camera when in scan mode
   useEffect(() => {
+    fetchMyAlerts();
     if (mode === 'scan') {
       startCamera();
     } else {
@@ -24,6 +27,17 @@ const ShopkeeperAlert = () => {
     }
     return () => stopCamera();
   }, [mode]);
+
+  const fetchMyAlerts = async () => {
+    try {
+      const { data } = await axios.get('/api/alerts');
+      // Filter out bulky requests so it only shows manual reports here, OR show all? We will show all for full transparency.
+      setAlerts(data.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
+    } catch (err) {
+      console.error('Failed to fetch alerts', err);
+    }
+    setFetchingAlerts(false);
+  };
 
   const startCamera = async () => {
     setScanError('');
@@ -115,6 +129,7 @@ const ShopkeeperAlert = () => {
       setMessage('Alert lodged successfully! Admin notified in real-time.');
       setDustbinId('');
       setComments('');
+      fetchMyAlerts(); // Refresh the list after submission
     } catch (err) {
       setStatus('error');
       setMessage(err.response?.data?.message || 'Failed to lodge alert. Please try again.');
@@ -312,6 +327,86 @@ const ShopkeeperAlert = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Complaint History Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mt-12 space-y-6"
+      >
+         <h2 className="text-xl font-black font-outfit uppercase tracking-widest text-slate-200 border-b border-white/5 pb-4">
+            Your Complaint History
+         </h2>
+         
+         <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 pb-10">
+            {fetchingAlerts ? (
+                <div className="flex justify-center p-8"><Loader2 className="animate-spin text-emerald-500" size={32} /></div>
+            ) : alerts.length === 0 ? (
+                <div className="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-xs glass-card">
+                    No complaints lodged yet.
+                </div>
+            ) : (
+                alerts.map(alert => (
+                    <div key={alert._id} className="glass-card p-6 border-l-[4px] relative overflow-hidden transition-all group" style={{ borderColor: alert.status === 'Resolved' ? '#10b981' : '#3b82f6' }}>
+                        <div className="flex flex-wrap justify-between items-start gap-4 relative z-10">
+                            <div className="flex-1 space-y-2">
+                                <div className="flex items-center gap-3">
+                                    <h3 className="font-black text-white uppercase tracking-wider text-sm">
+                                        Ticket #{alert._id.slice(-6).toUpperCase()}
+                                    </h3>
+                                    <span className={`px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest border uppercase ${
+                                        alert.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                    }`}>
+                                        {alert.status}
+                                    </span>
+                                    {alert.comments?.includes('BULKY') && (
+                                        <span className="px-2 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md text-[9px] font-black tracking-widest uppercase">
+                                            Bulky Request
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-xs font-bold text-slate-400">BIN: <span className="text-slate-300">{alert.dustbin_id?.dustbin_id || 'N/A'}</span></p>
+                                <p className="text-sm text-slate-300 mt-2 bg-slate-900/50 p-3 rounded-xl border border-white/5">
+                                    {alert.comments || 'No description provided.'}
+                                </p>
+                            </div>
+                            
+                            <div className="text-right">
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Logged On</p>
+                                <p className="text-xs font-black text-slate-300">{new Date(alert.timestamp).toLocaleDateString()}</p>
+                                <p className="text-[10px] text-slate-500">{new Date(alert.timestamp).toLocaleTimeString()}</p>
+                            </div>
+                        </div>
+
+                        {/* Resolution Message Box */}
+                        <AnimatePresence>
+                            {alert.status === 'Resolved' && alert.resolution_message && (
+                                <motion.div 
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="mt-4 pt-4 border-t border-white/5 relative z-10"
+                                >
+                                    <div className="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-xl flex items-start gap-3">
+                                        <CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={18} />
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500/70 mb-1">Admin Resolution / ETA</p>
+                                            <p className="text-sm font-bold text-emerald-400 leading-relaxed">{alert.resolution_message}</p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                        
+                        {/* Glow effect for resolved cards */}
+                        {alert.status === 'Resolved' && (
+                            <div className="absolute inset-0 bg-emerald-500/[0.02] pointer-events-none" />
+                        )}
+                    </div>
+                ))
+            )}
+         </div>
+      </motion.section>
     </div>
   );
 };

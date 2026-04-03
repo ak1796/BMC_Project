@@ -131,6 +131,9 @@ const deleteAlert = async (req, res) => {
         }
 
         if (alert) {
+            if (req.user.role !== 'admin' && alert.shop_id.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ message: 'Unauthorized' });
+            }
             await alert.deleteOne();
             res.json({ message: 'Alert removed' });
         } else {

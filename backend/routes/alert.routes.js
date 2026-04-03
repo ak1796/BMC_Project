@@ -6,10 +6,10 @@ const { adminOnly } = require('../middlewares/role.middleware');
 
 router.route('/')
     .post(protect, generateAlert)
-    .get(protect, adminOnly, getAlerts);
+    .get(protect, getAlerts);
 
 router.route('/:id')
     .put(protect, adminOnly, updateAlertStatus)
-    .delete(protect, adminOnly, deleteAlert);
+    .delete(protect, deleteAlert);
 
 module.exports = router;

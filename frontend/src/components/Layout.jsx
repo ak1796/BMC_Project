@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-  LogOut, LayoutDashboard, ClipboardList, Trash2, 
+  LogOut, LayoutDashboard, ClipboardList, Truck, 
   AlertCircle, Users, FileBarChart, Menu, X, Store, Bell, Settings, QrCode, CheckCircle2 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
   const shopkeeperLinks = [
     { to: '/shopkeeper/overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/shopkeeper/history', label: 'History', icon: <ClipboardList size={20} /> },
-    { to: '/shopkeeper/bulky', label: 'Large Waste', icon: <Trash2 size={20} /> },
+    { to: '/shopkeeper/bulky', label: 'Service Tracker', icon: <Truck size={20} /> },
     { to: '/shopkeeper/alert', label: 'Report Issue', icon: <Bell size={20} />, highlight: true },
     { to: '/shopkeeper/settings', label: 'Settings', icon: <Settings size={20} /> },
   ];

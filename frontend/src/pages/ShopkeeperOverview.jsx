@@ -11,6 +11,7 @@ const ShopkeeperOverview = () => {
   const [showLogForm, setShowLogForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dustbins, setDustbins] = useState([]);
+  const [alerts, setAlerts] = useState([]);
   const [loadingDustbins, setLoadingDustbins] = useState(false);
   const [formData, setFormData] = useState({
     dustbin_id: user?.dustbin_id || '',
@@ -25,6 +26,16 @@ const ShopkeeperOverview = () => {
       setLogs(data);
     } catch (err) {
       console.error('Error fetching logs', err);
+    }
+  };
+
+  const fetchAlerts = async () => {
+    try {
+      const { data } = await axios.get('/api/alerts');
+      // Sort so newest are first
+      setAlerts(data.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
+    } catch (err) {
+      console.error('Error fetching alerts', err);
     }
   };
 
@@ -56,6 +67,7 @@ const ShopkeeperOverview = () => {
   useEffect(() => {
     fetchLogs();
     fetchDustbins();
+    fetchAlerts();
   }, [user]);
 
   useEffect(() => {
@@ -257,6 +269,39 @@ const ShopkeeperOverview = () => {
                   </div>
                </div>
                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/[0.03] blur-[80px] pointer-events-none" />
+            </div>
+
+            {/* NEW TICKET AND ETA SECTION */}
+            <div className="pt-6">
+                <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200 px-2 mb-6">Service Tickets & ETA</h3>
+                <div className="glass-card divide-y divide-white/5 overflow-hidden max-h-[400px] overflow-y-auto">
+                    {alerts.length === 0 ? (
+                        <div className="p-12 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">No active tickets.</div>
+                    ) : (
+                        alerts.map(a => (
+                            <div key={a._id || a.alert_id} className="p-5 hover:bg-white/[0.02] transition-colors relative group">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h4 className="text-xs font-black uppercase text-white truncate max-w-[200px]" title={a.comments}>
+                                        {a.comments?.includes('BULKY') ? 'Bulky Waste Request' : 'Emergency Report'}
+                                    </h4>
+                                    <span className={`px-2 py-1 rounded text-[8px] font-black tracking-widest ${
+                                        a.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-blue-500/20 text-blue-500'
+                                    }`}>
+                                        {a.status === 'Resolved' ? 'RESOLVED' : 'QUEUE'}
+                                    </span>
+                                </div>
+                                <p className="text-[10px] text-slate-400 mb-3 truncate">{a.comments || 'No description provided.'}</p>
+                                
+                                {a.status === 'Resolved' && a.resolution_message && (
+                                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-emerald-500/70 mb-1">Admin ETA Message</p>
+                                        <p className="text-xs font-bold text-emerald-400">{a.resolution_message}</p>
+                                    </div>
+                                )}
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
          </section>
       </div>

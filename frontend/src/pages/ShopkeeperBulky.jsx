@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ShopkeeperBulky = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [scheduling, setScheduling] = useState(false);
 
   const fetchBulky = async () => {
     try {
@@ -19,25 +18,8 @@ const ShopkeeperBulky = () => {
     setLoading(false);
   };
 
-  const handleSchedule = async () => {
-    setScheduling(true);
-    try {
-      await axios.post('/api/wastelogs', {
-        waste_type: 'Dry',
-        no_of_bags: 10,
-        bulky_request: true,
-        dustbin_id: 'BIN-001'
-      });
-      fetchBulky();
-      alert('Bulky waste visit scheduled successfully!');
-    } catch (err) {
-      alert('Failed to schedule visit: ' + (err.response?.data?.message || 'Server error'));
-    }
-    setScheduling(false);
-  };
-
   const handleRevoke = async (id) => {
-    if (!window.confirm('Are you sure you want to revoke this bulky request?')) return;
+    if (!window.confirm('Are you sure you want to revoke this request?')) return;
     try {
       await axios.delete(`/api/alerts/${id}`);
       fetchBulky();
@@ -61,8 +43,8 @@ const ShopkeeperBulky = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-full text-[10px] font-black uppercase tracking-widest mb-2">
              <AlertTriangle size={12} /> Priority Logistics
           </div>
-          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Bulky Dispatch Hub</h1>
-          <p className="text-slate-500 font-medium tracking-wide">Manage special oversized item disposal and high-volume collection requests.</p>
+          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Dispatch & Ticket Hub</h1>
+          <p className="text-slate-500 font-medium tracking-wide">Track your collection ETAs and emergency ticket statuses in real-time.</p>
         </div>
         
         <div className="flex gap-4">
@@ -92,26 +74,20 @@ const ShopkeeperBulky = () => {
             </div>
             <div className="space-y-4 text-center md:text-left flex-1">
                <div>
-                  <h4 className="text-xl font-black font-outfit uppercase tracking-tight text-amber-200">Processing Guideline</h4>
+                  <h4 className="text-xl font-black font-outfit uppercase tracking-tight text-amber-200">Dispatch Guidelines</h4>
                   <p className="text-sm text-slate-400 font-medium leading-relaxed mt-1">
-                     Bulky requests are prioritized for Sector-07 every 24-48 hours. Items must be clearly tagged and placed at the designated "Node-Alpha" collection portal near your primary loading bay.
+                     Requests are synchronized with Sector-07 logistics every 24 hours. Ensure items are tagged with your establishment ID. 
+                     Live updates will appear in the registry below as admins assign pickup windows.
                   </p>
                </div>
                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                  {['Items < 50kg', 'Non-Hazardous', 'Correct Labeling'].map(badge => (
+                  {['Sector-07 Sync', 'Automatic Queueing', 'Live Status'].map(badge => (
                      <span key={badge} className="px-3 py-1.5 bg-slate-900 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500">
                         {badge}
                      </span>
                   ))}
                </div>
             </div>
-            <button 
-               onClick={handleSchedule} 
-               disabled={scheduling}
-               className="px-8 py-4 bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
-            >
-               {scheduling ? 'Scheduling...' : 'Schedule Visit'}
-            </button>
          </div>
       </motion.div>
 
@@ -162,9 +138,12 @@ const ShopkeeperBulky = () => {
                                  <Clock size={14} /> Time: {new Date(req.timestamp).toLocaleTimeString()}
                               </span>
                               <span className="flex items-center gap-2 px-3 py-1 bg-slate-800 rounded-full group-hover:text-amber-500 transition-colors uppercase">
-                                 <MapPin size={14} /> Zone-Alpha
+                                 <MapPin size={14} /> Bin: {req.dustbin_id?.dustbin_id || 'Zone-Alpha'}
                               </span>
                            </div>
+                           <p className="text-sm font-medium text-slate-300 mt-2 italic bg-black/20 p-2 rounded-lg border border-white/5">
+                                "{req.comments || 'No description provided for this request.'}"
+                           </p>
                         </div>
                      </div>
                      
