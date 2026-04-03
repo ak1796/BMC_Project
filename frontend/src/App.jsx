@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 // Shopkeeper Pages
 import ShopkeeperOverview from './pages/ShopkeeperOverview';
 import ShopkeeperHistory from './pages/ShopkeeperHistory';
+import ShopkeeperFines from './pages/ShopkeeperFines';
 import ShopkeeperBulky from './pages/ShopkeeperBulky';
 import ShopkeeperAlert from './pages/ShopkeeperAlert';
 import ShopkeeperSettings from './pages/ShopkeeperSettings';
@@ -15,6 +16,7 @@ import ShopkeeperSettings from './pages/ShopkeeperSettings';
 import AdminOverview from './pages/AdminOverview';
 import AdminAlerts from './pages/AdminAlerts';
 import AdminShops from './pages/AdminShops';
+import AdminFines from './pages/AdminFines';
 import AdminReports from './pages/AdminReports';
 import AdminQRGenerator from './pages/AdminQRGenerator';
 import AdminSettings from './pages/AdminSettings';
@@ -32,6 +34,7 @@ function App() {
             <Route path="/shopkeeper" element={<Navigate to="/shopkeeper/overview" replace />} />
             <Route path="/shopkeeper/overview" element={<ShopkeeperOverview />} />
             <Route path="/shopkeeper/history" element={<ShopkeeperHistory />} />
+            <Route path="/shopkeeper/fines" element={<ShopkeeperFines />} />
             <Route path="/shopkeeper/bulky" element={<ShopkeeperBulky />} />
             <Route path="/shopkeeper/alert" element={<ShopkeeperAlert />} />
             <Route path="/shopkeeper/settings" element={<ShopkeeperSettings />} />
@@ -43,6 +46,7 @@ function App() {
             <Route path="/admin/overview" element={<AdminOverview />} />
             <Route path="/admin/alerts" element={<AdminAlerts />} />
             <Route path="/admin/shops" element={<AdminShops />} />
+            <Route path="/admin/fines" element={<AdminFines />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/qr-generator" element={<AdminQRGenerator />} />
             <Route path="/admin/settings" element={<AdminSettings />} />

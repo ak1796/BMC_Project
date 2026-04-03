@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   LogOut, LayoutDashboard, ClipboardList, Truck, 
-  AlertCircle, Users, FileBarChart, Menu, X, Store, Bell, Settings, QrCode, CheckCircle2 
+  AlertCircle, Users, FileBarChart, Menu, X, Store, Bell, Settings, QrCode, CheckCircle2, ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import io from 'socket.io-client';
@@ -15,8 +15,22 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [resolutionToast, setResolutionToast] = useState(null);
+  const [pendingFinesCount, setPendingFinesCount] = useState(0);
 
   useEffect(() => {
+    const fetchPendingFines = async () => {
+      if (user && user.role === 'shopkeeper') {
+        try {
+          const res = await axios.get('/api/fines');
+          const pending = res.data.filter(f => f.status === 'Pending').length;
+          setPendingFinesCount(pending);
+        } catch (err) {
+          console.error('Error fetching pending fines:', err);
+        }
+      }
+    };
+    fetchPendingFines();
+
     if (user && user.role !== 'admin') {
        const newSocket = io('http://localhost:5000');
        newSocket.on('alert_resolved', (alert) => {
@@ -37,6 +51,7 @@ const Layout = ({ children }) => {
   const shopkeeperLinks = [
     { to: '/shopkeeper/overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/shopkeeper/history', label: 'History', icon: <ClipboardList size={20} /> },
+    { to: '/shopkeeper/fines', label: 'Fines & Dues', icon: <ShieldCheck size={20} />, badge: pendingFinesCount > 0 ? pendingFinesCount : null },
     { to: '/shopkeeper/bulky', label: 'Service Tracker', icon: <Truck size={20} /> },
     { to: '/shopkeeper/alert', label: 'Report Issue', icon: <Bell size={20} />, highlight: true },
     { to: '/shopkeeper/settings', label: 'Settings', icon: <Settings size={20} /> },
@@ -46,6 +61,7 @@ const Layout = ({ children }) => {
     { to: '/admin/overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/admin/alerts', label: 'Alerts', icon: <AlertCircle size={20} /> },
     { to: '/admin/shops', label: 'Shops', icon: <Users size={20} /> },
+    { to: '/admin/fines', label: 'Fines & Dues', icon: <ShieldCheck size={20} /> },
     { to: '/admin/reports', label: 'Reports', icon: <FileBarChart size={20} /> },
     { to: '/admin/qr-generator', label: 'QR Generator', icon: <QrCode size={20} />, eco: true },
     { to: '/admin/settings', label: 'Settings', icon: <Settings size={20} /> },
@@ -98,6 +114,11 @@ const Layout = ({ children }) => {
               >
                 {link.icon}
                 <span className="font-semibold text-sm tracking-wide">{link.label}</span>
+                {link.badge && (
+                  <span className="ml-auto bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-rose-500/20">
+                    {link.badge}
+                  </span>
+                )}
                 {location.pathname === link.to && (
                   <motion.div 
                     layoutId="sidebar-active"

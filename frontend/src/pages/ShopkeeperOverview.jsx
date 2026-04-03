@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { QrCode, ClipboardList, Send, Trash2, ArrowRight, Clock, Plus, BarChart3, TrendingUp } from 'lucide-react';
+import { QrCode, ClipboardList, Send, Trash2, ArrowRight, Clock, Plus, BarChart3, TrendingUp, AlertCircle, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,8 @@ const ShopkeeperOverview = () => {
   const [loading, setLoading] = useState(false);
   const [dustbins, setDustbins] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [fines, setFines] = useState([]);
+  const [showStatement, setShowStatement] = useState(false);
   const [loadingDustbins, setLoadingDustbins] = useState(false);
   const [formData, setFormData] = useState({
     dustbin_id: user?.dustbin_id || '',
@@ -26,6 +28,17 @@ const ShopkeeperOverview = () => {
       setLogs(data);
     } catch (err) {
       console.error('Error fetching logs', err);
+    }
+  };
+
+  const fetchFines = async () => {
+    try {
+      const { data } = await axios.get('/api/fines');
+      if (Array.isArray(data)) {
+        setFines(data.sort((a,b) => new Date(b.issuedAt) - new Date(a.issuedAt)));
+      }
+    } catch (err) {
+      console.error('Error fetching fines', err);
     }
   };
 
@@ -68,6 +81,7 @@ const ShopkeeperOverview = () => {
     fetchLogs();
     fetchDustbins();
     fetchAlerts();
+    fetchFines();
   }, [user]);
 
   useEffect(() => {
@@ -96,7 +110,8 @@ const ShopkeeperOverview = () => {
 
   // REAL DATA CALCULATIONS
   const processedMetrics = useMemo(() => {
-    if (!logs.length) return { compliance: '0%', avgVolume: '0', bulkyCount: 0 };
+    const defaultMetrics = { compliance: '0%', avgVolume: '0', bulkyCount: 0, pendingFinesCount: 0 };
+    if (!logs || !logs.length) return defaultMetrics;
 
     const now = new Date();
     const last7Days = new Date(now.setDate(now.getDate() - 7));
@@ -107,16 +122,19 @@ const ShopkeeperOverview = () => {
     const totalBags = recentLogs.reduce((acc, curr) => acc + (curr.no_of_bags || 0), 0);
     const avgVolume = recentLogs.length > 0 ? (totalBags / recentLogs.length).toFixed(1) : '0';
 
+    const pendingFinesCount = fines.filter(f => f.status === 'Pending').length;
+
     return { 
         compliance: `${Math.min(compliance, 100)}%`, 
         avgVolume: `${avgVolume} bags`, 
-        bulkyCount: logs.filter(l => l.bulky_request).length 
+        bulkyCount: logs.filter(l => l.bulky_request).length,
+        pendingFinesCount
     };
-  }, [logs]);
+  }, [logs, fines]);
 
   const containerStats = [
     { label: 'Total Entries', val: logs.length, icon: <ClipboardList size={22} />, color: 'emerald', path: '/shopkeeper/history' },
-    { label: 'Bulky Requests', val: processedMetrics.bulkyCount, icon: <Trash2 size={22} />, color: 'amber', path: '/shopkeeper/history' },
+    { label: 'Pending Fines', val: processedMetrics.pendingFinesCount, icon: <AlertCircle size={22} />, color: 'rose', path: '/shopkeeper/overview' },
     { label: 'Account Health', val: processedMetrics.compliance, icon: <BarChart3 size={22} />, color: 'blue', path: '/shopkeeper/history' },
   ];
 
@@ -272,6 +290,132 @@ const ShopkeeperOverview = () => {
             </div>
 
             {/* NEW TICKET AND ETA SECTION */}
+            {/* FINES SECTION */}
+            <div className="pt-6">
+                <div className="flex items-center justify-between px-2 mb-6">
+                    <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200">Penalties & Dues</h3>
+                    <button 
+                        onClick={() => setShowStatement(true)}
+                        className="text-[10px] font-black text-emerald-500 hover:text-emerald-400 uppercase tracking-widest flex items-center gap-2"
+                    >
+                        View Statement <ClipboardList size={14} />
+                    </button>
+                </div>
+                
+                <div className="glass-card divide-y divide-white/5 overflow-hidden">
+                    {fines.filter(f => f.status === 'Pending').length === 0 ? (
+                        <div className="p-12 text-center bg-emerald-500/5 items-center flex flex-col gap-3">
+                            <ShieldCheck size={32} className="text-emerald-500/30" />
+                            <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">No outstanding penalties.</p>
+                        </div>
+                    ) : (
+                        fines.filter(f => f.status === 'Pending').map(f => (
+                            <div key={f._id} className="p-6 hover:bg-rose-500/[0.02] transition-colors relative group">
+                                <div className="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h4 className="text-sm font-black uppercase tracking-tight text-rose-500">
+                                            Rs. {f.amount} Penalty
+                                        </h4>
+                                        <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">Issued: {new Date(f.issuedAt).toLocaleDateString()}</p>
+                                    </div>
+                                    <span className="px-2 py-1 rounded text-[8px] font-black tracking-widest bg-rose-500/20 text-rose-500 animate-pulse">
+                                        OVERDUE
+                                    </span>
+                                </div>
+                                <p className="text-xs font-bold text-slate-300 leading-relaxed">{f.reason}</p>
+                                
+                                <button 
+                                    onClick={async () => {
+                                        try {
+                                            await axios.put(`/api/fines/${f._id}/pay`);
+                                            fetchFines();
+                                        } catch (err) {
+                                            alert('Payment failed');
+                                        }
+                                    }}
+                                    className="mt-4 w-full py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+                                >
+                                    Settle Penalty Now
+                                </button>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </div>
+
+            {/* STATEMENT MODAL */}
+            <AnimatePresence>
+                {showStatement && (
+                    <motion.div 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-xl"
+                        onClick={() => setShowStatement(false)}
+                    >
+                        <motion.div 
+                            initial={{ scale: 0.9, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                            className="w-full max-w-2xl bg-slate-900 border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="p-8 border-b border-white/5 flex justify-between items-center bg-slate-800/50">
+                                <div>
+                                    <h3 className="text-2xl font-black font-outfit uppercase tracking-tight text-white">Financial Statement</h3>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Transaction History & Penalties</p>
+                                </div>
+                                <button onClick={() => setShowStatement(false)} className="w-10 h-10 flex items-center justify-center bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">✕</button>
+                            </div>
+                            
+                            <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar space-y-4">
+                                {fines.length === 0 ? (
+                                    <div className="py-20 text-center opacity-30">
+                                        <ClipboardList size={48} className="mx-auto mb-4" />
+                                        <p className="font-black uppercase tracking-widest text-xs">No transactions recorded</p>
+                                    </div>
+                                ) : (
+                                    fines.map(f => (
+                                        <div key={f._id} className="p-5 bg-slate-950/50 rounded-2xl border border-white/5 flex items-center justify-between group">
+                                            <div className="flex items-center gap-5">
+                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                                                    f.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                                }`}>
+                                                    <AlertCircle size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-slate-100 text-sm">{f.reason}</p>
+                                                    <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">
+                                                        {new Date(f.issuedAt).toLocaleDateString()} • {f.status === 'Paid' ? 'SETTLED' : 'PENDING'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-lg font-black text-white font-outfit tracking-tighter">Rs. {f.amount}</p>
+                                                <p className={`text-[8px] font-black uppercase tracking-widest ${f.status === 'Paid' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                    {f.status === 'Paid' ? 'Transaction Success' : 'Awaiting Payment'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                            
+                            <div className="p-8 bg-slate-800/30 border-t border-white/5 flex justify-between items-center">
+                                <div>
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Total Outstanding</p>
+                                    <p className="text-2xl font-black text-rose-500 font-outfit tracking-tighter">
+                                        Rs. {fines.filter(f => f.status === 'Pending').reduce((acc, curr) => acc + curr.amount, 0)}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Lifetime Settled</p>
+                                    <p className="text-2xl font-black text-emerald-500 font-outfit tracking-tighter">
+                                        Rs. {fines.filter(f => f.status === 'Paid').reduce((acc, curr) => acc + curr.amount, 0)}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="pt-6">
                 <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200 px-2 mb-6">Service Tickets & ETA</h3>
                 <div className="glass-card divide-y divide-white/5 overflow-hidden max-h-[400px] overflow-y-auto">

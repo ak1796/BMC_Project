@@ -9,26 +9,31 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const AdminOverview = () => {
-  const [data, setData] = useState({ logs: [], unlogged: [], defaulters: [], alerts: [], shops: [] });
+  const [data, setData] = useState({ logs: [], unlogged: [], defaulters: [], alerts: [], shops: [], fines: [] });
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [logs, unlogged, defaulters, alerts, shops] = await Promise.all([
+        // First Sync Fines for defaulters (3-day rule)
+        await axios.post('/api/fines/sync');
+
+        const [logs, unlogged, defaulters, alerts, shops, fines] = await Promise.all([
           axios.get('/api/wastelogs'),
           axios.get('/api/wastelogs/unlogged'),
           axios.get('/api/wastelogs/defaulters'),
           axios.get('/api/alerts'),
-          axios.get('/api/shopkeepers')
+          axios.get('/api/shopkeepers'),
+          axios.get('/api/fines')
         ]);
         setData({ 
           logs: logs.data, 
           unlogged: unlogged.data, 
           defaulters: defaulters.data, 
           alerts: alerts.data,
-          shops: shops.data
+          shops: shops.data,
+          fines: fines.data
         });
       } catch (err) {
         console.error('Error fetching admin overview', err);
@@ -42,7 +47,7 @@ const AdminOverview = () => {
 
   // REAL DATA CALCULATIONS
   const processedMetrics = useMemo(() => {
-    if (!data.logs.length) return { 
+    if (!data.logs || !data.logs.length) return { 
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         zones: [
             { name: 'Sector 01', status: 'Optimal', color: 'emerald' },
@@ -55,7 +60,8 @@ const AdminOverview = () => {
         weeklyStreamData: Array(7).fill(0),
         velocity: '0%',
         compliance: '0%',
-        mean: 0
+        mean: 0,
+        totalPendingFines: 0
     };
 
     // 7-Day Weekly Distribution
@@ -125,6 +131,10 @@ const AdminOverview = () => {
         return { name, status, color, count: zoneData[name].total };
     }).sort((a, b) => b.count - a.count).slice(0, 5);
 
+    const totalPendingFines = data.fines
+        .filter(f => f.status === 'Pending')
+        .reduce((acc, curr) => acc + curr.amount, 0);
+
     return { 
         stream, 
         velocity: `${velocity}%`, 
@@ -138,14 +148,15 @@ const AdminOverview = () => {
             { name: 'Sector 07', status: 'Delayed', color: 'amber' },
             { name: 'Sector 12', status: 'Critical', color: 'rose' },
             { name: 'Mumbai West', status: 'Optimal', color: 'emerald' },
-        ]
+        ],
+        totalPendingFines
     };
   }, [data]);
 
   const stats = [
     { label: 'Total Logs', count: data.logs.length, color: 'emerald', icon: <FileText size={20} />, trend: 'LIVE', path: '/admin/reports' },
-    { label: 'Unlogged Shops', count: data.unlogged.length, color: 'amber', icon: <Users size={20} />, trend: 'WAIT', path: '/admin/shops?view=unlogged' },
     { label: 'Defaulters', count: data.defaulters.length, color: 'rose', icon: <AlertCircle size={20} />, trend: 'CRITICAL', path: '/admin/shops?view=defaulters' },
+    { label: 'Pending Fines', count: data.fines.filter(f => f.status === 'Pending').length, color: 'rose', icon: <ShieldCheck size={20} />, trend: 'PENALTY', path: '/admin/shops?view=fines' },
     { label: 'Active Alerts', count: data.alerts.length, color: 'blue', icon: <Activity size={20} />, trend: 'LIVE', path: '/admin/alerts' },
   ];
 
@@ -338,7 +349,7 @@ const AdminOverview = () => {
                 {[
                     { l: 'Mean Daily Load (Collection)', v: `${processedMetrics.mean} Pts`, p: `${Math.min((processedMetrics.mean / 50) * 100, 100)}%`, color: 'purple' },
                     { l: 'Daily Collection Velocity', v: processedMetrics.velocity, p: processedMetrics.velocity, color: 'emerald' },
-                    { l: 'Weekly Efficiency Score', v: processedMetrics.compliance, p: processedMetrics.compliance, color: 'blue' },
+                    { l: 'Total Outstanding Penalties', v: `Rs. ${processedMetrics.totalPendingFines}`, p: `${Math.min((processedMetrics.totalPendingFines / 5000) * 100, 100)}%`, color: 'rose' },
                     { l: 'Defaulter Ratio', v: data.shops.length > 0 ? `${Math.round((data.defaulters.length / data.shops.length) * 100)}%` : '0%', p: data.shops.length > 0 ? `${Math.round((data.defaulters.length / data.shops.length) * 100)}%` : '0%', color: 'rose' },
                 ].map(item => (
                     <div key={item.l} className="space-y-3 group cursor-default">

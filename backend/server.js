@@ -3,9 +3,13 @@ const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
+const { initFineCron } = require('./utils/fineCron');
 
 // Connect to database
 connectDB();
+
+// Initialize Cron Jobs
+initFineCron();
 
 const server = http.createServer(app);
 
