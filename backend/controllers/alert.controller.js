@@ -103,14 +103,32 @@ const updateAlertStatus = async (req, res) => {
             if (req.user.role === 'admin' && alert.admin_id && alert.admin_id.toString() !== req.user._id.toString()) {
                 return res.status(403).json({ message: 'Not authorized to manage this alert' });
             }
+            if (req.user.role === 'shopkeeper') {
+                if (alert.shop_id.toString() !== req.user._id.toString()) {
+                    return res.status(403).json({ message: 'Unauthorized' });
+                }
+                if (status !== 'Generated') {
+                    return res.status(403).json({ message: 'Shopkeepers can only reopen alerts' });
+                }
+            }
+
             alert.status = status;
-            if (req.body.resolution_message) {
+            
+            // If shopkeeper relodges/reopens the ticket, update timestamp and clear resolution
+            if (status === 'Generated') {
+                alert.timestamp = Date.now();
+                alert.resolution_message = '';
+            } else if (req.body.resolution_message !== undefined) {
                 alert.resolution_message = req.body.resolution_message;
             }
+            
             const updatedAlert = await alert.save();
             
             if (status === 'Resolved' && req.io) {
                 req.io.emit('alert_resolved', updatedAlert);
+            } else if (status === 'Generated' && req.io) {
+                // emit reopening event
+                req.io.emit('new_alert', updatedAlert);
             }
 
             res.json(updatedAlert);

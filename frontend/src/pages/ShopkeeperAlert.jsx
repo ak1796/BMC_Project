@@ -145,13 +145,13 @@ const ShopkeeperAlert = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-3"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full text-xs font-semibold font-medium">
           <AlertCircle size={12} /> Emergency Reporting Protocol
         </div>
-        <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">
+        <h1 className="text-4xl font-semibold font-outfit text-[#263238] tracking-tight uppercase">
           Lodge Complaint
         </h1>
-        <p className="text-slate-500 font-medium">
+        <p className="text-[#607D8B] font-medium">
           Scan the QR code on any dustbin to instantly raise an overflow or anomaly alert to the Market Admin.
         </p>
       </motion.header>
@@ -161,24 +161,24 @@ const ShopkeeperAlert = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="flex gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl"
+        className="flex gap-2 p-1.5 bg-white border border-[#E0E0E0] rounded-2xl"
       >
         <button
           onClick={() => setMode('scan')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-semibold font-medium transition-all ${
             mode === 'scan'
-              ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20'
-              : 'text-slate-500 hover:text-white'
+              ? 'bg-[#2E7D32] text-white shadow-lg shadow-[#2E7D32]/20'
+              : 'bg-transparent text-[#607D8B] hover:bg-slate-50 hover:text-[#263238]'
           }`}
         >
           <Camera size={16} /> Scan QR Code
         </button>
         <button
           onClick={() => setMode('manual')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-semibold font-medium transition-all ${
             mode === 'manual'
-              ? 'bg-slate-700 text-white shadow-lg'
-              : 'text-slate-500 hover:text-white'
+              ? 'bg-[#0D47A1] text-white shadow-lg shadow-[#0D47A1]/20'
+              : 'bg-transparent text-[#607D8B] hover:bg-slate-50 hover:text-[#263238]'
           }`}
         >
           <Keyboard size={16} /> Manual Entry
@@ -193,9 +193,9 @@ const ShopkeeperAlert = () => {
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
-            className="glass-card p-4 space-y-4"
+            className="saas-card p-4 space-y-4"
           >
-            <div className="relative rounded-2xl overflow-hidden bg-slate-950 aspect-square max-h-72 mx-auto flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-[#F5F7F6] aspect-square max-h-72 mx-auto flex items-center justify-center">
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
@@ -204,21 +204,21 @@ const ShopkeeperAlert = () => {
               />
               {/* Corners overlay */}
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-emerald-500 rounded-tl-lg" />
-                <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-emerald-500 rounded-tr-lg" />
-                <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-emerald-500 rounded-bl-lg" />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-emerald-500 rounded-br-lg" />
+                <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-[#2E7D32] rounded-tl-lg" />
+                <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-[#2E7D32] rounded-tr-lg" />
+                <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-[#2E7D32] rounded-bl-lg" />
+                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-[#2E7D32] rounded-br-lg" />
                 <motion.div
                   animate={{ y: ['0%', '100%', '0%'] }}
                   transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute left-4 right-4 h-0.5 bg-emerald-500/60 blur-sm"
+                  className="absolute left-4 right-4 h-0.5 bg-[#2E7D32]/60 blur-sm"
                 />
               </div>
             </div>
             {scanError && (
-              <p className="text-center text-xs text-amber-400 font-medium px-4">{scanError}</p>
+              <p className="text-center text-xs text-[#E65100] font-medium px-4">{scanError}</p>
             )}
-            <p className="text-center text-[10px] font-black uppercase tracking-widest text-slate-600">
+            <p className="text-center text-xs font-semibold font-medium text-slate-600">
               Align QR code within the frame
             </p>
           </motion.div>
@@ -231,7 +231,7 @@ const ShopkeeperAlert = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="glass-card p-8 space-y-6"
+            className="saas-card p-8 space-y-6"
           >
             {message && (
               <motion.div
@@ -239,8 +239,8 @@ const ShopkeeperAlert = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className={`flex items-start gap-3 p-4 rounded-2xl text-sm font-medium ${
                   status === 'success'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                    ? 'bg-[#2E7D32]/10 text-[#2E7D32] border border-[#2E7D32]/20'
+                    : 'bg-[#0D47A1]/10 text-[#0D47A1] border border-[#0D47A1]/20'
                 }`}
               >
                 <CheckCircle2 size={18} className="shrink-0 mt-0.5" />
@@ -250,13 +250,13 @@ const ShopkeeperAlert = () => {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">
                   Dustbin / Asset ID <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative group">
                   <QrCode
                     size={18}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-[#2E7D32] transition-colors"
                   />
                   <input
                     type="text"
@@ -267,13 +267,13 @@ const ShopkeeperAlert = () => {
                     onChange={(e) => setDustbinId(e.target.value)}
                   />
                 </div>
-                <p className="text-[10px] text-slate-600 ml-1">
-                  Enter manually or scan the QR on the dustbin. Seeded bin: <span className="text-emerald-500 font-black">SMW-DB-000001</span>
+                <p className="text-xs text-slate-600 ml-1">
+                  Enter manually or scan the QR on the dustbin. Seeded bin: <span className="text-[#2E7D32] font-semibold">SMW-DB-000001</span>
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">
                   Incident Description (Optional)
                 </label>
                 <textarea
@@ -295,7 +295,7 @@ const ShopkeeperAlert = () => {
                 ) : (
                   <>
                     <Send size={18} />
-                    <span className="text-sm font-black uppercase tracking-[0.3em]">Lodge Alert to Office</span>
+                    <span className="text-sm font-semibold uppercase tracking-[0.3em]">Lodge Alert to Office</span>
                   </>
                 )}
               </button>
@@ -311,7 +311,7 @@ const ShopkeeperAlert = () => {
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
-            className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-emerald-500 text-slate-950 rounded-2xl font-black text-sm shadow-2xl shadow-emerald-500/40 z-50"
+            className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-[#2E7D32] text-[#263238] rounded-2xl font-semibold text-sm shadow-2xl shadow-emerald-500/40 z-50"
           >
             <CheckCircle2 size={20} /> Alert sent to Market Admin!
           </motion.div>
@@ -321,7 +321,7 @@ const ShopkeeperAlert = () => {
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
-            className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-rose-500 text-white rounded-2xl font-black text-sm shadow-2xl shadow-rose-500/40 z-50"
+            className="fixed bottom-8 right-8 flex items-center gap-3 px-6 py-4 bg-rose-500 text-[#263238] rounded-2xl font-semibold text-sm shadow-2xl shadow-rose-500/40 z-50"
           >
             <AlertCircle size={20} /> {message}
           </motion.div>
@@ -335,47 +335,47 @@ const ShopkeeperAlert = () => {
         transition={{ delay: 0.2 }}
         className="mt-12 space-y-6"
       >
-         <h2 className="text-xl font-black font-outfit uppercase tracking-widest text-slate-200 border-b border-white/5 pb-4">
+         <h2 className="text-xl font-semibold font-outfit font-medium text-[#263238] border-b border-[#E0E0E0] pb-4">
             Your Complaint History
          </h2>
          
          <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2 pb-10">
             {fetchingAlerts ? (
-                <div className="flex justify-center p-8"><Loader2 className="animate-spin text-emerald-500" size={32} /></div>
+                <div className="flex justify-center p-8"><Loader2 className="animate-spin text-[#2E7D32]" size={32} /></div>
             ) : alerts.length === 0 ? (
-                <div className="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-xs glass-card">
+                <div className="p-8 text-center text-[#607D8B] font-bold font-medium text-xs saas-card">
                     No complaints lodged yet.
                 </div>
             ) : (
                 alerts.map(alert => (
-                    <div key={alert._id} className="glass-card p-6 border-l-[4px] relative overflow-hidden transition-all group" style={{ borderColor: alert.status === 'Resolved' ? '#10b981' : '#3b82f6' }}>
+                    <div key={alert._id} className="saas-card p-6 border-l-[4px] relative overflow-hidden transition-all group" style={{ borderColor: alert.status === 'Resolved' ? '#10b981' : '#3b82f6' }}>
                         <div className="flex flex-wrap justify-between items-start gap-4 relative z-10">
                             <div className="flex-1 space-y-2">
                                 <div className="flex items-center gap-3">
-                                    <h3 className="font-black text-white uppercase tracking-wider text-sm">
+                                    <h3 className="font-semibold text-[#263238] uppercase tracking-wider text-sm">
                                         Ticket #{alert._id.slice(-6).toUpperCase()}
                                     </h3>
-                                    <span className={`px-2.5 py-1 rounded-md text-[9px] font-black tracking-widest border uppercase ${
-                                        alert.status === 'Resolved' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                                    <span className={`px-2.5 py-1 rounded-md text-xs font-semibold tracking-widest border uppercase ${
+                                        alert.status === 'Resolved' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
                                     }`}>
                                         {alert.status}
                                     </span>
                                     {alert.comments?.includes('BULKY') && (
-                                        <span className="px-2 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md text-[9px] font-black tracking-widest uppercase">
+                                        <span className="px-2 py-1 bg-[#E65100]/10 text-[#E65100] border border-[#E65100]/20 rounded-md text-xs font-semibold tracking-widest uppercase">
                                             Bulky Request
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-xs font-bold text-slate-400">BIN: <span className="text-slate-300">{alert.dustbin_id?.dustbin_id || 'N/A'}</span></p>
-                                <p className="text-sm text-slate-300 mt-2 bg-slate-900/50 p-3 rounded-xl border border-white/5">
+                                <p className="text-xs font-bold text-[#607D8B]">BIN: <span className="text-[#607D8B]">{alert.dustbin_id?.dustbin_id || 'N/A'}</span></p>
+                                <p className="text-sm text-[#607D8B] mt-2 bg-white/50 p-3 rounded-xl border border-[#E0E0E0]">
                                     {alert.comments || 'No description provided.'}
                                 </p>
                             </div>
                             
                             <div className="text-right">
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Logged On</p>
-                                <p className="text-xs font-black text-slate-300">{new Date(alert.timestamp).toLocaleDateString()}</p>
-                                <p className="text-[10px] text-slate-500">{new Date(alert.timestamp).toLocaleTimeString()}</p>
+                                <p className="text-xs font-bold text-[#607D8B] font-medium">Logged On</p>
+                                <p className="text-xs font-semibold text-[#607D8B]">{new Date(alert.timestamp).toLocaleDateString()}</p>
+                                <p className="text-xs text-[#607D8B]">{new Date(alert.timestamp).toLocaleTimeString()}</p>
                             </div>
                         </div>
 
@@ -385,13 +385,13 @@ const ShopkeeperAlert = () => {
                                 <motion.div 
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}
-                                    className="mt-4 pt-4 border-t border-white/5 relative z-10"
+                                    className="mt-4 pt-4 border-t border-[#E0E0E0] relative z-10"
                                 >
-                                    <div className="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-xl flex items-start gap-3">
-                                        <CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={18} />
+                                    <div className="bg-[#2E7D32]/5 border border-[#2E7D32]/10 p-4 rounded-xl flex items-start gap-3">
+                                        <CheckCircle2 className="text-[#2E7D32] shrink-0 mt-0.5" size={18} />
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500/70 mb-1">Admin Resolution / ETA</p>
-                                            <p className="text-sm font-bold text-emerald-400 leading-relaxed">{alert.resolution_message}</p>
+                                            <p className="text-xs font-semibold font-medium text-[#2E7D32]/70 mb-1">Admin Resolution / ETA</p>
+                                            <p className="text-sm font-bold text-[#2E7D32] leading-relaxed">{alert.resolution_message}</p>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -400,7 +400,7 @@ const ShopkeeperAlert = () => {
                         
                         {/* Glow effect for resolved cards */}
                         {alert.status === 'Resolved' && (
-                            <div className="absolute inset-0 bg-emerald-500/[0.02] pointer-events-none" />
+                            <div className="absolute inset-0 bg-[#2E7D32]/[0.02] pointer-events-none" />
                         )}
                     </div>
                 ))

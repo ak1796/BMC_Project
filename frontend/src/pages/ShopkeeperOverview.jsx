@@ -146,19 +146,19 @@ const ShopkeeperOverview = () => {
         className="flex flex-col md:flex-row md:items-center justify-between gap-6"
       >
         <div className="space-y-1">
-          <h1 className="text-4xl font-black font-outfit tracking-tight text-white capitalize">
+          <h1 className="text-4xl font-semibold font-outfit tracking-tight text-[#263238] capitalize">
             Shopkeeper Dashboard
           </h1>
-          <p className="text-slate-500 font-medium tracking-wide">Manage your daily waste compliance and pickup logistics.</p>
+          <p className="text-[#607D8B] font-medium tracking-wide">Manage your daily waste compliance and pickup logistics.</p>
         </div>
         <button 
           onClick={() => setShowLogForm(true)}
           className="btn-primary group flex items-center gap-3 px-8 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
         >
-          <div className="p-1 bg-slate-950/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
+          <div className="p-1 bg-[#F5F7F6]/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
             <Plus size={20} className="stroke-[3px]" />
           </div>
-          <span className="text-sm font-black uppercase tracking-widest">Add Waste Entry</span>
+          <span className="text-sm font-semibold font-medium">Add Waste Entry</span>
         </button>
       </motion.header>
 
@@ -171,18 +171,18 @@ const ShopkeeperOverview = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ y: -5, scale: 1.02 }}
-              className={`glass-card p-8 border-l-[6px] border-${stat.color}-500 group relative overflow-hidden active:scale-95 transition-all`}
+              className={`saas-card p-8 border-l-[6px] border-${stat.color}-500 group relative overflow-hidden active:scale-95 transition-all`}
             >
                <div className="flex items-center justify-between relative z-10">
                   <div>
-                     <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">{stat.label}</p>
-                     <p className="text-4xl font-black font-outfit text-white group-hover:scale-110 transition-transform origin-left duration-500">{stat.val}</p>
+                     <p className="text-sm font-semibold font-medium text-[#607D8B] mb-2">{stat.label}</p>
+                     <p className="text-4xl font-semibold font-outfit text-[#263238] group-hover:scale-110 transition-transform origin-left duration-500">{stat.val}</p>
                   </div>
                   <div className={`p-4 rounded-2xl bg-${stat.color}-500/10 text-${stat.color}-500 border border-${stat.color}-500/20`}>
                      {stat.icon}
                   </div>
                </div>
-               <div className={`absolute bottom-0 right-0 w-24 h-24 bg-${stat.color}-500/5 blur-3xl pointer-events-none group-hover:bg-${stat.color}-500/10 transition-colors`} />
+               <div className={`absolute bottom-0 right-0 w-24 h-24 bg-${stat.color}-500/5  pointer-events-none group-hover:bg-${stat.color}-500/10 transition-colors`} />
             </motion.div>
           </Link>
         ))}
@@ -191,70 +191,70 @@ const ShopkeeperOverview = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
          <section className="xl:col-span-2 space-y-6">
             <div className="flex items-center justify-between px-2">
-               <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200">Recent Waste Logs</h3>
-               <Link to="/shopkeeper/history" className="text-xs font-black text-emerald-500 hover:text-emerald-400 flex items-center gap-2 tracking-widest uppercase">
+               <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238]">Recent Waste Logs</h3>
+               <Link to="/shopkeeper/history" className="text-xs font-semibold text-[#2E7D32] hover:text-[#2E7D32] flex items-center gap-2 tracking-widest uppercase">
                   View Full History <ArrowRight size={14} />
                </Link>
             </div>
             
-            <div className="glass-card divide-y divide-white/5 overflow-hidden">
+            <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden">
                {logs.slice(0, 5).map((log, idx) => (
                   <motion.div 
                     key={log._id} 
                     initial={{ opacity: 0 }} 
                     animate={{ opacity: 1 }} 
                     transition={{ delay: 0.3 + idx * 0.1 }}
-                    className="p-6 flex items-center justify-between hover:bg-white/[0.02] group transition-all"
+                    className="p-6 flex items-center justify-between hover:bg-slate-50 group transition-all"
                   >
                      <div className="flex items-center gap-6">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black border transition-all duration-500 group-hover:scale-110 ${
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-semibold border transition-all duration-500 group-hover:scale-110 ${
                            log.waste_type === 'Wet' 
-                             ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
-                             : 'bg-blue-500/10 text-blue-500 border-blue-500/20'
+                             ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' 
+                             : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
                         }`}>
                            {log.waste_type[0]}
                         </div>
                         <div>
-                           <p className="font-bold text-slate-100 text-lg">{log.waste_type} Waste • {log.no_of_bags} Bags</p>
-                           <div className="flex items-center gap-3 mt-1.5 font-bold text-[10px] uppercase tracking-widest text-slate-600">
+                           <p className="font-bold text-[#263238] text-lg">{log.waste_type} Waste • {log.no_of_bags} Bags</p>
+                           <div className="flex items-center gap-3 mt-1.5 font-bold text-xs font-medium text-slate-600">
                              <span className="flex items-center gap-1.5"><Clock size={12} /> {new Date(log.timestamp).toLocaleTimeString()}</span>
-                             <span className="w-1 h-1 bg-slate-800 rounded-full" />
+                             <span className="w-1 h-1 bg-slate-100 rounded-full" />
                              <span>Bin: {log.dustbin_id?.dustbin_id || 'XN-001'}</span>
                            </div>
                         </div>
                      </div>
                      <div className="flex flex-col items-end gap-2">
                         {log.bulky_request && (
-                           <span className="px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-lg text-[10px] font-black tracking-widest uppercase">
+                           <span className="px-3 py-1 bg-[#E65100]/10 text-[#E65100] border border-[#E65100]/20 rounded-lg text-xs font-semibold tracking-widest uppercase">
                               Bulky Action
                            </span>
                         )}
-                        <span className="text-[10px] font-bold text-slate-700">{new Date(log.timestamp).toLocaleDateString()}</span>
+                        <span className="text-xs font-bold text-slate-700">{new Date(log.timestamp).toLocaleDateString()}</span>
                      </div>
                   </motion.div>
                ))}
                {logs.length === 0 && (
                   <div className="p-20 text-center space-y-4">
-                     <div className="w-16 h-16 bg-slate-900 border border-slate-800 rounded-[2rem] flex items-center justify-center mx-auto text-slate-700 animate-bounce">
+                     <div className="w-16 h-16 bg-white border border-[#E0E0E0] rounded-[2rem] flex items-center justify-center mx-auto text-slate-700 animate-bounce">
                         <ClipboardList size={32} />
                      </div>
-                     <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-xs">No active data stream</p>
+                     <p className="text-[#607D8B] font-bold font-medium text-xs">No active data stream</p>
                   </div>
                )}
             </div>
          </section>
 
          <section className="space-y-6">
-            <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200 px-2">Performance Summary</h3>
-            <div className="glass-card p-8 bg-gradient-to-br from-slate-900 to-slate-950 border-white/5 relative overflow-hidden h-[400px]">
+            <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238] px-2">Performance Summary</h3>
+            <div className="saas-card p-8 bg-white border-[#E0E0E0] relative overflow-hidden h-[400px]">
                <div className="relative z-10 space-y-6">
                   <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center border border-emerald-500/20">
+                     <div className="w-12 h-12 bg-[#2E7D32]/10 text-[#2E7D32] rounded-2xl flex items-center justify-center border border-[#2E7D32]/20">
                         <BarChart3 size={24} />
                      </div>
                      <div>
-                        <p className="text-xs font-black text-slate-500 uppercase tracking-widest">Personal Tracking</p>
-                        <p className="text-lg font-bold text-white uppercase">Compliance Matrix</p>
+                        <p className="text-xs font-semibold text-[#607D8B] font-medium">Personal Tracking</p>
+                        <p className="text-lg font-bold text-[#263238] uppercase">Compliance Matrix</p>
                      </div>
                   </div>
                   
@@ -265,11 +265,11 @@ const ShopkeeperOverview = () => {
                         { l: 'System Trust Score', v: '9.8', c: 'emerald' }
                      ].map(item => (
                         <div key={item.l} className="space-y-2">
-                           <div className="flex justify-between text-[10px] font-black uppercase text-slate-600 tracking-tighter">
+                           <div className="flex justify-between text-xs font-semibold uppercase text-slate-600 tracking-tighter">
                               <span>{item.l}</span>
                               <span className={`text-${item.c}-500`}>{item.v}</span>
                            </div>
-                           <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-white/[0.02]">
+                           <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-white/[0.02]">
                               <motion.div 
                                 initial={{ width: 0 }} 
                                 animate={{ width: item.v.includes('%') ? item.v : '90%' }} 
@@ -281,48 +281,48 @@ const ShopkeeperOverview = () => {
                      ))}
                   </div>
 
-                  <div className="mt-6 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl flex items-center gap-4">
-                     <TrendingUp className="text-emerald-500" size={24} />
-                     <p className="text-[11px] font-medium text-slate-400">Your compliance is <span className="text-emerald-500 font-black">Top 5%</span> in this sector.</p>
+                  <div className="mt-6 p-4 bg-[#2E7D32]/5 border border-[#2E7D32]/10 rounded-2xl flex items-center gap-4">
+                     <TrendingUp className="text-[#2E7D32]" size={24} />
+                     <p className="text-sm font-medium text-[#607D8B]">Your compliance is <span className="text-[#2E7D32] font-semibold">Top 5%</span> in this sector.</p>
                   </div>
                </div>
-               <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/[0.03] blur-[80px] pointer-events-none" />
+               <div className="absolute top-0 right-0 w-48 h-48 bg-[#2E7D32]/[0.03]  pointer-events-none" />
             </div>
 
             {/* NEW TICKET AND ETA SECTION */}
             {/* FINES SECTION */}
             <div className="pt-6">
                 <div className="flex items-center justify-between px-2 mb-6">
-                    <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200">Penalties & Dues</h3>
+                    <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238]">Penalties & Dues</h3>
                     <button 
                         onClick={() => setShowStatement(true)}
-                        className="text-[10px] font-black text-emerald-500 hover:text-emerald-400 uppercase tracking-widest flex items-center gap-2"
+                        className="text-xs font-semibold text-[#2E7D32] hover:text-[#2E7D32] font-medium flex items-center gap-2"
                     >
                         View Statement <ClipboardList size={14} />
                     </button>
                 </div>
                 
-                <div className="glass-card divide-y divide-white/5 overflow-hidden">
+                <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden">
                     {fines.filter(f => f.status === 'Pending').length === 0 ? (
-                        <div className="p-12 text-center bg-emerald-500/5 items-center flex flex-col gap-3">
-                            <ShieldCheck size={32} className="text-emerald-500/30" />
-                            <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">No outstanding penalties.</p>
+                        <div className="p-12 text-center bg-[#2E7D32]/5 items-center flex flex-col gap-3">
+                            <ShieldCheck size={32} className="text-[#2E7D32]/30" />
+                            <p className="text-[#607D8B] text-xs font-semibold font-medium">No outstanding penalties.</p>
                         </div>
                     ) : (
                         fines.filter(f => f.status === 'Pending').map(f => (
                             <div key={f._id} className="p-6 hover:bg-rose-500/[0.02] transition-colors relative group">
                                 <div className="flex justify-between items-start mb-3">
                                     <div>
-                                        <h4 className="text-sm font-black uppercase tracking-tight text-rose-500">
+                                        <h4 className="text-sm font-semibold uppercase tracking-tight text-rose-500">
                                             Rs. {f.amount} Penalty
                                         </h4>
-                                        <p className="text-[10px] font-bold text-slate-500 mt-1 uppercase tracking-widest">Issued: {new Date(f.issuedAt).toLocaleDateString()}</p>
+                                        <p className="text-xs font-bold text-[#607D8B] mt-1 font-medium">Issued: {new Date(f.issuedAt).toLocaleDateString()}</p>
                                     </div>
-                                    <span className="px-2 py-1 rounded text-[8px] font-black tracking-widest bg-rose-500/20 text-rose-500 animate-pulse">
+                                    <span className="px-2 py-1 rounded text-[8px] font-semibold tracking-widest bg-rose-500/20 text-rose-500 animate-pulse">
                                         OVERDUE
                                     </span>
                                 </div>
-                                <p className="text-xs font-bold text-slate-300 leading-relaxed">{f.reason}</p>
+                                <p className="text-xs font-bold text-[#607D8B] leading-relaxed">{f.reason}</p>
                                 
                                 <button 
                                     onClick={async () => {
@@ -333,7 +333,7 @@ const ShopkeeperOverview = () => {
                                             alert('Payment failed');
                                         }
                                     }}
-                                    className="mt-4 w-full py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all"
+                                    className="mt-4 w-full py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-[#263238] border border-rose-500/20 rounded-xl text-xs font-semibold font-medium transition-all"
                                 >
                                     Settle Penalty Now
                                 </button>
@@ -348,47 +348,47 @@ const ShopkeeperOverview = () => {
                 {showStatement && (
                     <motion.div 
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-xl"
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F5F7F6]/90 backdrop-blur-xl"
                         onClick={() => setShowStatement(false)}
                     >
                         <motion.div 
                             initial={{ scale: 0.9, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                            className="w-full max-w-2xl bg-slate-900 border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden"
+                            className="w-full max-w-2xl bg-white border border-[#E0E0E0] rounded-[2.5rem] shadow-2xl overflow-hidden"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="p-8 border-b border-white/5 flex justify-between items-center bg-slate-800/50">
+                            <div className="p-8 border-b border-[#E0E0E0] flex justify-between items-center bg-slate-100/50">
                                 <div>
-                                    <h3 className="text-2xl font-black font-outfit uppercase tracking-tight text-white">Financial Statement</h3>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Transaction History & Penalties</p>
+                                    <h3 className="text-2xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Financial Statement</h3>
+                                    <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Transaction History & Penalties</p>
                                 </div>
-                                <button onClick={() => setShowStatement(false)} className="w-10 h-10 flex items-center justify-center bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">✕</button>
+                                <button onClick={() => setShowStatement(false)} className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-xl text-[#607D8B] hover:text-[#263238] transition-all">✕</button>
                             </div>
                             
                             <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar space-y-4">
                                 {fines.length === 0 ? (
                                     <div className="py-20 text-center opacity-30">
                                         <ClipboardList size={48} className="mx-auto mb-4" />
-                                        <p className="font-black uppercase tracking-widest text-xs">No transactions recorded</p>
+                                        <p className="font-semibold font-medium text-xs">No transactions recorded</p>
                                     </div>
                                 ) : (
                                     fines.map(f => (
-                                        <div key={f._id} className="p-5 bg-slate-950/50 rounded-2xl border border-white/5 flex items-center justify-between group">
+                                        <div key={f._id} className="p-5 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] flex items-center justify-between group">
                                             <div className="flex items-center gap-5">
                                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                                                    f.status === 'Paid' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                                    f.status === 'Paid' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
                                                 }`}>
                                                     <AlertCircle size={20} />
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-slate-100 text-sm">{f.reason}</p>
-                                                    <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mt-1">
+                                                    <p className="font-bold text-[#263238] text-sm">{f.reason}</p>
+                                                    <p className="text-xs font-semibold text-slate-600 font-medium mt-1">
                                                         {new Date(f.issuedAt).toLocaleDateString()} • {f.status === 'Paid' ? 'SETTLED' : 'PENDING'}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-lg font-black text-white font-outfit tracking-tighter">Rs. {f.amount}</p>
-                                                <p className={`text-[8px] font-black uppercase tracking-widest ${f.status === 'Paid' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                                <p className="text-lg font-semibold text-[#263238] font-outfit tracking-tighter">Rs. {f.amount}</p>
+                                                <p className={`text-[8px] font-semibold font-medium ${f.status === 'Paid' ? 'text-[#2E7D32]' : 'text-rose-500'}`}>
                                                     {f.status === 'Paid' ? 'Transaction Success' : 'Awaiting Payment'}
                                                 </p>
                                             </div>
@@ -397,16 +397,16 @@ const ShopkeeperOverview = () => {
                                 )}
                             </div>
                             
-                            <div className="p-8 bg-slate-800/30 border-t border-white/5 flex justify-between items-center">
+                            <div className="p-8 bg-slate-100/30 border-t border-[#E0E0E0] flex justify-between items-center">
                                 <div>
-                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Total Outstanding</p>
-                                    <p className="text-2xl font-black text-rose-500 font-outfit tracking-tighter">
+                                    <p className="text-xs font-semibold text-[#607D8B] font-medium">Total Outstanding</p>
+                                    <p className="text-2xl font-semibold text-rose-500 font-outfit tracking-tighter">
                                         Rs. {fines.filter(f => f.status === 'Pending').reduce((acc, curr) => acc + curr.amount, 0)}
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Lifetime Settled</p>
-                                    <p className="text-2xl font-black text-emerald-500 font-outfit tracking-tighter">
+                                    <p className="text-xs font-semibold text-[#607D8B] font-medium">Lifetime Settled</p>
+                                    <p className="text-2xl font-semibold text-[#2E7D32] font-outfit tracking-tighter">
                                         Rs. {fines.filter(f => f.status === 'Paid').reduce((acc, curr) => acc + curr.amount, 0)}
                                     </p>
                                 </div>
@@ -417,29 +417,29 @@ const ShopkeeperOverview = () => {
             </AnimatePresence>
 
             <div className="pt-6">
-                <h3 className="text-lg font-black font-outfit uppercase tracking-wider text-slate-200 px-2 mb-6">Service Tickets & ETA</h3>
-                <div className="glass-card divide-y divide-white/5 overflow-hidden max-h-[400px] overflow-y-auto">
+                <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238] px-2 mb-6">Service Tickets & ETA</h3>
+                <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden max-h-[400px] overflow-y-auto">
                     {alerts.length === 0 ? (
-                        <div className="p-12 text-center text-slate-500 text-xs font-bold uppercase tracking-widest">No active tickets.</div>
+                        <div className="p-12 text-center text-[#607D8B] text-xs font-bold font-medium">No active tickets.</div>
                     ) : (
                         alerts.map(a => (
-                            <div key={a._id || a.alert_id} className="p-5 hover:bg-white/[0.02] transition-colors relative group">
+                            <div key={a._id || a.alert_id} className="p-5 hover:bg-slate-50 transition-colors relative group">
                                 <div className="flex justify-between items-start mb-2">
-                                    <h4 className="text-xs font-black uppercase text-white truncate max-w-[200px]" title={a.comments}>
+                                    <h4 className="text-xs font-semibold uppercase text-[#263238] truncate max-w-[200px]" title={a.comments}>
                                         {a.comments?.includes('BULKY') ? 'Bulky Waste Request' : 'Emergency Report'}
                                     </h4>
-                                    <span className={`px-2 py-1 rounded text-[8px] font-black tracking-widest ${
-                                        a.status === 'Resolved' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-blue-500/20 text-blue-500'
+                                    <span className={`px-2 py-1 rounded text-[8px] font-semibold tracking-widest ${
+                                        a.status === 'Resolved' ? 'bg-[#2E7D32]/20 text-[#2E7D32]' : 'bg-[#0D47A1]/20 text-[#0D47A1]'
                                     }`}>
                                         {a.status === 'Resolved' ? 'RESOLVED' : 'QUEUE'}
                                     </span>
                                 </div>
-                                <p className="text-[10px] text-slate-400 mb-3 truncate">{a.comments || 'No description provided.'}</p>
+                                <p className="text-xs text-[#607D8B] mb-3 truncate">{a.comments || 'No description provided.'}</p>
                                 
                                 {a.status === 'Resolved' && a.resolution_message && (
-                                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-emerald-500/70 mb-1">Admin ETA Message</p>
-                                        <p className="text-xs font-bold text-emerald-400">{a.resolution_message}</p>
+                                    <div className="p-3 bg-[#2E7D32]/10 border border-[#2E7D32]/20 rounded-xl">
+                                        <p className="text-xs font-semibold font-medium text-[#2E7D32]/70 mb-1">Admin ETA Message</p>
+                                        <p className="text-xs font-bold text-[#2E7D32]">{a.resolution_message}</p>
                                     </div>
                                 )}
                             </div>
@@ -455,23 +455,23 @@ const ShopkeeperOverview = () => {
         {showLogForm && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F5F7F6]/80 backdrop-blur-xl"
             onClick={() => setShowLogForm(false)}
           >
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 40 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="w-full max-w-xl bg-slate-900 border border-white/10 rounded-[2.5rem] shadow-[0_0_100px_rgba(0,0,0,0.5)] overflow-hidden"
+              className="w-full max-w-xl bg-white border border-[#E0E0E0] rounded-[2.5rem] shadow-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-8 border-b border-white/5 flex justify-between items-center bg-gradient-to-r from-emerald-500/5 to-transparent">
+              <div className="p-8 border-b border-[#E0E0E0] flex justify-between items-center bg-gradient-to-r from-emerald-500/5 to-transparent">
                 <div>
-                   <h3 className="text-2xl font-black font-outfit uppercase tracking-tight text-white">Add Waste Entry</h3>
-                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Waste Collection Form</p>
+                   <h3 className="text-2xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Add Waste Entry</h3>
+                   <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Waste Collection Form</p>
                 </div>
                 <button 
                   onClick={() => setShowLogForm(false)} 
-                  className="w-12 h-12 flex items-center justify-center bg-slate-800 text-slate-500 hover:text-white rounded-2xl transition-all active:scale-90"
+                  className="w-12 h-12 flex items-center justify-center bg-slate-100 text-[#607D8B] hover:text-[#263238] rounded-2xl transition-all active:scale-90"
                 >
                   ✕
                 </button>
@@ -480,12 +480,11 @@ const ShopkeeperOverview = () => {
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Dustbin ID</label>
+                       <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Dustbin ID</label>
                        <div className="relative group">
-                          <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors z-10" size={20} />
+                          <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within/input:text-[#2E7D32] transition-colors z-10" size={20} />
                           <select 
-                            style={{ backgroundColor: '#0f172a' }}
-                            className="w-full !pl-12 pr-10 h-14 text-sm font-bold tracking-widest appearance-none outline-none border border-white/5 rounded-2xl focus:border-emerald-500/50 transition-colors"
+                            className="w-full !pl-12 pr-10 h-14 text-sm font-bold tracking-widest appearance-none outline-none border border-[#E0E0E0] rounded-2xl focus:border-[#2E7D32]/50 transition-colors"
                             value={formData.dustbin_id} 
                             required
                             onChange={(e) => setFormData({...formData, dustbin_id: e.target.value})}
@@ -505,9 +504,9 @@ const ShopkeeperOverview = () => {
                        </div>
                     </div>
                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Waste Type</label>
+                      <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Waste Type</label>
                       <select 
-                        className="w-full h-14 text-sm font-bold tracking-widest appearance-none" 
+                        className="w-full h-14 text-sm font-bold tracking-widest appearance-none outline-none" 
                         value={formData.waste_type} onChange={(e) => setFormData({...formData, waste_type: e.target.value})}
                       >
                         <option>Dry</option><option>Wet</option><option>Electronics</option>
@@ -516,25 +515,25 @@ const ShopkeeperOverview = () => {
                 </div>
 
                 <div className="space-y-2">
-                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Number of Bags</label>
+                   <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Number of Bags</label>
                    <input 
-                     type="number" min="1" required className="w-full h-14 text-sm font-black tracking-widest"
+                     type="number" min="1" required className="w-full h-14 text-sm font-semibold tracking-widest"
                      value={formData.no_of_bags} onChange={(e) => setFormData({...formData, no_of_bags: e.target.value === '' ? '' : parseInt(e.target.value)})}
                    />
                 </div>
 
                 <motion.label 
                    whileTap={{ scale: 0.98 }}
-                   className="flex items-center gap-4 p-5 bg-slate-800/30 rounded-3xl cursor-pointer border border-white/[0.03] hover:border-amber-500/20 transition-all group"
+                   className="flex items-center gap-4 p-5 bg-slate-100/30 rounded-3xl cursor-pointer border border-[#E0E0E0] hover:border-[#E65100]/20 transition-all group"
                 >
                   <input 
                      type="checkbox" checked={formData.bulky_request} 
                      onChange={(e) => setFormData({...formData, bulky_request: e.target.checked})}
-                     className="w-6 h-6 rounded-lg bg-slate-900 border-slate-700 checked:bg-amber-500 transition-all"
+                     className="w-6 h-6 rounded-lg bg-white border-[#E0E0E0] checked:bg-[#E65100] transition-all"
                   />
                   <div>
-                     <p className="text-sm font-black uppercase tracking-widest text-slate-200 group-hover:text-amber-500 transition-colors">Request Bulky Waste Pickup</p>
-                     <p className="text-[10px] font-medium text-slate-500 mt-0.5">Special pickup for large items</p>
+                     <p className="text-sm font-semibold font-medium text-[#263238] group-hover:text-[#E65100] transition-colors">Request Bulky Waste Pickup</p>
+                     <p className="text-xs font-medium text-[#607D8B] mt-0.5">Special pickup for large items</p>
                   </div>
                 </motion.label>
 
@@ -549,7 +548,7 @@ const ShopkeeperOverview = () => {
                     ) : (
                       <>
                         <Send size={20} className="stroke-[2.5px] transition-transform group-hover/submit:translate-x-1 group-hover/submit:-translate-y-1" />
-                        <span className="text-sm font-black uppercase tracking-[0.3em]">Submit Entry</span>
+                        <span className="text-sm font-semibold uppercase tracking-[0.3em]">Submit Entry</span>
                       </>
                     )}
                   </button>

@@ -28,14 +28,14 @@ const AdminReports = () => {
       id: 'logged', 
       title: 'Waste Collection Report', 
       desc: 'Detailed list of all successful waste collection entries for the selected period.',
-      icon: <Activity className="text-emerald-500" size={40} />,
+      icon: <Activity className="text-[#2E7D32]" size={40} />,
       gradient: 'from-emerald-500/10 to-transparent'
     },
     { 
       id: 'unlogged', 
       title: 'Defaulters List', 
       desc: 'List of shops that have failed to log waste for 3 consecutive days.',
-      icon: <ShieldCheck className="text-blue-500" size={40} />,
+      icon: <ShieldCheck className="text-[#0D47A1]" size={40} />,
       gradient: 'from-blue-500/10 to-transparent'
     }
   ];
@@ -47,11 +47,11 @@ const AdminReports = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-4"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-900 border border-white/5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-2 shadow-inner">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-[#E0E0E0] rounded-full text-xs font-semibold uppercase tracking-[0.3em] text-[#607D8B] mb-2 shadow-inner">
            <FileText size={14} /> Reports
         </div>
-        <h1 className="text-5xl font-black font-outfit text-white tracking-tighter uppercase">System Reports</h1>
-        <p className="text-slate-500 font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
+        <h1 className="text-5xl font-semibold font-outfit text-[#263238] tracking-tighter uppercase">System Reports</h1>
+        <p className="text-[#607D8B] font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
           Generate and download Excel reports for waste collection and compliance monitoring.
         </p>
       </motion.header>
@@ -64,18 +64,18 @@ const AdminReports = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 + idx * 0.1 }}
             whileHover={{ y: -8, scale: 1.01 }}
-            className={`glass-card p-10 flex flex-col items-center text-center space-y-8 bg-gradient-to-br ${report.gradient} border-white/[0.03] group transition-all duration-500 overflow-hidden relative`}
+            className={`saas-card p-10 flex flex-col items-center text-center space-y-8 bg-gradient-to-br ${report.gradient} border-[#E0E0E0] group transition-all duration-500 overflow-hidden relative`}
           >
-            <div className="p-6 bg-slate-900 rounded-[2.5rem] border border-white/5 shadow-2xl relative z-10 group-hover:rotate-12 transition-transform duration-700">
+            <div className="p-6 bg-white rounded-[2.5rem] border border-[#E0E0E0] shadow-2xl relative z-10 group-hover:rotate-12 transition-transform duration-700">
               {report.icon}
             </div>
             <div className="relative z-10 space-y-3">
-              <h3 className="text-2xl font-black text-white font-outfit uppercase tracking-tight">{report.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto font-medium">{report.desc}</p>
+              <h3 className="text-2xl font-semibold text-[#263238] font-outfit uppercase tracking-tight">{report.title}</h3>
+              <p className="text-[#607D8B] text-sm leading-relaxed max-w-xs mx-auto font-medium">{report.desc}</p>
             </div>
             
             <div className="flex gap-4 w-full pt-6 relative z-10">
-              <div className="flex-1 flex items-center justify-center gap-3 bg-slate-950/50 rounded-2xl px-4 py-4 text-[10px] font-black text-slate-600 border border-white/[0.02] shadow-inner uppercase tracking-widest">
+              <div className="flex-1 flex items-center justify-center gap-3 bg-[#F5F7F6]/50 rounded-2xl px-4 py-4 text-xs font-semibold text-slate-600 border border-white/[0.02] shadow-inner font-medium">
                 <Calendar size={16} /> Operative: Today
               </div>
               <button 
@@ -89,12 +89,12 @@ const AdminReports = () => {
                 ) : (
                   <>
                     <Download size={20} className="stroke-[2.5px] transition-transform group-hover/btn:translate-y-1" />
-                    <span className="text-xs font-black uppercase tracking-[0.2em] relative z-10">Download Excel</span>
+                    <span className="text-xs font-semibold font-medium relative z-10">Download Excel</span>
                   </>
                 )}
               </button>
             </div>
-            <div className="absolute top-0 right-0 w-48 h-48 bg-white/[0.01] blur-3xl pointer-events-none -mr-24 -mt-24" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/[0.01]  pointer-events-none -mr-24 -mt-24" />
           </motion.div>
         ))}
       </div>
@@ -103,19 +103,19 @@ const AdminReports = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="glass-card p-10 border-blue-500/10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden group"
+        className="saas-card p-10 border-[#0D47A1]/10 flex flex-col md:flex-row items-center gap-10 relative overflow-hidden group"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-        <div className="w-20 h-20 rounded-[2rem] bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20 shadow-inner group-hover:scale-110 transition-transform duration-500 shrink-0 relative z-10">
+        <div className="w-20 h-20 rounded-[2rem] bg-[#0D47A1]/10 text-[#0D47A1] flex items-center justify-center border border-[#0D47A1]/20 shadow-inner group-hover:scale-110 transition-transform duration-500 shrink-0 relative z-10">
            <Info size={40} strokeWidth={1.5} />
         </div>
         <div className="space-y-4 flex-1 relative z-10">
-          <h4 className="text-xl font-black font-outfit uppercase tracking-tight text-blue-200">Report Information</h4>
-          <p className="text-sm text-slate-500 font-medium leading-relaxed">
+          <h4 className="text-xl font-semibold font-outfit uppercase tracking-tight text-[#0D47A1]-200">Report Information</h4>
+          <p className="text-sm text-[#607D8B] font-medium leading-relaxed">
             Reports are generated in real-time. For large datasets, the download may take a few seconds. All reports include shop details, timestamps, and collection status.
           </p>
-          <div className="flex items-center gap-3 text-[9px] font-black text-blue-500/40 uppercase tracking-[0.3em] pt-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+          <div className="flex items-center gap-3 text-xs font-semibold text-[#0D47A1]/40 uppercase tracking-[0.3em] pt-2">
+            <div className="w-2 h-2 bg-[#0D47A1] rounded-full animate-ping" />
             LIVE LINK ACQUISITION: SUCCESSFUL
           </div>
         </div>

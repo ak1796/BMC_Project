@@ -165,8 +165,8 @@ const AdminOverview = () => {
   if (loading) {
      return (
         <div className="p-32 text-center space-y-6">
-           <div className="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full mx-auto animate-spin" />
-           <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Establishing Secure Connection...</p>
+           <div className="w-16 h-16 border-4 border-[#E0E0E0] border-t-emerald-500 rounded-full mx-auto animate-spin" />
+           <p className="text-[#607D8B] text-xs font-semibold uppercase tracking-[0.4em]">Establishing Secure Connection...</p>
         </div>
      );
   }
@@ -177,84 +177,82 @@ const AdminOverview = () => {
       <motion.section 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden glass-card p-10 border-white/[0.03] bg-gradient-to-br from-slate-900 to-slate-950"
+        className="relative overflow-hidden saas-card p-10 border-[#E0E0E0] bg-white"
       >
         <div className="absolute top-0 right-0 p-8 flex flex-col items-end">
-            <div className="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-2xl border border-white/5 shadow-inner">
-                <Clock size={16} className="text-emerald-500" />
-                <span className="text-[11px] font-black text-slate-100 uppercase tracking-[0.1em]">{currentTime.toLocaleTimeString()}</span>
+            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl border border-[#E0E0E0] shadow-sm">
+                <Clock size={16} className="text-[#2E7D32]" />
+                <span className="text-sm font-semibold text-[#263238]">{currentTime.toLocaleTimeString()}</span>
             </div>
-            <div className="mt-3 flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-lg text-[9px] font-black uppercase tracking-widest">
+            <div className="mt-3 flex items-center gap-2 px-3 py-1 bg-[#2E7D32]/10 text-[#2E7D32] border border-[#2E7D32]/20 rounded-lg text-xs font-semibold font-medium">
                 <Radio size={10} className="animate-pulse" /> Data Stream Verified
             </div>
         </div>
 
         <div className="relative z-10 space-y-6 max-w-2xl">
           <div className="flex items-center gap-4">
-             <div className="w-20 h-20 rounded-[2.5rem] bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shadow-2xl group cursor-default">
-                <ShieldCheck size={40} className="group-hover:rotate-12 transition-transform duration-500" />
+             <div className="w-16 h-16 rounded-xl bg-[#2E7D32]/10 border border-[#2E7D32]/20 flex items-center justify-center text-[#2E7D32] shadow-sm">
+                <ShieldCheck size={32} />
              </div>
              <div>
-                <h1 className="text-4xl font-black font-outfit text-white tracking-tighter uppercase leading-none mb-2">Command Center</h1>
-                <p className="text-slate-500 font-medium tracking-wide">Smart Market Waste Management • Oversight Dashboard v4.1</p>
+                <h1 className="text-3xl font-bold font-inter text-[#263238] tracking-tight leading-none mb-2">Command Center</h1>
+                <p className="text-[#607D8B] font-medium tracking-wide text-sm">Smart Market Waste Management • Oversight Dashboard</p>
              </div>
           </div>
           
           <div className="flex flex-wrap gap-4 pt-4">
-             <div className="flex items-center gap-3 px-6 py-4 bg-slate-950/50 rounded-2xl border border-white/5 shadow-inner">
-                <Server size={18} className="text-blue-500" />
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
+                <Server size={18} className="text-[#0D47A1]" />
                 <div>
-                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">System Status</p>
-                   <p className="text-sm font-bold text-slate-100 mt-1">Operational</p>
+                   <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">System Status</p>
+                   <p className="text-sm font-bold text-[#263238] mt-1">Operational</p>
                 </div>
              </div>
-             <div className="flex items-center gap-3 px-6 py-4 bg-slate-950/50 rounded-2xl border border-white/5 shadow-inner">
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
                 <Globe size={18} className="text-purple-500" />
                 <div>
-                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Zonal Registry</p>
-                   <p className="text-sm font-bold text-slate-100 mt-1">{data.shops.length} Units</p>
+                   <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">Zonal Registry</p>
+                   <p className="text-sm font-bold text-[#263238] mt-1">{data.shops.length} Units</p>
                 </div>
              </div>
-             <div className="flex items-center gap-3 px-6 py-4 bg-slate-950/50 rounded-2xl border border-white/5 shadow-inner">
-                <Zap size={18} className="text-amber-500" />
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
+                <Zap size={18} className="text-[#E65100]" />
                 <div>
-                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Today's Load</p>
-                   <p className="text-sm font-bold text-slate-100 mt-1">{data.logs.filter(l => new Date(l.timestamp).setHours(0,0,0,0) === new Date().setHours(0,0,0,0)).length} Entries</p>
+                   <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">Today's Load</p>
+                   <p className="text-sm font-bold text-[#263238] mt-1">{data.logs.filter(l => new Date(l.timestamp).setHours(0,0,0,0) === new Date().setHours(0,0,0,0)).length} Entries</p>
                 </div>
              </div>
           </div>
         </div>
         
-        {/* Decorative elements */}
-        <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-emerald-500/5 blur-[100px] pointer-events-none" />
-        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/5 to-transparent opaicty-20" />
+        {/* No decorative elements */}
       </motion.section>
 
-      {/* Stats Grid - Premiumized with navigation */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (
           <Link to={stat.path} key={stat.label} className="block">
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + idx * 0.1 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className={`glass-card p-8 border-t-[4px] border-${stat.color}-500 group relative overflow-hidden flex flex-col justify-between h-full hover:bg-white/[0.02] transition-colors`}
+              transition={{ delay: 0.1 + idx * 0.05 }}
+              whileHover={{ y: -4 }}
+              className={`saas-card p-6 border-t-2 border-${stat.color}-500 group relative overflow-hidden flex flex-col justify-between h-full`}
             >
               <div className="flex justify-between items-start relative z-10">
-                <div className={`p-4 rounded-3xl bg-${stat.color}-500/10 text-${stat.color}-500 border border-${stat.color}-500/20 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-${stat.color}-500/10`}>
+                <div className={`p-2.5 rounded-xl bg-${stat.color}-500/10 text-${stat.color}-500`}>
                     {stat.icon}
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                    <TrendingUp className={`text-${stat.color}-500 group-hover:animate-bounce transition-all`} size={16} />
-                    <span className={`text-[10px] font-black text-${stat.color}-500 shadow-xl tracking-widest uppercase bg-${stat.color}-500/10 px-2 py-0.5 rounded-md border border-${stat.color}-500/20`}>
+                    <TrendingUp className={`text-${stat.color}-500`} size={14} />
+                    <span className={`text-xs font-bold text-${stat.color}-500 tracking-wider uppercase bg-${stat.color}-500/10 px-2 py-0.5 rounded border border-${stat.color}-500/20`}>
                         {stat.trend}
                     </span>
                 </div>
               </div>
-              <div className="mt-8 relative z-10">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">{stat.label}</p>
-                <h4 className="text-4xl font-black text-white font-outfit tracking-tighter leading-none">{stat.count}</h4>
+              <div className="mt-6 relative z-10">
+                <p className="text-xs font-medium text-[#607D8B] mb-1">{stat.label}</p>
+                <h4 className="text-3xl font-bold text-[#263238] tracking-tight leading-none">{stat.count}</h4>
               </div>
               
               {/* Real Data Sparkline */}
@@ -270,7 +268,8 @@ const AdminOverview = () => {
                   ))}
               </div>
 
-              <div className={`absolute -right-10 -bottom-10 w-32 h-32 bg-${stat.color}-500/5 blur-[60px] pointer-events-none transition-all duration-1000 group-hover:scale-150`} />
+
+
             </motion.div>
           </Link>
         ))}
@@ -282,47 +281,47 @@ const AdminOverview = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
-            className="xl:col-span-2 glass-card p-8 space-y-8"
+            className="xl:col-span-2 saas-card p-8 space-y-8"
          >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl border border-blue-500/20 shadow-inner">
+                    <div className="p-3 bg-[#0D47A1]/10 text-[#0D47A1] rounded-2xl border border-[#0D47A1]/20 shadow-inner">
                         <Map size={24} />
                     </div>
                     <div>
-                        <h3 className="text-xl font-black font-outfit uppercase tracking-tight text-white">Live Zone Monitor</h3>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Real-time sector compliance tracking</p>
+                        <h3 className="text-xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Live Zone Monitor</h3>
+                        <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Real-time sector compliance tracking</p>
                     </div>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {zones.map((zone, i) => (
-                    <div key={zone.name} className="p-5 bg-slate-950/40 rounded-2xl border border-white/5 flex flex-col items-center text-center group hover:bg-slate-900 transition-all cursor-default">
-                        <div className={`w-3 h-3 rounded-full bg-${zone.color}-500 mb-4 shadow-[0_0_15px_rgba(16,185,129,0.2)] ${zone.color === 'emerald' ? 'animate-pulse' : ''}`} />
-                        <p className="text-[11px] font-black text-slate-100 uppercase tracking-tighter mb-1">{zone.name}</p>
-                        <p className={`text-[9px] font-black uppercase tracking-widest text-${zone.color}-500/60 group-hover:text-${zone.color}-500 transition-colors`}>{zone.status}</p>
+                    <div key={zone.name} className="p-4 bg-white/50 rounded-xl border border-[#E0E0E0]/80 flex flex-col items-center text-center">
+                        <div className={`w-2.5 h-2.5 rounded-full bg-${zone.color}-500 mb-3`} />
+                        <p className="text-sm font-semibold text-[#263238] mb-1">{zone.name}</p>
+                        <p className={`text-xs font-medium text-${zone.color}-400`}>{zone.status}</p>
                     </div>
                 ))}
             </div>
 
             <div className="space-y-6 pt-4">
-                <div className="flex items-center justify-between text-[11px] font-black uppercase text-slate-500 tracking-widest px-2">
+                <div className="flex items-center justify-between text-sm font-semibold uppercase text-[#607D8B] tracking-widest px-2">
                     <span>Weekly Activity (Mon - Sun Distribution)</span>
-                    <span className="text-emerald-500">Live Feedback</span>
+                    <span className="text-[#2E7D32]">Live Feedback</span>
                 </div>
-                <div className="h-44 glass-card bg-slate-950/50 p-6 flex items-end justify-between items-stretch gap-4 transition-all">
+                <div className="h-44 saas-card bg-[#F5F7F6]/50 p-6 flex items-end justify-between items-stretch gap-4 transition-all">
                     {processedMetrics.stream.map((h, i) => (
                         <div key={i} className="flex-1 flex flex-col justify-end gap-2 group/bar">
                             <motion.div 
                                 initial={{ height: 0 }} animate={{ height: `${Math.max(h, 5)}%` }}
                                 transition={{ delay: 0.8 + i * 0.05 }}
                                 title={`${processedMetrics.weeklyStreamData[i]} Logs`}
-                                className={`rounded-t-xl bg-gradient-to-t transition-all cursor-pointer ${
-                                    h > 70 ? 'from-emerald-500/40 to-emerald-400 group-hover:scale-x-110 shadow-[0_0_20px_rgba(16,185,129,0.2)]' : 'from-slate-800 to-slate-700'
+                                className={`rounded-t flex-1 bg-gradient-to-t transition-all cursor-pointer ${
+                                    h > 70 ? 'from-emerald-600/40 to-emerald-500' : 'from-[#E0E0E0] to-slate-300'
                                 }`}
                             />
-                            <span className="text-[9px] font-black text-slate-500 text-center uppercase tracking-tighter group-hover/bar:text-white transition-colors">{processedMetrics.days[i]}</span>
+                            <span className="text-xs font-semibold text-[#607D8B] text-center uppercase tracking-tighter group-hover/bar:text-[#263238] transition-colors">{processedMetrics.days[i]}</span>
                         </div>
                     ))}
                 </div>
@@ -333,15 +332,15 @@ const AdminOverview = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8 }}
-            className="glass-card p-8 bg-gradient-to-b from-slate-900 to-slate-950 flex flex-col gap-8 shadow-[0_0_100px_rgba(16,185,129,0.02)]"
+            className="saas-card p-8 bg-[#F5F7F6] border border-[#E0E0E0] flex flex-col gap-8 shadow-[0_0_100px_rgba(16,185,129,0.02)]"
          >
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl border border-purple-500/20 shadow-inner">
                     <BarChart3 size={24} />
                 </div>
                 <div>
-                    <h3 className="text-xl font-black font-outfit uppercase tracking-tight text-white">Efficiency Data</h3>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Real-time aggregate calculations</p>
+                    <h3 className="text-xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Efficiency Data</h3>
+                    <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Real-time aggregate calculations</p>
                 </div>
             </div>
 
@@ -354,10 +353,10 @@ const AdminOverview = () => {
                 ].map(item => (
                     <div key={item.l} className="space-y-3 group cursor-default">
                         <div className="flex justify-between items-end">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter group-hover:text-white transition-colors">{item.l}</span>
-                            <span className={`text-[12px] font-black text-${item.color}-500`}>{item.v}</span>
+                            <span className="text-xs font-semibold text-[#607D8B] uppercase tracking-tighter group-hover:text-[#263238] transition-colors">{item.l}</span>
+                            <span className={`text-sm font-semibold text-${item.color}-500`}>{item.v}</span>
                         </div>
-                        <div className="h-2 w-full bg-slate-950 rounded-full border border-white/[0.03] overflow-hidden">
+                        <div className="h-2 w-full bg-[#F5F7F6] rounded-full border border-[#E0E0E0] overflow-hidden">
                             <motion.div 
                                 initial={{ width: 0 }} animate={{ width: item.p }}
                                 transition={{ delay: 1.2, duration: 1.5 }}
@@ -368,13 +367,13 @@ const AdminOverview = () => {
                 ))}
             </div>
 
-            <div className="flex-1 mt-6 p-6 border border-white/5 bg-white/[0.02] rounded-3xl flex flex-col items-center justify-center text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-slate-600 shadow-inner">
+            <div className="flex-1 mt-6 p-6 border border-[#E0E0E0] bg-white/30 rounded-2xl flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-12 h-12 rounded-full bg-slate-100/80 flex items-center justify-center text-[#607D8B]">
                     <Globe size={32} />
                 </div>
                 <div>
-                   <p className="text-sm font-black text-white uppercase tracking-tight">Active Operation</p>
-                   <p className="text-[11px] font-medium text-slate-500 mt-1">All data points are synchronized with the central database.</p>
+                   <p className="text-sm font-semibold text-[#263238] uppercase tracking-tight">Active Operation</p>
+                   <p className="text-sm font-medium text-[#607D8B] mt-1">All data points are synchronized with the central database.</p>
                 </div>
             </div>
          </motion.div>

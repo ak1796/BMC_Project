@@ -70,22 +70,21 @@ const Layout = ({ children }) => {
   const links = user?.role === 'admin' ? adminLinks : shopkeeperLinks;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex font-inter overflow-x-hidden">
-      {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-72 bg-slate-900/50 backdrop-blur-xl border-r border-slate-800/50 p-6 fixed inset-y-0 z-50">
+    <div className="min-h-screen bg-[#F5F7F6] text-[#263238] flex font-inter overflow-x-hidden">
+      <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-[#E0E0E0]/60 p-5 fixed inset-y-0 z-50">
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3 px-2 mb-10"
+          className="flex items-center gap-3 px-2 mb-8"
         >
-          <div className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center border border-emerald-500/20 shadow-inner">
-            <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
+          <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center bg-[#2E7D32]/10 text-[#2E7D32] font-bold">
+            <img src={logo} alt="BMC Logo" className="w-8 h-8 object-contain" />
           </div>
           <div>
-            <span className="text-xl font-bold font-outfit uppercase tracking-tighter bg-gradient-to-br from-white to-slate-500 bg-clip-text text-transparent">
+            <span className="text-lg font-bold font-inter text-[#263238] uppercase tracking-tight">
               Smart Market
             </span>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">Waste Management System</p>
+            <p className="text-xs text-[#607D8B] font-medium">Waste Management</p>
           </div>
         </motion.div>
 
@@ -100,29 +99,23 @@ const Layout = ({ children }) => {
               <NavLink
                 to={link.to}
                 className={({ isActive }) => `
-                  flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group relative
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative
                   ${isActive 
-                    ? link.eco 
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
-                      : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/10 shadow-lg shadow-emerald-500/5' 
-                    : link.highlight
-                      ? 'text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 border border-transparent hover:border-rose-500/20'
-                      : link.eco 
-                        ? 'text-emerald-600/60 hover:bg-emerald-500/5 hover:text-emerald-500 border border-transparent hover:border-emerald-500/10'
-                        : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}
+                    ? 'bg-[#2E7D32]/10 text-[#2E7D32] font-semibold' 
+                    : 'text-[#607D8B] hover:bg-slate-100/50 hover:text-[#263238] font-medium'}
                 `}
               >
                 {link.icon}
                 <span className="font-semibold text-sm tracking-wide">{link.label}</span>
                 {link.badge && (
-                  <span className="ml-auto bg-rose-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-rose-500/20">
+                  <span className="ml-auto bg-[#2E7D32]/90 text-[#263238] text-xs font-semibold px-2 py-0.5 rounded-full">
                     {link.badge}
                   </span>
                 )}
                 {location.pathname === link.to && (
                   <motion.div 
                     layoutId="sidebar-active"
-                    className="absolute left-0 w-1 h-6 bg-emerald-500 rounded-r-full"
+                    className="absolute left-0 w-1 h-6 bg-[#2E7D32] rounded-r-full"
                   />
                 )}
               </NavLink>
@@ -130,18 +123,18 @@ const Layout = ({ children }) => {
           ))}
         </nav>
 
-        <div className="pt-6 border-t border-slate-800/50 space-y-4">
-          <div className="px-4 py-3 bg-slate-800/30 rounded-2xl flex items-center gap-3 border border-slate-800/50 hover:bg-slate-800/50 transition-colors cursor-default">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500/20 to-blue-500/20 text-emerald-500 flex items-center justify-center font-bold text-xs border border-emerald-500/20 shadow-inner">
+        <div className="pt-6 mt-6 border-t border-[#E0E0E0]/60 space-y-4">
+          <div className="px-3 py-3 bg-white rounded-xl flex items-center gap-3 border border-[#E0E0E0]/60 hover:bg-slate-100/50 transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-[#2E7D32]/90 text-[#263238] flex items-center justify-center font-bold text-xs shadow-sm">
               {user?.username?.charAt(0) || user?.shop_id?.charAt(0) || 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-slate-200 truncate">{user?.shop_name || user?.username}</p>
-              <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest leading-tight">{user?.role}</p>
+              <p className="text-sm font-semibold text-[#263238] truncate">{user?.shop_name || user?.username}</p>
+              <p className="text-xs text-[#607D8B] capitalize">{user?.role}</p>
             </div>
             <button 
               onClick={handleLogout}
-              className="p-2 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all active:scale-90"
+              className="p-1.5 text-[#607D8B] hover:text-rose-500 hover:bg-rose-500/10 rounded-md transition-all active:scale-95"
             >
               <LogOut size={16} />
             </button>
@@ -150,13 +143,10 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 lg:ml-72 min-h-screen relative">
-        {/* Subtle Background Glows */}
-        <div className="fixed top-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-500/5 blur-[120px] pointer-events-none" />
-        <div className="fixed bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-blue-500/5 blur-[120px] pointer-events-none" />
-
+      <main className="flex-1 lg:ml-72 min-h-screen relative bg-[#F5F7F6]">
+        
         {/* Mobile Header */}
-        <header className="lg:hidden flex items-center justify-between p-5 bg-slate-900 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-lg bg-opacity-80">
+        <header className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-[#E0E0E0]/60 sticky top-0 z-40">
           <div className="flex items-center gap-3">
              <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center">
                 <img src={logo} alt="BMC Logo" className="w-full h-full object-cover" />
@@ -165,7 +155,7 @@ const Layout = ({ children }) => {
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
-            className="p-2.5 bg-slate-800 text-slate-300 rounded-xl active:scale-95 transition-all shadow-lg"
+            className="p-2.5 bg-slate-100 text-[#607D8B] rounded-xl active:scale-95 transition-all shadow-lg"
           >
             {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -193,16 +183,16 @@ const Layout = ({ children }) => {
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
-              className="fixed bottom-8 right-8 z-[100] flex items-start gap-4 p-5 bg-emerald-950 border border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-500/20 max-w-sm"
+              className="fixed bottom-8 right-8 z-[100] flex items-start gap-4 p-5 bg-white border border-[#2E7D32]/30 rounded-2xl shadow-2xl shadow-emerald-500/20 max-w-sm"
             >
-              <div className="w-10 h-10 shrink-0 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 bg-[#2E7D32]/20 text-[#2E7D32] rounded-full flex items-center justify-center">
                 <CheckCircle2 size={24} />
               </div>
               <div className="space-y-1">
-                <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500">Alert Resolved</h4>
-                <p className="text-xs font-semibold text-emerald-100 leading-relaxed">{resolutionToast}</p>
+                <h4 className="text-sm font-semibold font-medium text-[#2E7D32]">Alert Resolved</h4>
+                <p className="text-xs font-semibold text-[#263238] leading-relaxed">{resolutionToast}</p>
               </div>
-              <button onClick={() => setResolutionToast(null)} className="absolute top-4 right-4 text-emerald-500/50 hover:text-emerald-400">
+              <button onClick={() => setResolutionToast(null)} className="absolute top-4 right-4 text-[#2E7D32]/50 hover:text-[#2E7D32]">
                 <X size={16} />
               </button>
             </motion.div>
@@ -219,14 +209,14 @@ const Layout = ({ children }) => {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[60] lg:hidden"
+              className="fixed inset-0 bg-[#F5F7F6]/60 backdrop-blur-md z-[60] lg:hidden"
             />
             <motion.div 
               initial={{ x: '100%', skewX: 5 }} 
               animate={{ x: 0, skewX: 0 }} 
               exit={{ x: '100%', skewX: 5 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 w-[85%] max-w-xs bg-slate-900 z-[70] p-8 lg:hidden border-l border-slate-800 shadow-2xl flex flex-col"
+              className="fixed inset-y-0 right-0 w-[85%] max-w-xs bg-white z-[70] p-8 lg:hidden border-l border-[#E0E0E0] shadow-2xl flex flex-col"
             >
               <div className="mb-10 flex flex-col items-center">
                 <div className="w-20 h-20 rounded-3xl overflow-hidden flex items-center justify-center mb-4">
@@ -243,7 +233,7 @@ const Layout = ({ children }) => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={({ isActive }) => `
                       flex items-center gap-4 px-6 py-4 rounded-2xl text-lg font-bold transition-all duration-300
-                      ${isActive ? 'bg-emerald-500 text-slate-950 shadow-xl shadow-emerald-500/20' : 'text-slate-400 hover:text-white'}
+                      ${isActive ? 'bg-[#2E7D32] text-slate-950 shadow-xl shadow-emerald-500/20' : 'text-[#607D8B] hover:text-[#263238]'}
                     `}
                   >
                     {link.icon}
@@ -252,10 +242,10 @@ const Layout = ({ children }) => {
                 ))}
               </nav>
 
-              <div className="pt-8 border-t border-slate-800">
+              <div className="pt-8 border-t border-[#E0E0E0]">
                 <button 
                   onClick={handleLogout} 
-                  className="flex items-center gap-4 px-6 py-4 text-rose-500 font-black text-lg w-full bg-rose-500/5 rounded-2xl active:bg-rose-500/10 transition-colors"
+                  className="flex items-center gap-4 px-6 py-4 text-rose-500 font-semibold text-lg w-full bg-rose-500/5 rounded-2xl active:bg-rose-500/10 transition-colors"
                 >
                   <LogOut size={24} /> Logout
                 </button>

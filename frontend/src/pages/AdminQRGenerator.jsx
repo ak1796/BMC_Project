@@ -139,7 +139,7 @@ const AdminQRGenerator = () => {
         scale: 2, 
         useCORS: true, 
         logging: false,
-        backgroundColor: '#ffffff',
+        backgroundcolor: '#263238',
         onclone: (clonedDoc) => {
           // Nuclear Option: Remove all Tailwind v4 styles from the clone to prevent parsing oklch
           clonedDoc.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => el.remove());
@@ -202,7 +202,7 @@ const AdminQRGenerator = () => {
       const canvas = await html2canvas(element, { 
         scale: 2, 
         useCORS: true, 
-        backgroundColor: '#ffffff',
+        backgroundcolor: '#263238',
         onclone: (clonedDoc) => {
           clonedDoc.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => el.remove());
           const clonedElement = clonedDoc.querySelector('.qr-card-to-export');
@@ -259,21 +259,21 @@ const AdminQRGenerator = () => {
       >
         <div className="space-y-2">
           <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.2)' }} 
-               className="inline-flex items-center gap-2 px-3 py-1 border rounded-full text-[10px] font-black uppercase tracking-widest mb-2">
+               className="inline-flex items-center gap-2 px-3 py-1 border rounded-full text-xs font-semibold font-medium mb-2">
              <Leaf size={12} fill="currentColor" /> Sustainability Initiative
           </div>
-          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">QR Generator</h1>
+          <h1 className="text-4xl font-semibold font-outfit text-[#263238] tracking-tight uppercase">QR Generator</h1>
           <p style={{ color: '#64748b' }} className="text-sm font-medium tracking-wide">Generate smart identification tags for sustainable city infrastructure.</p>
         </div>
         
         <div className="flex gap-4">
-           <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.1)' }} className="glass-card px-6 py-3 flex items-center gap-4 border">
+           <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.1)' }} className="saas-card px-6 py-3 flex items-center gap-4 border">
               <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', color: '#10b981' }} className="w-10 h-10 rounded-full flex items-center justify-center">
                  <Globe size={20} />
               </div>
               <div>
-                 <p style={{ color: '#64748b' }} className="text-[10px] font-black tracking-widest uppercase mb-1">Eco-System</p>
-                 <p className="text-sm font-bold text-white leading-none">Active Monitor</p>
+                 <p style={{ color: '#64748b' }} className="text-xs font-semibold tracking-widest uppercase mb-1">Eco-System</p>
+                 <p className="text-sm font-bold text-[#263238] leading-none">Active Monitor</p>
               </div>
            </div>
         </div>
@@ -284,49 +284,49 @@ const AdminQRGenerator = () => {
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="glass-card p-10 space-y-8 bg-gradient-to-br from-slate-900 to-emerald-950/20"
+          className="saas-card p-10 space-y-8 bg-white border border-[#E0E0E0]"
         >
           <div className="flex items-center gap-4 mb-2">
-             <PlusCircle className="text-emerald-500" size={24} />
-             <h3 className="text-xl font-black font-outfit uppercase text-white tracking-tight">Deploy New Node</h3>
+             <PlusCircle className="text-[#2E7D32]" size={24} />
+             <h3 className="text-xl font-semibold font-outfit uppercase text-[#263238] tracking-tight">Deploy New Node</h3>
           </div>
 
           <form onSubmit={handleGenerate} className="space-y-6">
             <div className="space-y-2">
-              <label style={{ color: '#64748b' }} className="text-[10px] font-black uppercase tracking-widest ml-1">Asset Identifier (Dustbin ID)</label>
+              <label style={{ color: '#64748b' }} className="text-xs font-semibold font-medium ml-1">Asset Identifier (Dustbin ID)</label>
               <div className="relative group flex gap-2">
                  <div className="relative flex-1">
                     <Trash2 className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#475569' }} size={20} />
                     <input 
                       type="text" 
                       readOnly
-                      style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#34d399' }}
-                      className="w-full !pl-12 h-14 text-sm font-black tracking-[0.2em] cursor-default"
+                      style={{ backgroundColor: '#ffffff', borderColor: '#E0E0E0', color: '#2E7D32' }}
+                      className="w-full !pl-12 h-14 text-sm font-semibold tracking-[0.2em] cursor-default rounded-xl border"
                       value={formData.dustbin_id}
                     />
                  </div>
                  <button 
                    type="button"
                    onClick={generateRandomID}
-                   style={{ backgroundColor: '#1e293b', borderColor: 'rgba(255,255,255,0.05)' }}
-                   className="px-4 hover:bg-slate-700 rounded-xl border transition-colors group/refresh"
+                   style={{ backgroundColor: '#F5F7F6', borderColor: '#E0E0E0' }}
+                   className="px-4 hover:bg-slate-200 rounded-xl border transition-colors group/refresh"
                    title="Generate New ID"
                  >
-                    <RotateCcw size={18} style={{ color: '#94a3b8' }} className="group-hover/refresh:rotate-180 transition-transform duration-500" />
+                    <RotateCcw size={18} style={{ color: '#64748b' }} className="group-hover/refresh:rotate-180 transition-transform duration-500" />
                  </button>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label style={{ color: '#64748b' }} className="text-[10px] font-black uppercase tracking-widest ml-1">Geographic Placement (Location)</label>
+              <label style={{ color: '#64748b' }} className="text-xs font-semibold font-medium ml-1">Geographic Placement (Location)</label>
               <div className="relative group">
                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#475569' }} size={20} />
                  <input 
                    type="text" 
                    required
-                   style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#ffffff' }}
+                   style={{ backgroundColor: '#ffffff', borderColor: '#E0E0E0', color: '#263238' }}
                    placeholder="e.g. Sector 21, Navi Mumbai"
-                   className="w-full !pl-12 h-14 text-sm font-bold tracking-widest placeholder:text-slate-700"
+                   className="w-full !pl-12 h-14 text-sm font-bold tracking-widest placeholder:text-slate-500 rounded-xl border"
                    value={formData.location}
                    onChange={(e) => setFormData({...formData, location: e.target.value})}
                  />
@@ -334,10 +334,10 @@ const AdminQRGenerator = () => {
             </div>
 
             <div className="space-y-2">
-               <label style={{ color: '#64748b' }} className="text-[10px] font-black uppercase tracking-widest ml-1">Assigned BMC / Admin</label>
+               <label style={{ color: '#64748b' }} className="text-xs font-semibold font-medium ml-1">Assigned BMC / Admin</label>
                <select 
-                 style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#ffffff' }}
-                 className="w-full h-14 px-6 text-sm font-bold tracking-widest appearance-none"
+                 style={{ backgroundColor: '#ffffff', borderColor: '#E0E0E0', color: '#263238' }}
+                 className="w-full h-14 px-6 text-sm font-bold tracking-widest appearance-none rounded-xl border"
                  value={formData.admin_id}
                  required
                  onChange={(e) => setFormData({...formData, admin_id: e.target.value})}
@@ -355,10 +355,10 @@ const AdminQRGenerator = () => {
             </div>
 
             <div className="space-y-2">
-               <label style={{ color: '#64748b' }} className="text-[10px] font-black uppercase tracking-widest ml-1">Administrative Ward</label>
+               <label style={{ color: '#64748b' }} className="text-xs font-semibold font-medium ml-1">Administrative Ward</label>
                <select 
-                 style={{ backgroundColor: '#020617', borderColor: 'rgba(255,255,255,0.05)', color: '#ffffff' }}
-                 className="w-full h-14 px-6 text-sm font-bold tracking-widest appearance-none"
+                 style={{ backgroundColor: '#ffffff', borderColor: '#E0E0E0', color: '#263238' }}
+                 className="w-full h-14 px-6 text-sm font-bold tracking-widest appearance-none rounded-xl border"
                  value={formData.ward}
                  onChange={(e) => setFormData({...formData, ward: e.target.value})}
                >
@@ -370,14 +370,14 @@ const AdminQRGenerator = () => {
               <button 
                 type="submit"
                 disabled={isGenerating}
-                className="w-full h-16 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-slate-950 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-95 group shadow-[0_0_30px_rgba(16,185,129,0.1)] hover:shadow-emerald-500/20"
+                className="w-full h-16 bg-[#2E7D32] hover:bg-[#1B5E20] text-white rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-95 group shadow-lg shadow-[#2E7D32]/20"
               >
                 {isGenerating ? (
                   <Loader2 className="animate-spin" size={24} />
                 ) : (
                   <>
                     <Leaf size={20} className="group-hover:rotate-12 transition-transform" />
-                    <span className="text-sm font-black uppercase tracking-[0.3em]">Generate Eco QR</span>
+                    <span className="text-sm font-semibold uppercase tracking-[0.3em]">Generate Eco QR</span>
                   </>
                 )}
               </button>
@@ -387,8 +387,8 @@ const AdminQRGenerator = () => {
           <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.1)' }} 
                className="p-5 rounded-2xl border">
              <div className="flex gap-4">
-                <Sparkles style={{ color: '#34d399' }} className="shrink-0" size={20} />
-                <p style={{ color: '#94a3b8' }} className="text-[11px] font-medium leading-relaxed italic">
+                <Sparkles style={{ color: '#2E7D32' }} className="shrink-0" size={20} />
+                <p style={{ color: '#64748b' }} className="text-sm font-medium leading-relaxed italic">
                   "Each smart QR enables efficient waste sorting and optimized collection routes, reducing the carbon footprint of city logistics."
                 </p>
              </div>
@@ -402,21 +402,21 @@ const AdminQRGenerator = () => {
           className="space-y-8"
         >
           <div ref={qrRef} 
-               style={{ backgroundColor: '#ffffff', color: '#0f172a' }}
-               className="qr-card-to-export p-10 shadow-[0_0_100px_rgba(16,185,129,0.15)] relative overflow-hidden group rounded-[2rem]"
+               style={{ backgroundColor: '#ffffff', color: '#263238' }}
+               className="qr-card-to-export p-10 border border-[#E0E0E0] shadow-xl relative overflow-hidden group rounded-[2rem]"
           >
              {/* Eco Badge */}
              <div className="absolute top-6 right-6 flex flex-col items-end opacity-40 group-hover:opacity-100 transition-opacity">
                 <div style={{ backgroundColor: '#d1fae5', borderColor: 'rgba(16, 185, 129, 0.2)' }} 
                      className="flex items-center gap-2 px-3 py-1.5 rounded-full border">
                    <Leaf size={14} style={{ color: '#059669' }} />
-                   <span style={{ color: '#047857' }} className="text-[10px] font-black uppercase tracking-widest">Smart Waste Node</span>
+                   <span style={{ color: '#047857' }} className="text-xs font-semibold font-medium">Smart Waste Node</span>
                 </div>
              </div>
 
              <div className="flex flex-col items-center gap-8 py-4 relative z-10">
-                <div style={{ backgroundColor: '#f8fafc', borderColor: 'rgba(16, 185, 129, 0.3)' }} 
-                     className="p-6 border-4 rounded-[3rem] shadow-2xl relative">
+                <div style={{ backgroundColor: '#ffffff', borderColor: '#E0E0E0' }} 
+                     className="p-6 border-4 rounded-[3rem] shadow-lg relative">
                   <QRCodeSVG 
                     value={qrData}
                     size={280}
@@ -427,14 +427,14 @@ const AdminQRGenerator = () => {
                   {/* Small Center Logo */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                      <div style={{ backgroundColor: '#ffffff', borderColor: '#10b981' }} 
-                          className="w-16 h-16 rounded-2xl flex items-center justify-center p-2 shadow-xl border-2">
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center p-2 shadow-sm border-2">
                         <Globe style={{ color: '#059669' }} size={32} />
                      </div>
                   </div>
                 </div>
 
                 <div className="text-center space-y-3">
-                   <h4 style={{ color: '#0f172a' }} className="text-3xl font-black font-outfit uppercase tracking-tighter">
+                   <h4 style={{ color: '#0f172a' }} className="text-3xl font-semibold font-outfit uppercase tracking-tighter">
                       {formData.dustbin_id || "ID PENDING"}
                    </h4>
                    <div className="flex items-center justify-center gap-3">
@@ -446,7 +446,7 @@ const AdminQRGenerator = () => {
                          {formData.location || "Location not assigned"}
                       </span>
                    </div>
-                   <p style={{ color: '#94a3b8' }} className="text-[10px] font-black uppercase tracking-[0.4em] pt-4">
+                   <p style={{ color: '#94a3b8' }} className="text-xs font-semibold uppercase tracking-[0.4em] pt-4">
                       towards a cleaner, greener city
                    </p>
                 </div>
@@ -464,22 +464,22 @@ const AdminQRGenerator = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
              <button 
                onClick={downloadPNG}
-               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.05)' }}
-               className="h-16 rounded-2xl hover:bg-emerald-500/10 text-slate-300 hover:text-emerald-500 border transition-all active:scale-95 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3"
+               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: '#E0E0E0' }}
+               className="h-16 rounded-2xl hover:bg-[#2E7D32]/10 text-[#607D8B] hover:text-[#2E7D32] border transition-all active:scale-95 text-sm font-semibold font-medium flex items-center justify-center gap-3"
              >
                 <Download size={20} /> PNG
              </button>
              <button 
                onClick={downloadPDF}
-               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.05)' }}
-               className="h-16 rounded-2xl hover:bg-blue-500/10 text-slate-300 hover:text-blue-500 border transition-all active:scale-95 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3"
+               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: '#E0E0E0' }}
+               className="h-16 rounded-2xl hover:bg-[#0D47A1]/10 text-[#607D8B] hover:text-[#0D47A1] border transition-all active:scale-95 text-sm font-semibold font-medium flex items-center justify-center gap-3"
              >
                 <FileText size={20} /> PDF
              </button>
              <button 
                onClick={handlePrint}
-               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.05)' }}
-               className="col-span-2 md:col-span-1 h-16 rounded-2xl hover:bg-purple-500/10 text-slate-300 hover:text-purple-500 border transition-all active:scale-95 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-3"
+               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: '#E0E0E0' }}
+               className="col-span-2 md:col-span-1 h-16 rounded-2xl hover:bg-purple-500/10 text-[#607D8B] hover:text-purple-500 border transition-all active:scale-95 text-sm font-semibold font-medium flex items-center justify-center gap-3"
              >
                 <Printer size={20} /> Print
              </button>
@@ -499,8 +499,8 @@ const AdminQRGenerator = () => {
                     <CheckCircle2 size={24} />
                  </div>
                  <div>
-                    <h5 className="font-black text-emerald-500 uppercase tracking-widest text-sm">QR Generated Successfully</h5>
-                    <p style={{ color: '#64748b' }} className="text-[11px] font-medium tracking-wide mt-1">Sustainability node has been established in the digital registry.</p>
+                    <h5 className="font-semibold text-[#2E7D32] font-medium text-sm">QR Generated Successfully</h5>
+                    <p style={{ color: '#64748b' }} className="text-sm font-medium tracking-wide mt-1">Sustainability node has been established in the digital registry.</p>
                  </div>
               </motion.div>
             )}

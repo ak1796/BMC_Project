@@ -24,10 +24,17 @@ const ShopkeeperSettings = () => {
     if (user?.admin_id) {
       axios.get('/api/admins')
         .then(({ data }) => {
-          const found = data.find(a => a._id === user.admin_id || a._id.toString() === user.admin_id?.toString());
-          if (found) setAssignedAdmin(found);
+          const adminIdToMatch = typeof user.admin_id === 'object' ? user.admin_id._id : user.admin_id;
+          const found = data.find(a => a._id === adminIdToMatch || a._id.toString() === adminIdToMatch?.toString() || a._id === user.admin_id);
+          if (found) {
+            setAssignedAdmin(found);
+          } else {
+            setAssignedAdmin({ admin_name: 'No Matching Admin Found', office_location: 'Check DB connection' });
+          }
         })
-        .catch(() => {});
+        .catch(() => {
+          setAssignedAdmin({ admin_name: 'Error Loading Admin', office_location: 'Network Error' });
+        });
     }
   }, [user]);
 
@@ -76,11 +83,11 @@ const ShopkeeperSettings = () => {
         className="flex flex-col md:flex-row md:items-center justify-between gap-8"
       >
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#2E7D32]/10 text-[#2E7D32] border border-[#2E7D32]/20 rounded-full text-xs font-semibold font-medium mb-3">
              <Settings size={12} /> Configuration
           </div>
-          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Profile Settings</h1>
-          <p className="text-slate-500 font-medium tracking-wide">Update your personal identifiers, location, and credentials.</p>
+          <h1 className="text-4xl font-semibold font-outfit text-[#263238] tracking-tight uppercase">Profile Settings</h1>
+          <p className="text-[#607D8B] font-medium tracking-wide">Update your personal identifiers, location, and credentials.</p>
         </div>
       </motion.header>
 
@@ -89,38 +96,38 @@ const ShopkeeperSettings = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="glass-card p-6 border-l-4 border-emerald-500"
+        className="saas-card p-6 border-l-4 border-[#2E7D32]"
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center border border-emerald-500/20">
+          <div className="w-10 h-10 bg-[#2E7D32]/10 text-[#2E7D32] rounded-xl flex items-center justify-center border border-[#2E7D32]/20">
             <ShieldCheck size={20} />
           </div>
           <div>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Assigned Authority</p>
-            <p className="text-sm font-black text-white uppercase tracking-wide">BMC Administrator</p>
+            <p className="text-xs font-semibold text-[#607D8B] font-medium">Assigned Authority</p>
+            <p className="text-sm font-semibold text-[#263238] uppercase tracking-wide">BMC Administrator</p>
           </div>
         </div>
         {assignedAdmin ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Admin Name</p>
+              <p className="text-xs font-semibold text-slate-600 font-medium">Admin Name</p>
               <div className="flex items-center gap-2">
-                <User size={14} className="text-emerald-500" />
-                <p className="text-sm font-bold text-slate-200">{assignedAdmin.admin_name || '—'}</p>
+                <User size={14} className="text-[#2E7D32]" />
+                <p className="text-sm font-bold text-[#263238]">{assignedAdmin.admin_name || '—'}</p>
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Office Location</p>
+              <p className="text-xs font-semibold text-slate-600 font-medium">Office Location</p>
               <div className="flex items-center gap-2">
-                <Building2 size={14} className="text-emerald-500" />
-                <p className="text-sm font-bold text-slate-200">{assignedAdmin.office_location || '—'}</p>
+                <Building2 size={14} className="text-[#2E7D32]" />
+                <p className="text-sm font-bold text-[#263238]">{assignedAdmin.office_location || '—'}</p>
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Contact</p>
+              <p className="text-xs font-semibold text-slate-600 font-medium">Contact</p>
               <div className="flex items-center gap-2">
-                <Phone size={14} className="text-emerald-500" />
-                <p className="text-sm font-bold text-slate-200">{assignedAdmin.contact_number || assignedAdmin.email || '—'}</p>
+                <Phone size={14} className="text-[#2E7D32]" />
+                <p className="text-sm font-bold text-[#263238]">{assignedAdmin.contact_number || assignedAdmin.email || '—'}</p>
               </div>
             </div>
           </div>
@@ -136,7 +143,7 @@ const ShopkeeperSettings = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <form onSubmit={handleSubmit} className="glass-card p-8 lg:p-10 space-y-8 relative overflow-hidden group">
+        <form onSubmit={handleSubmit} className="saas-card p-8 lg:p-10 space-y-8 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
           <AnimatePresence>
@@ -146,7 +153,7 @@ const ShopkeeperSettings = () => {
                 </motion.div>
              )}
              {success && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-4 text-[13px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3">
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="p-4 text-[13px] font-bold text-[#2E7D32] bg-[#2E7D32]/10 border border-[#2E7D32]/30 rounded-2xl flex items-center gap-3">
                    <CheckCircle2 size={18} /> Profile updated successfully!
                 </motion.div>
              )}
@@ -154,83 +161,83 @@ const ShopkeeperSettings = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             <div className="space-y-2 md:col-span-2 mb-2">
-              <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">Assigned Shop ID (Immutable)</label>
+              <label className="text-xs font-semibold text-[#2E7D32] font-medium ml-1">Assigned Shop ID (Immutable)</label>
               <div className="relative group/input">
-                <StoreIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500/70" />
+                <StoreIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2E7D32]/70" />
                 <input
                   type="text"
                   readOnly
                   disabled
                   title="Your unique identification node cannot be manually altered"
                   value={user?.shop_id || 'Authenticating...'}
-                  className="w-full !pl-12 h-14 text-sm font-black tracking-widest bg-emerald-500/5 text-emerald-400 border-emerald-500/30 cursor-not-allowed shadow-inner"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-widest bg-[#2E7D32]/5 text-[#2E7D32] border-[#2E7D32]/30 cursor-not-allowed shadow-inner"
                 />
               </div>
             </div>
 
             <div className="space-y-2 md:col-span-2 mb-2">
-              <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">Shop Username (Immutable)</label>
+              <label className="text-xs font-semibold text-[#2E7D32] font-medium ml-1">Shop Username (Immutable)</label>
               <div className="relative group/input">
-                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500/70" />
+                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#2E7D32]/70" />
                 <input
                   type="text"
                   readOnly
                   disabled
                   value={user?.username || 'Not assigned'}
-                  className="w-full !pl-12 h-14 text-sm font-black tracking-widest bg-emerald-500/5 text-emerald-400 border-emerald-500/30 cursor-not-allowed shadow-inner"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-widest bg-[#2E7D32]/5 text-[#2E7D32] border-[#2E7D32]/30 cursor-not-allowed shadow-inner"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Entity Name (Shop)</label>
+              <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Entity Name (Shop)</label>
               <div className="relative group/input">
-                <StoreIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                <StoreIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                 <input
                   type="text"
                   readOnly
                   disabled
                   placeholder="Retail / Establishment Name"
-                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-slate-900/50 cursor-not-allowed opacity-70"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-white/50 cursor-not-allowed opacity-70"
                   value={formData.shop_name}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Shopkeeper Name</label>
+              <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Shopkeeper Name</label>
               <div className="relative group/input">
-                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                 <input
                   type="text"
                   readOnly
                   disabled
                   placeholder="Full Name"
-                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-slate-900/50 cursor-not-allowed opacity-70"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-white/50 cursor-not-allowed opacity-70"
                   value={formData.shopkeeper_name}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Geographic Location</label>
+              <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Geographic Location</label>
               <div className="relative group/input">
-                <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                 <input
                   type="text"
                   readOnly
                   disabled
                   placeholder="Sector / Zone / Address"
-                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-slate-900/50 cursor-not-allowed opacity-70"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-white/50 cursor-not-allowed opacity-70"
                   value={formData.location}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Contact Details</label>
+              <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Contact Details</label>
               <div className="relative group/input">
-                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                 <input
                   type="text"
                   required
@@ -242,11 +249,11 @@ const ShopkeeperSettings = () => {
               </div>
             </div>
             
-            <div className="space-y-2 md:col-span-2 mt-4 pt-8 border-t border-slate-800">
-               <h3 className="text-sm font-bold text-white mb-4 uppercase tracking-widest">Security</h3>
-               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">New Password (Optional)</label>
+            <div className="space-y-2 md:col-span-2 mt-4 pt-8 border-t border-[#E0E0E0]">
+               <h3 className="text-sm font-bold text-[#263238] mb-4 font-medium">Security</h3>
+               <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">New Password (Optional)</label>
                <div className="relative group/input">
-                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-emerald-500" />
+                  <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                   <input
                   type="password"
                   placeholder="Leave blank to keep current password"
@@ -265,7 +272,7 @@ const ShopkeeperSettings = () => {
                 className="btn-primary h-14 px-10 flex items-center justify-center gap-3"
              >
                 {loading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
-                <span className="text-sm uppercase font-black tracking-widest">Save Settings</span>
+                <span className="text-sm uppercase font-semibold tracking-widest">Save Settings</span>
              </button>
           </div>
         </form>

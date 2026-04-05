@@ -69,30 +69,30 @@ const ShopkeeperHistory = () => {
         className="flex flex-col md:flex-row md:items-center justify-between gap-8"
       >
         <div>
-          <h1 className="text-4xl font-black font-outfit text-white tracking-tight uppercase">Transmission Logs</h1>
-          <p className="text-slate-500 font-medium tracking-wide mt-1">Immutable archive of your establishment's waste submissions.</p>
+          <h1 className="text-4xl font-semibold font-outfit text-[#263238] tracking-tight uppercase">Transmission Logs</h1>
+          <p className="text-[#607D8B] font-medium tracking-wide mt-1">Immutable archive of your establishment's waste submissions.</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-4">
            <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-emerald-500 transition-colors" size={18} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-[#2E7D32] transition-colors" size={18} />
               <input 
                 type="text" 
                 placeholder="Search by type or bin..." 
-                className="!pl-12 w-64 h-12 bg-slate-900 border-white/[0.05] rounded-2xl text-xs font-bold uppercase tracking-widest focus:w-80 transition-all"
+                className="!pl-12 w-64 h-12 bg-white border-white/[0.05] rounded-2xl text-xs font-bold font-medium focus:w-80 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
            </div>
-           <button onClick={handleExport} disabled={exporting} className="btn-secondary h-12 flex items-center gap-3 px-6 shadow-xl shadow-black/20 disabled:opacity-50">
-              <Download size={18} className="text-emerald-500" />
-              <span className="text-[10px] font-black uppercase tracking-[0.25em]">{exporting ? 'Exporting...' : 'Export XLSX'}</span>
-           </button>
+            <button onClick={handleExport} disabled={exporting} className="btn-secondary h-12 flex items-center gap-3 px-6 shadow-md disabled:opacity-50">
+              <Download size={18} className="text-[#2E7D32]" />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em]">{exporting ? 'Exporting...' : 'Export XLSX'}</span>
+            </button>
         </div>
       </motion.header>
 
-      <div className="glass-card overflow-hidden border-white/[0.03]">
-        <div className="p-5 border-b border-white/5 bg-slate-900/40 flex flex-wrap items-center gap-4">
+      <div className="saas-card overflow-hidden border-[#E0E0E0]">
+        <div className="p-5 border-b border-[#E0E0E0] bg-[#F5F7F6]/50 flex flex-wrap items-center gap-4">
            {[
               { l: 'Today' },
               { l: 'Last 7 Days' },
@@ -101,8 +101,8 @@ const ShopkeeperHistory = () => {
               <button 
                 key={tab.l}
                 onClick={() => setActiveTab(tab.l)}
-                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all ${
-                   activeTab === tab.l ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-lg' : 'text-slate-500 hover:text-slate-300'
+                className={`px-4 py-2 rounded-xl text-xs font-semibold font-medium flex items-center gap-2 transition-all ${
+                   activeTab === tab.l ? 'bg-[#2E7D32]/10 text-[#2E7D32] border border-[#2E7D32]/20 shadow-lg' : 'text-[#607D8B] hover:text-[#607D8B]'
                 }`}
               >
                 {tab.icon} {tab.l}
@@ -112,7 +112,7 @@ const ShopkeeperHistory = () => {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-900/60 text-slate-600 text-[10px] uppercase font-black tracking-widest border-b border-white/[0.02]">
+            <thead className="bg-white/60 text-slate-600 text-xs uppercase font-semibold tracking-widest border-b border-white/[0.02]">
               <tr>
                 <th className="px-8 py-6">Identity / Time</th>
                 <th className="px-8 py-6 text-center">Protocol Type</th>
@@ -131,55 +131,55 @@ const ShopkeeperHistory = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ delay: idx * 0.03 }}
-                    className="hover:bg-white/[0.02] group transition-all cursor-default"
+                    className="hover:bg-slate-50 group transition-all cursor-default"
                   >
                     <td className="px-8 py-6">
                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-500 group-hover:bg-emerald-500/10 group-hover:text-emerald-500 transition-all border border-transparent group-hover:border-emerald-500/20">
+                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-[#607D8B] group-hover:bg-[#2E7D32]/10 group-hover:text-[#2E7D32] transition-all border border-transparent group-hover:border-[#2E7D32]/20">
                              <ClipboardList size={18} />
                           </div>
                           <div>
-                             <p className="text-sm font-black text-slate-200 tracking-tight">#{log._id.slice(-6).toUpperCase()}</p>
-                             <div className="flex items-center gap-2 text-[10px] text-slate-600 font-bold uppercase tracking-wider mt-0.5">
-                                <span className="group-hover:text-slate-400 transition-colors">{new Date(log.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
+                             <p className="text-sm font-semibold text-[#263238] tracking-tight">#{log._id.slice(-6).toUpperCase()}</p>
+                             <div className="flex items-center gap-2 text-xs text-slate-600 font-bold uppercase tracking-wider mt-0.5">
+                                <span className="group-hover:text-[#607D8B] transition-colors">{new Date(log.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
                                 <span>•</span>
-                                <span className="group-hover:text-slate-400 transition-colors">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                                <span className="group-hover:text-[#607D8B] transition-colors">{new Date(log.timestamp).toLocaleTimeString()}</span>
                              </div>
                           </div>
                        </div>
                     </td>
                     <td className="px-8 py-6 text-center">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.1em] border transition-all ${
+                      <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold font-medium text-[#607D8B] border transition-all ${
                         log.waste_type === 'Wet' 
-                          ? 'bg-emerald-500/5 text-emerald-500 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]' 
-                          : 'bg-blue-500/5 text-blue-500 border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.05)]'
+                          ? 'bg-[#2E7D32]/5 text-[#2E7D32] border-[#2E7D32]/20 shadow-[0_0_15px_rgba(16,185,129,0.05)]' 
+                          : 'bg-[#0D47A1]/5 text-[#0D47A1] border-[#0D47A1]/20 shadow-[0_0_15px_rgba(59,130,246,0.05)]'
                       }`}>
-                        <div className={`w-1.5 h-1.5 rounded-full ${log.waste_type === 'Wet' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full ${log.waste_type === 'Wet' ? 'bg-[#2E7D32]' : 'bg-[#0D47A1]'}`} />
                         {log.waste_type}
                       </span>
                     </td>
                     <td className="px-8 py-6">
                        <div className="space-y-1">
-                          <p className="text-sm font-black text-slate-100">{log.no_of_bags} Packages</p>
-                          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-white/[0.03] inline-block px-2 py-0.5 rounded-lg border border-white/[0.05]">
+                          <p className="text-sm font-semibold text-[#263238]">{log.no_of_bags} Packages</p>
+                          <p className="text-xs font-bold text-slate-600 font-medium bg-slate-50 inline-block px-2 py-0.5 rounded-lg border border-white/[0.05]">
                              {log.bag_size} Volumetric
                           </p>
                        </div>
                     </td>
                     <td className="px-8 py-6">
                        <div className="flex flex-col">
-                          <span className="text-xs font-black text-slate-400 font-outfit uppercase tracking-tighter">Asset Gateway</span>
-                          <span className="text-sm font-bold text-slate-200 group-hover:text-emerald-500 transition-colors uppercase">{log.dustbin_id?.dustbin_id || 'BIN-001'}</span>
+                          <span className="text-xs font-semibold text-[#607D8B] font-outfit uppercase tracking-tighter">Asset Gateway</span>
+                          <span className="text-sm font-bold text-[#263238] group-hover:text-[#2E7D32] transition-colors uppercase">{log.dustbin_id?.dustbin_id || 'BIN-001'}</span>
                        </div>
                     </td>
                     <td className="px-8 py-6 text-right">
                        <div className="flex flex-col items-end gap-2 group/btn">
                           {log.bulky_request ? (
-                            <span className="px-3 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-xl text-[9px] font-black tracking-[0.2em] uppercase">
+                            <span className="px-3 py-1 bg-[#E65100]/10 text-[#E65100] border border-[#E65100]/20 rounded-xl text-xs font-semibold tracking-[0.2em] uppercase">
                                Bulky Hub Enabled
                             </span>
                           ) : (
-                            <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-600 group-hover/btn:bg-emerald-500/10 group-hover/btn:text-emerald-500 transition-all border border-transparent group-hover/btn:border-emerald-500/20">
+                            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover/btn:bg-[#2E7D32]/10 group-hover/btn:text-[#2E7D32] transition-all border border-transparent group-hover/btn:border-[#2E7D32]/20">
                                <ChevronRight size={16} />
                             </div>
                           )}
@@ -192,16 +192,16 @@ const ShopkeeperHistory = () => {
           </table>
           {loading && (
             <div className="p-24 text-center space-y-6">
-              <div className="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full mx-auto animate-spin shadow-[0_0_30px_rgba(16,185,129,0.1)]" />
-              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em]">Establishing Secure Datastream</p>
+              <div className="w-16 h-16 border-4 border-[#E0E0E0] border-t-emerald-500 rounded-full mx-auto animate-spin shadow-[0_0_30px_rgba(16,185,129,0.1)]" />
+              <p className="text-[#607D8B] text-xs font-semibold uppercase tracking-[0.4em]">Establishing Secure Datastream</p>
             </div>
           )}
           {!loading && filteredLogs.length === 0 && (
             <div className="p-24 text-center space-y-4 bg-white/[0.01]">
-              <div className="p-6 bg-slate-900 border border-white/[0.03] rounded-[2.5rem] inline-block mx-auto text-slate-700 animate-pulse">
+              <div className="p-6 bg-white border border-[#E0E0E0] rounded-[2.5rem] inline-block mx-auto text-slate-700 animate-pulse">
                  <ClipboardList size={40} />
               </div>
-              <h3 className="text-xl font-bold font-outfit text-slate-200 uppercase">Null Records Returned</h3>
+              <h3 className="text-xl font-bold font-outfit text-[#263238] uppercase">Null Records Returned</h3>
               <p className="text-slate-600 text-sm max-w-xs mx-auto font-medium">No transmissions match your current filter parameters or the registry is empty.</p>
             </div>
           )}

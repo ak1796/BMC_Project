@@ -9,7 +9,7 @@ router.route('/')
     .get(protect, getAlerts);
 
 router.route('/:id')
-    .put(protect, adminOnly, updateAlertStatus)
+    .put(protect, updateAlertStatus)
     .delete(protect, deleteAlert);
 
 module.exports = router;

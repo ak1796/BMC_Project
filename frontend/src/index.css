@@ -7,43 +7,36 @@
 
 /* Base Styles */
 body {
-  @apply bg-slate-950 text-slate-100 font-inter antialiased;
+  @apply bg-[#F5F7F6] text-[#263238] font-inter antialiased selection:bg-[#2E7D32]/20 selection:text-[#2E7D32];
 }
 
 input,
 select,
 textarea {
-  @apply bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 outline-none transition-all duration-200 focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 text-white placeholder:text-slate-600;
+  @apply bg-white border border-[#E0E0E0] rounded-lg px-4 py-2.5 text-sm outline-none transition-all duration-200 focus:border-[#2E7D32] focus:ring-1 focus:ring-[#2E7D32] text-[#263238] placeholder:text-[#607D8B] shadow-sm;
 }
 
 /* Component Utilities */
-.glass-card {
-  @apply bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-3xl shadow-2xl;
+.saas-card {
+  @apply bg-white border border-[#E0E0E0] rounded-xl shadow-sm text-[#263238];
 }
 
 .btn-primary {
-  @apply bg-emerald-500 text-slate-950 font-bold rounded-xl px-6 py-3 transition-all duration-200 hover:bg-emerald-400 hover:scale-[1.02] active:scale-95 shadow-lg shadow-emerald-500/20 disabled:opacity-50;
+  @apply bg-[#2E7D32] text-white font-medium rounded-lg px-5 py-2.5 text-sm transition-all duration-200 hover:bg-[#1B5E20] hover:shadow-md active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:ring-offset-2 focus:ring-offset-[#F5F7F6];
 }
 
 .btn-secondary {
-  @apply bg-slate-800 text-slate-200 font-semibold rounded-xl px-4 py-2 transition-all duration-200 hover:bg-slate-700 hover:text-white border border-slate-700/50;
+  @apply bg-white text-[#0D47A1] font-medium rounded-lg px-4 py-2 text-sm transition-all duration-200 hover:bg-[#F5F7F6] border border-[#0D47A1] shadow-sm active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#0D47A1] focus:ring-offset-2 focus:ring-offset-[#F5F7F6];
 }
 
-/* Custom Animations */
-@keyframes pulse-soft {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.8;
-    transform: scale(0.98);
-  }
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-
-.animate-pulse-soft {
-  animation: pulse-soft 3s infinite ease-in-out;
+::-webkit-scrollbar-track {
+  @apply bg-[#F5F7F6];
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-[#E0E0E0] rounded-full hover:bg-slate-400 transition-colors;
 }
