@@ -3,7 +3,11 @@ const bcrypt = require('bcryptjs');
 
 const getProfiles = async (req, res) => {
     try {
-        const profiles = await Shopkeeper.find().select('-password');
+        console.log(`Debug: Admin ${req.user.username} (ID: ${req.user._id}) fetching profiles.`);
+        const filter = req.user.role === 'admin' ? { admin_id: req.user._id } : {};
+        console.log(`Debug: Query Filter: ${JSON.stringify(filter)}`);
+        const profiles = await Shopkeeper.find(filter).select('-password');
+        console.log(`Debug: Found ${profiles.length} profiles.`);
         res.json(profiles);
     } catch (error) {
         res.status(500).json({ message: error.message });

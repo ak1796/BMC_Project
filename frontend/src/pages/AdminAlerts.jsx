@@ -42,9 +42,10 @@ const AdminAlerts = () => {
         status: 'Resolved', 
         resolution_message: eta.trim() ? `Your waste will be collected in ${eta.trim()}.` : 'Your issue has been resolved and pickup is scheduled.' 
       });
-      setAlerts(prev => prev.filter(a => a._id !== id));
+      setAlerts(prev => prev.filter(a => (a._id !== id && a.alert_id !== id)));
     } catch (err) {
       console.error('Failed to resolve alert', err);
+      alert('Error: Could not resolve alert. ' + (err.response?.data?.message || ''));
     }
     setActionLoading(null);
   };
@@ -54,9 +55,10 @@ const AdminAlerts = () => {
     setActionLoading(id);
     try {
       await axios.delete(`/api/alerts/${id}`);
-      setAlerts(prev => prev.filter(a => a._id !== id));
+      setAlerts(prev => prev.filter(a => (a._id !== id && a.alert_id !== id)));
     } catch (err) {
       console.error('Failed to delete alert', err);
+      alert('Error: Could not delete alert. ' + (err.response?.data?.message || ''));
     }
     setActionLoading(null);
   };
@@ -135,18 +137,18 @@ const AdminAlerts = () => {
 
                     <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 self-end lg:self-center">
                       <button 
-                        onClick={() => handleResolve(alert._id)}
-                        disabled={actionLoading === alert._id}
+                        onClick={() => handleResolve(alert._id || alert.alert_id)}
+                        disabled={actionLoading === (alert._id || alert.alert_id)}
                         className="flex-1 lg:flex-none h-14 px-8 bg-emerald-500 text-slate-950 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-emerald-500/10 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
                       >
-                        {actionLoading === alert._id ? <Loader2 size={18} className="animate-spin" /> : 'Resolve'}
+                        {actionLoading === (alert._id || alert.alert_id) ? <Loader2 size={18} className="animate-spin" /> : 'Resolve'}
                       </button>
                       <button 
-                        onClick={() => handleDelete(alert._id)}
-                        disabled={actionLoading === alert._id}
+                        onClick={() => handleDelete(alert._id || alert.alert_id)}
+                        disabled={actionLoading === (alert._id || alert.alert_id)}
                         className="h-14 p-4 aspect-square bg-slate-800 text-slate-500 rounded-2xl hover:bg-rose-500/10 hover:text-rose-500 transition-all border border-white/5 active:scale-90 flex items-center justify-center"
                       >
-                        {actionLoading === alert._id ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={22} strokeWidth={1.5} />}
+                        {actionLoading === (alert._id || alert.alert_id) ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={22} strokeWidth={1.5} />}
                       </button>
                     </div>
                   </div>

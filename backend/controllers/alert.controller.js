@@ -99,6 +99,10 @@ const updateAlertStatus = async (req, res) => {
         }
 
         if (alert) {
+            // Ownership check
+            if (req.user.role === 'admin' && alert.admin_id && alert.admin_id.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ message: 'Not authorized to manage this alert' });
+            }
             alert.status = status;
             if (req.body.resolution_message) {
                 alert.resolution_message = req.body.resolution_message;
@@ -131,6 +135,9 @@ const deleteAlert = async (req, res) => {
         }
 
         if (alert) {
+            if (req.user.role === 'admin' && alert.admin_id && alert.admin_id.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ message: 'Not authorized to delete this alert' });
+            }
             if (req.user.role !== 'admin' && alert.shop_id.toString() !== req.user._id.toString()) {
                 return res.status(403).json({ message: 'Unauthorized' });
             }

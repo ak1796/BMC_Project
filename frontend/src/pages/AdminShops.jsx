@@ -137,7 +137,7 @@ const AdminShops = () => {
           <p className="text-slate-500 font-medium tracking-wide">
             {currentView 
               ? `Displaying all ${currentView} records flagged by the system.` 
-              : 'Directory of all registered shops and administrators.'
+              : 'Directory of assigned shops and administrators.'
             }
           </p>
         </div>

@@ -51,6 +51,13 @@ const issueFine = async (req, res) => {
     try {
         const { shop_id, amount, reason } = req.body;
         
+        // Ownership check
+        const shop = await Shopkeeper.findById(shop_id);
+        if (!shop) return res.status(404).json({ message: 'Shop not found' });
+        if (shop.admin_id && shop.admin_id.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized to issue fines for this shop' });
+        }
+        
         const fine = await Fine.create({
             shop_id,
             amount: amount || 500,
@@ -68,8 +75,20 @@ const getFines = async (req, res) => {
         let filter = {};
         if (req.user.role !== 'admin') {
             filter.shop_id = req.user._id;
-        } else if (req.query.shopId) {
-            filter.shop_id = req.query.shopId;
+        } else {
+            // Find shop IDs belonging to this admin
+            const shops = await Shopkeeper.find({ admin_id: req.user._id }).select('_id');
+            const shopIds = shops.map(s => s._id);
+
+            if (req.query.shopId) {
+                if (shopIds.some(id => id.toString() === req.query.shopId)) {
+                    filter.shop_id = req.query.shopId;
+                } else {
+                    return res.status(403).json({ message: 'Not authorized to view fines for this shop' });
+                }
+            } else {
+                filter.shop_id = { $in: shopIds };
+            }
         }
 
         const fines = await Fine.find(filter)
@@ -83,8 +102,11 @@ const getFines = async (req, res) => {
 
 const payFine = async (req, res) => {
     try {
-        const fine = await Fine.findById(req.params.id);
+        const fine = await Fine.findById(req.params.id).populate('shop_id');
         if (fine) {
+            if (fine.shop_id.admin_id && fine.shop_id.admin_id.toString() !== req.user._id.toString()) {
+                return res.status(403).json({ message: 'Not authorized to settle this fine' });
+            }
             fine.status = 'Paid';
             await fine.save();
             res.json(fine);
@@ -111,7 +133,11 @@ const syncFines = async (req, res) => {
 
 const getFineStats = async (req, res) => {
     try {
+        let shops = await Shopkeeper.find({ admin_id: req.user._id }).select('_id');
+        let shopIds = shops.map(s => s._id);
+
         const stats = await Fine.aggregate([
+            { $match: { shop_id: { $in: shopIds } } },
             {
                 $group: {
                     _id: "$status",

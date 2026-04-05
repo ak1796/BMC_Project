@@ -12,12 +12,9 @@ const registerDustbin = async (req, res) => {
         const dustbinData = {
             dustbin_id,
             location,
-            qr_code_link
+            qr_code_link,
+            admin_id: req.user.role === 'admin' ? req.user._id : admin_id
         };
-
-        if (admin_id && admin_id.trim() !== '') {
-            dustbinData.admin_id = admin_id;
-        }
 
         const dustbin = await Dustbin.create(dustbinData);
 
@@ -53,7 +50,8 @@ const getDustbinsByAdmin = async (req, res) => {
 
 const getAllDustbins = async (req, res) => {
     try {
-        const dustbins = await Dustbin.find({}).select('dustbin_id location admin_id');
+        const filter = req.user.role === 'admin' ? { admin_id: req.user._id } : {};
+        const dustbins = await Dustbin.find(filter).select('dustbin_id location admin_id');
         res.json(dustbins);
     } catch (error) {
         res.status(500).json({ message: error.message });

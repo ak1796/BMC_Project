@@ -211,7 +211,7 @@ const AdminOverview = () => {
              <div className="flex items-center gap-3 px-6 py-4 bg-slate-950/50 rounded-2xl border border-white/5 shadow-inner">
                 <Globe size={18} className="text-purple-500" />
                 <div>
-                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Global Registry</p>
+                   <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Zonal Registry</p>
                    <p className="text-sm font-bold text-slate-100 mt-1">{data.shops.length} Units</p>
                 </div>
              </div>

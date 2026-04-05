@@ -37,7 +37,8 @@ const updateProfile = async (req, res) => {
 
 const getAdmins = async (req, res) => {
     try {
-        const admins = await Admin.find().select('-password');
+        const filter = req.user.role === 'admin' ? { _id: req.user._id } : {};
+        const admins = await Admin.find(filter).select('-password');
         res.json(admins);
     } catch (error) {
         res.status(500).json({ message: error.message });
