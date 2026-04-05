@@ -62,6 +62,7 @@ const AdminQRGenerator = () => {
   const wards = ['Ward A', 'Ward B', 'Ward C', 'Ward D', 'Ward E', 'Ward F'];
 
   const qrData = JSON.stringify({
+    system_origin: 'SMW-PRO',
     dustbin_id: formData.dustbin_id || 'PENDING',
     location: formData.location || 'NOT SET',
     ward: formData.ward

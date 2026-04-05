@@ -65,8 +65,7 @@ const ShopkeeperAlert = () => {
           
           if (code && code.data) {
             const url = code.data;
-            // Parse dustbin ID from QR URL like: /api/alerts/scan?dustbin=SMW-DB-000001
-            const match = url.match(/dustbin=([^&]+)/i);
+            const match = url.match(/dustbin=(SMW-DB-[^&]+)/i);
             
             let extractedId = '';
             let message = '';
@@ -74,26 +73,31 @@ const ShopkeeperAlert = () => {
             if (match) {
               extractedId = match[1];
               message = `QR scanned! Dustbin ${extractedId} detected.`;
+            } else if (url.startsWith('SMW-DB-')) {
+               // Allow plain ID strings that start with our prefix
+               extractedId = url.trim();
+               message = `QR scanned! Dustbin ${extractedId} detected.`;
             } else {
-               // Try parsing JSON if generated via AdminQRGenerator
                try {
-                  const parsedUrl = JSON.parse(url);
-                  if (parsedUrl.dustbin_id) {
-                     extractedId = parsedUrl.dustbin_id;
-                     message = `QR scanned! Dustbin ${extractedId} detected at ${parsedUrl.location || 'assigned location'}.`;
+                  const parsedData = JSON.parse(url);
+                  // Check for our specific JSON keys
+                  if (parsedData.dustbin_id && (parsedData.system_origin === 'SMW-PRO' || parsedData.dustbin_id.startsWith('SMW-DB-'))) {
+                     extractedId = parsedData.dustbin_id;
+                     message = `QR scanned! Dustbin ${extractedId} detected at ${parsedData.location || 'assigned location'}.`;
                   } else {
-                     throw new Error('Not valid JSON with dustbin_id');
+                     throw new Error('Invalid SMW content');
                   }
                } catch (e) {
-                  // Use the raw value if not a URL format and not JSON
-                  extractedId = url.trim();
-                  message = `QR scanned: ${url.trim()}`;
+                  // If it's not a URL, not a plain SMW-DB ID, and not SMW JSON, reject it
+                  setScanError('Unauthorized QR Code. Please scan official SMW tags only.');
+                  return;
                }
             }
             
             setDustbinId(extractedId);
             setMode('manual');
             setMessage(message);
+            setScanError(''); // Clear any previous errors
             clearInterval(scannerRef.current);
             if (streamRef.current) {
               streamRef.current.getTracks().forEach(t => t.stop());
