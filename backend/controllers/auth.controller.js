@@ -11,7 +11,7 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { username, shop_name, shopkeeper_name, location, admin_id, dustbin_id, contact_number, password, role } = req.body;
+        const { username, shop_id, shop_name, shopkeeper_name, location, admin_id, dustbin_id, contact_number, password, role } = req.body;
 
         if (!username) {
             return res.status(400).json({ message: 'Username is required' });
@@ -30,18 +30,18 @@ const registerUser = async (req, res) => {
         }
 
         const { v4: uuidv4 } = require('uuid');
-        const generatedShopId = `SHP-${uuidv4().substring(0,8)}-${uuidv4().substring(9,13)}`.toUpperCase();
+        const finalShopId = shop_id || `SHP-${uuidv4().substring(0,8)}-${uuidv4().substring(9,13)}`.toUpperCase();
 
-        const idExists = await Shopkeeper.findOne({ shop_id: generatedShopId });
+        const idExists = await Shopkeeper.findOne({ shop_id: finalShopId });
         if (idExists) {
-            return res.status(400).json({ message: 'System fault: duplicate ID generated. Re-attempt registration.' });
+            return res.status(400).json({ message: 'Shop ID already exists. Please regenerate or re-attempt.' });
         }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const shopkeeperData = {
-            shop_id: generatedShopId,
+            shop_id: finalShopId,
             username,
             shop_name,
             shopkeeper_name,

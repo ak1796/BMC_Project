@@ -11,9 +11,9 @@ const ShopkeeperBulky = () => {
     try {
       const { data } = await axios.get('/api/alerts');
       // Show ALL alerts for Shopkeeper on this dashboard (both Bulky and Report Issues)
-      setRequests(data);
+      setRequests(data.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
     } catch (err) {
-      console.error('Error fetching bulky requests', err);
+      console.error('Error fetching alerts', err);
     }
     setLoading(false);
   };
@@ -137,8 +137,12 @@ const ShopkeeperBulky = () => {
                 >
                   <div className="p-7 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 relative z-10">
                      <div className="flex items-center gap-8">
-                        <div className="w-16 h-16 rounded-[1.5rem] bg-slate-100 flex items-center justify-center border border-[#E0E0E0] text-[#607D8B] group-hover:bg-[#E65100]/10 group-hover:text-[#E65100] group-hover:border-[#E65100]/20 transition-all duration-500 shadow-inner">
-                           <Truck size={32} />
+                        <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center border border-[#E0E0E0] shadow-inner transition-all duration-500 group-hover:border-[#E65100]/20 ${
+                           req.comments?.includes('BULKY') 
+                             ? 'bg-slate-100 text-[#607D8B] group-hover:bg-[#E65100]/10 group-hover:text-[#E65100]' 
+                             : 'bg-blue-50 text-blue-500 group-hover:bg-blue-500/10 group-hover:text-blue-500 group-hover:border-blue-500/20'
+                        }`}>
+                           {req.comments?.includes('BULKY') ? <Truck size={32} /> : <AlertTriangle size={32} />}
                         </div>
                         <div className="space-y-2">
                            <div className="flex items-center gap-3">
@@ -148,9 +152,11 @@ const ShopkeeperBulky = () => {
                               <span className={`px-3 py-1 rounded-lg text-xs font-semibold tracking-[0.2em] border ${
                                  req.status === 'Resolved' 
                                     ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' 
+                                    : req.status === 'Dispatched'
+                                    ? 'bg-[#E65100]/10 text-[#E65100] border-[#E65100]/20'
                                     : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
                               }`}>
-                                 {req.status === 'Resolved' ? 'RESOLVED' : 'QUEUED'}
+                                 {req.status === 'Resolved' ? 'RESOLVED' : req.status === 'Dispatched' ? 'IN PROGRESS' : 'QUEUED'}
                               </span>
                            </div>
                            <div className="flex flex-wrap items-center gap-4 text-xs font-bold font-medium text-[#607D8B] text-slate-600">
@@ -161,10 +167,10 @@ const ShopkeeperBulky = () => {
                                  <Clock size={14} /> Time: {new Date(req.timestamp).toLocaleTimeString()}
                               </span>
                               <span className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full group-hover:text-[#E65100] transition-colors uppercase">
-                                 <MapPin size={14} /> Bin: {req.dustbin_id?.dustbin_id || 'Zone-Alpha'}
+                                 <MapPin size={14} /> {req.comments?.includes('BULKY') ? 'Pickup Location' : 'Asset Bin'}: {req.dustbin_id?.dustbin_id || 'Global-Zone'}
                               </span>
                            </div>
-                           <p className="text-sm font-medium text-[#607D8B] mt-2 italic bg-[#F5F7F6] p-2 rounded-lg border border-[#E0E0E0]">
+                           <p className="text-sm font-medium text-[#607D8B] mt-2 italic bg-[#F9FBF7] p-2 rounded-lg border border-[#E0E0E0]">
                                 "{req.comments || 'No description provided for this request.'}"
                            </p>
                         </div>

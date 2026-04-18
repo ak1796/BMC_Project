@@ -142,13 +142,13 @@ const AdminShops = () => {
           </p>
         </div>
         
-        <div className="flex-1 max-w-2xl flex gap-3">
-          <div className="flex-1 bg-white border border-[#E0E0E0] rounded-2xl px-6 py-4 flex items-center gap-4 shadow-inner group">
-            <Search size={22} className="text-slate-600 group-focus-within:text-[#2E7D32] transition-colors" />
+        <div className="flex-1 max-w-2xl flex flex-col md:flex-row gap-4 items-center">
+          <div className="flex-1 w-full bg-white border border-[#E0E0E0] focus-within:border-[#2E7D32]/40 focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl px-8 h-20 flex items-center gap-6 group transition-all duration-300">
+            <Search size={20} className="text-slate-400 group-focus-within:text-[#2E7D32] transition-colors shrink-0" />
             <input 
               type="text" 
               placeholder={`Search in ${currentView || 'registry'}...`} 
-              className="bg-transparent border-none p-0 text-sm font-semibold font-medium focus:ring-0 w-full placeholder:text-slate-700" 
+              className="bg-transparent border-none p-0 text-lg font-bold font-medium text-[#263238] focus:ring-0 w-full placeholder:text-slate-400 placeholder:font-medium tracking-wide" 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -156,12 +156,14 @@ const AdminShops = () => {
           {currentView ? (
             <button 
               onClick={clearFilter}
-              className="px-6 h-14 bg-rose-500 text-[#263238] rounded-2xl text-xs font-semibold font-medium flex items-center gap-2 hover:scale-105 transition-all"
+              className="px-8 h-20 bg-rose-500 text-[#263238] rounded-3xl text-sm font-semibold font-medium flex items-center gap-3 hover:scale-105 transition-all shadow-lg active:scale-95 shrink-0"
             >
-              <RotateCcw size={16} /> Show All
+              <RotateCcw size={18} /> Show All
             </button>
           ) : (
-            <button className="btn-secondary px-5 h-14 bg-white border-[#E0E0E0]"><Filter size={24} /></button>
+            <button className="px-6 h-20 bg-white border border-[#E0E0E0] rounded-3xl text-[#607D8B] hover:text-[#263238] transition-all flex items-center justify-center shrink-0">
+              <Filter size={24} />
+            </button>
           )}
         </div>
       </motion.header>
@@ -397,7 +399,7 @@ const AdminShops = () => {
                                className={`py-4 rounded-xl text-xs font-semibold border transition-all ${
                                  fineAmount === val 
                                    ? 'bg-[#2E7D32] text-[#263238] border-[#2E7D32] shadow-[0_0_20px_rgba(16,185,129,0.3)]' 
-                                   : 'bg-[#F5F7F6] text-[#607D8B] border-[#E0E0E0] hover:border-[#2E7D32]/30'
+                                   : 'bg-[#F9FBF7] text-[#607D8B] border-[#E0E0E0] hover:border-[#2E7D32]/30'
                                }`}
                              >
                                {val}
@@ -413,7 +415,7 @@ const AdminShops = () => {
                           value={fineReason}
                           onChange={(e) => setFineReason(e.target.value)}
                           placeholder="EX: Repeated failure to segregate waste..."
-                          className="w-full bg-[#F5F7F6] border-[#E0E0E0] rounded-2xl p-5 text-sm text-[#263238] placeholder:text-slate-700 focus:ring-emerald-500/20 focus:border-[#2E7D32] transition-all min-h-[120px] resize-none"
+                          className="w-full bg-[#F9FBF7] border-[#E0E0E0] rounded-2xl p-5 text-sm text-[#263238] placeholder:text-slate-700 focus:ring-emerald-500/20 focus:border-[#2E7D32] transition-all min-h-[120px] resize-none"
                         />
                       </div>
                     </div>

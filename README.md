@@ -1,155 +1,117 @@
-# Smart Market Waste Management System
+# 🌿 NagarVaani: Smart Market Waste Management
 
-A comprehensive Smart Market Waste Management System. This system streamlines waste logging for shopkeepers and provides administrative oversight, real-time alerts, and automated fine management for market officials.
+NagarVaani is a high-performance, real-time waste management and compliance platform designed for municipal markets. It streamlines the waste collection lifecycle by providing shopkeepers with intuitive logging tools and market administrators with robust oversight and automated penalty systems.
 
 ---
 
 ## 🚀 Key Features
 
-### For Shopkeepers
-- **Waste Logging**: Log daily waste (Dry, Wet, Hazardous) with bag sizes.
-- **QR Code Integration**: Scan dustbin QR codes to log complaint.
-- **Bulky Waste Requests**: Request pickup for large items.
-- **Personal Dashboard**: View history and statistics of waste logs.
-- **Profile Management**: Update shop details.
+### 🏪 For Shopkeepers
+- **Dual-Identifier Authentication**: Secure login using either a system-generated **Shop ID** or a personalized **Username**.
+- **Real-Time Waste Logging**: Seamless logging for Dry, Wet, and Electronic waste with automatic volume estimation.
+- **Service Hub & Tracker**: A centralized "Dispatch Hub" to track collections, emergency tickets, and bulky waste requests in one view.
+- **Smart Issue Reporting**: Report overflows or bin anomalies using a built-in QR scanner or manual entry.
+- **Financial Transparency**: View penalty history and settle outstanding dues directly through an integrated statement view.
 
-### For Market Admins
-- **Real-time Alerts**: Monitor waste collection status via Socket.io.
-- **Automated Fine Management**: System tracks unlogged shops and issues fines for non-compliance.
-- **QR Generator**: Generate and export QR codes for shop dustbins.
-- **Comprehensive Reports**: Export waste logs and defaulter lists to Excel.
-- **User Management**: Manage shopkeeper accounts and profiles.
+### 🛡️ For Market Administrators
+- **Executive Dashboard**: Real-time insights into market-wide compliance, collection ETAs, and active alerts via Socket.io.
+- **Dynamic System Reports**: Generate and export targeted Excel reports for **Today**, **Last 7 Days**, or **Last 30 Days**.
+- **Automated Fine Management**: Intelligent tracking systems that identify non-compliant shops and automate penalty issuance.
+- **QR Asset Management**: Generate and manage unique QR codes for market bin nodes.
+- **Priority Dispatch**: Delegate and track emergency waste collection protocols with real-time status updates for shopkeepers.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Tier | Technology |
-| :--- | :--- |
-| **Frontend** | React, Vite, Tailwind CSS 4, Framer Motion, Lucide Icons |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB (Mongoose ODM) |
-| **Real-time** | Socket.io |
-| **Authentication** | JWT, BcryptJS |
-| **Reporting** | ExcelJS |
-
----
-
-## 📋 Prerequisites
-
-- **Node.js**: v18.x or higher
-- **npm**: v9.x or higher
-- **MongoDB**: Local instance or MongoDB Atlas URI
+| Tier | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | **React 18 (Vite)** | Modern, fast, and responsive UI. |
+| **Styling** | **Tailwind CSS 4** | High-utility styling for a premium SaaS aesthetic. |
+| **Animations** | **Framer Motion** | Smooth transitions and interactive micro-animations. |
+| **Backend** | **Node.js / Express** | Scalable and robust API backbone. |
+| **Database** | **MongoDB (Mongoose)** | Flexible document storage for logs and users. |
+| **Real-time** | **Socket.io** | Low-latency bi-directional event streaming. |
+| **Reports** | **ExcelJS** | Server-side generation of high-quality `.xlsx` reports. |
 
 ---
 
 ## ⚙️ Installation & Setup
 
-### 1. Clone the repository
+### 1. Repository Initialization
 ```bash
 git clone <repository-url>
 cd BMC_Project
 ```
 
-### 2. Backend Setup
+### 2. Backend Orchestration
 Navigate to the `backend` directory and install dependencies.
 ```bash
 cd backend
 npm install
 ```
-Create a `.env` file in the `backend` directory:
-```bash
-cp .env.example .env
+Configure your environment in `.env`:
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secure_jwt_secret
+PORT=5000
 ```
-Update `.env` with your credentials:
-- `MONGO_URI`: Your MongoDB URI
-- `JWT_SECRET`: A secure random string
-- `PORT`: 5000 (default)
+**Start the server:**
+```bash
+# Recommended for Development (HMR enabled)
+npm run dev
 
-### 3. Frontend Setup
-Navigate to the `frontend` directory and install dependencies.
+# For Production
+npm start
+```
+
+### 3. Frontend Assembly
+Navigate to the `frontend` directory and initialize the interface.
 ```bash
 cd ../frontend
 npm install
-```
-
----
-
-## 🏃‍♂️ Running the Application
-
-### Option A: Start Backend
-In the `backend` directory:
-```bash
-# Seed the database (First time only)
-npm run seed
-
-# Start server
-npm start
-```
-*Backend runs on `http://localhost:5000`*
-
-### Option B: Start Frontend
-In the `frontend` directory:
-```bash
 npm run dev
 ```
-*Frontend runs on `http://localhost:5173` (default)*
 
 ---
 
-## 📋 Default Credentials
+## 📑 API Reference & Protocols
 
-| Role | Username | Password |
-| :--- | :--- | :--- |
-| **Admin** | `2024alinakhan_db_user` | `ak1796` |
-| **Shopkeeper** | `SHOP001` | `ak1796` |
+### 🔑 Authentication
+- `POST /api/auth/register` - Create a new shop account with Dual-ID support.
+- `POST /api/auth/login` - Unified login for Shopkeeper and Admin roles.
 
----
+### 📊 Reports & Data (Admin Only)
+- `GET /api/wastelogs/export/logged?days={N}` - Export successful logs for a specific range (1/7/30).
+- `GET /api/wastelogs/export/unlogged?days={N}` - Export list of defaulters for the specified period.
 
-## 📡 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - Authenticate and get token.
-- `GET /api/auth/profile` - Get current user profile.
-
-### Waste Management
-- `POST /api/waste/` - Create a waste log (Shopkeeper).
-- `GET /api/waste/` - Get waste logs.
-- `GET /api/waste/unlogged` - List shops that haven't logged waste today (Admin).
-- `GET /api/waste/defaulters` - List shops with 3+ consecutive unlogged days (Admin).
-- `GET /api/waste/export/logged` - Export logs to Excel (Admin).
-
-### Alerts & Fines
-- `GET /api/alert/` - View all alerts (Admin).
-- `PUT /api/alert/:id` - Update alert status (Admin).
-- `POST /api/fine/` - Issue a fine (Admin).
-- `GET /api/fine/` - View fines (Shopkeeper/Admin).
-
-### Dustbins
-- `POST /api/dustbin/register` - Register a new dustbin (Admin).
-- `GET /api/dustbin/qr/:qr_code_link` - Get dustbin info from QR.
+### 🚛 Waste & Service Tickets
+- `POST /api/wastelogs` - Register a standard or bulky waste entry.
+- `GET /api/alerts` - Retrieve the active ticket feed for the authenticated user.
+- `PUT /api/alerts/:id` - Update status (Queued/Dispatched/Resolved) and resolution messages.
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Architecture
 
 ```text
 BMC_Project/
 ├── backend/
-│   ├── config/         # DB & Socket configurations
-│   ├── controllers/    # Business logic
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # Express routes
-│   └── utils/          # Seeder and utilities
-├── frontend/
-│   ├── src/
-│   │   ├── components/ # Reusable UI components
-│   │   ├── pages/      # View components
-│   │   └── api/        # Axios configurations
-│   └── public/         # Static assets
-└── README.md
+│   ├── config/         # Database, Socket.io, and Middleware configs
+│   ├── controllers/    # Core business logic (Waste, Auth, Alerts)
+│   ├── models/         # Mongoose Schemas (WasteLog, Shopkeeper, Fine)
+│   ├── routes/         # Express endpoint definitions
+│   └── utils/          # Automation (Cron jobs) and Data Seeders
+└── frontend/
+    ├── src/
+    │   ├── pages/      # View layers (Dashboard, History, Settings)
+    │   ├── context/    # Global State (AuthContext)
+    │   └── assets/     # Styling tokens and imagery
 ```
 
 ---
-*Developed for the Market Smart Waste Management Initiative.*
 
+> [!IMPORTANT]
+> **Defaulter Policy**: Shops failing to register a waste entry for 3 consecutive days are automatically flagged in the System Health dashboard and issued a compliance fine.
+
+*Developed with focus on Municipal Productivity and Sustainable Urban Management.*

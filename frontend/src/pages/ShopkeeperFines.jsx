@@ -158,7 +158,7 @@ const ShopkeeperFines = () => {
                         </ul>
                     </div>
 
-                    <div className="p-8 rounded-[2.5rem] border border-[#E0E0E0] bg-[#F5F7F6] text-center">
+                    <div className="p-8 rounded-[2.5rem] border border-[#E0E0E0] bg-[#F9FBF7] text-center">
                         <History size={32} className="mx-auto text-slate-700 mb-4" />
                         <p className="text-xs font-semibold text-[#607D8B] font-medium mb-1">Need Clarification?</p>
                         <p className="text-xs font-bold text-[#607D8B] underline cursor-pointer hover:text-[#263238] transition-colors tracking-tight">Contact your assigned BMC Admin</p>

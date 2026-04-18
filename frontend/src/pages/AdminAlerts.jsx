@@ -32,6 +32,18 @@ const AdminAlerts = () => {
     return () => newSocket.close();
   }, []);
 
+  const handleDispatch = async (id) => {
+    setActionLoading(id);
+    try {
+      await axios.put(`/api/alerts/${id}`, { status: 'Dispatched' });
+      setAlerts(prev => prev.map(a => (a._id === id || a.alert_id === id) ? { ...a, status: 'Dispatched' } : a));
+    } catch (err) {
+      console.error('Failed to dispatch alert', err);
+      alert('Error: Could not dispatch alert. ' + (err.response?.data?.message || ''));
+    }
+    setActionLoading(null);
+  };
+
   const handleResolve = async (id) => {
     const eta = window.prompt('Enter ETA for collection (e.g. "1-2 hours", "Today by 5PM")');
     if (eta === null) return; // User cancelled
@@ -78,12 +90,12 @@ const AdminAlerts = () => {
           <p className="text-[#607D8B] font-medium tracking-wide mt-1">Live updates of all emergency bounds and bulky waste dispatch items.</p>
         </div>
 
-        <div className="flex bg-white border border-[#E0E0E0] rounded-2xl px-5 py-3 items-center gap-4 shadow-inner group">
-          <Search size={20} className="text-slate-600 group-focus-within:text-[#0D47A1] transition-colors" />
+        <div className="flex bg-white border border-[#E0E0E0] focus-within:border-[#0D47A1]/40 focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl h-20 items-center gap-6 px-8 group transition-all duration-300">
+          <Search size={22} className="text-slate-400 group-focus-within:text-[#0D47A1] transition-colors shrink-0" />
           <input
             type="text"
             placeholder="Search alerts..."
-            className="bg-transparent border-none p-0 text-sm font-bold font-medium focus:ring-0 w-72 placeholder:text-slate-700"
+            className="bg-transparent border-none p-0 text-lg font-bold font-medium text-[#263238] focus:ring-0 w-full md:w-80 placeholder:text-slate-400 placeholder:font-medium tracking-wide"
           />
         </div>
       </motion.header>
@@ -136,6 +148,16 @@ const AdminAlerts = () => {
                     </div>
 
                     <div className="flex items-center gap-3 w-full lg:w-auto shrink-0 self-end lg:self-center">
+                      {alert.status === 'Generated' && (
+                        <button 
+                          onClick={() => handleDispatch(alert._id || alert.alert_id)}
+                          disabled={actionLoading === (alert._id || alert.alert_id)}
+                          className="flex-1 lg:flex-none h-14 px-8 bg-[#0D47A1] text-white rounded-2xl text-xs font-semibold font-medium shadow-xl shadow-blue-500/10 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                        >
+                          {actionLoading === (alert._id || alert.alert_id) ? <Loader2 size={18} className="animate-spin" /> : 'Dispatch'}
+                        </button>
+                      )}
+                      
                       <button 
                         onClick={() => handleResolve(alert._id || alert.alert_id)}
                         disabled={actionLoading === (alert._id || alert.alert_id)}

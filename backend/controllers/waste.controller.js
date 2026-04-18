@@ -125,13 +125,22 @@ const ExcelJS = require('exceljs');
 
 const exportLoggedWaste = async (req, res) => {
     try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const days = parseInt(req.query.days) || 1;
+        const startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        
+        // If days > 1, we subtract (days - 1) to get the start of the first day in the window.
+        // e.g., days=7 from the 18th means 12th, 13, 14, 15, 16, 17, 18.
+        if (days > 1) {
+            startDate.setDate(startDate.getDate() - (days - 1));
+        }
 
-        let query = { timestamp: { $gte: today } };
+        let query = { timestamp: { $gte: startDate } };
         if (req.user.role === 'admin') {
             query.admin_id = req.user._id;
         }
+
+        console.log(`[EXPORT LOGGED] Range: ${days} days, StartDate: ${startDate.toISOString()}, Admin: ${req.user._id}`);
 
         const logs = await WasteLog.find(query)
             .populate('shop_id', 'shop_id shop_name location');
@@ -162,7 +171,8 @@ const exportLoggedWaste = async (req, res) => {
         });
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=Daily_Waste_Logs_${today.toDateString()}.xlsx`);
+        const rangeLabel = days === 1 ? 'Today' : `Past_${days}_Days`;
+        res.setHeader('Content-Disposition', `attachment; filename=Logged_Waste_Report_${rangeLabel}.xlsx`);
 
         await workbook.xlsx.write(res);
         res.end();
@@ -173,11 +183,18 @@ const exportLoggedWaste = async (req, res) => {
 
 const exportUnloggedWaste = async (req, res) => {
     try {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const days = parseInt(req.query.days) || 1;
+        const startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        
+        if (days > 1) {
+            startDate.setDate(startDate.getDate() - (days - 1));
+        }
 
-        const logsToday = await WasteLog.find({ timestamp: { $gte: today } }).select('shop_id');
-        const loggedShopIds = logsToday.map(log => log.shop_id);
+        console.log(`[EXPORT UNLOGGED] Range: ${days} days, StartDate: ${startDate.toISOString()}`);
+
+        const logsInRange = await WasteLog.find({ timestamp: { $gte: startDate } }).select('shop_id');
+        const loggedShopIds = logsInRange.map(log => log.shop_id);
 
         let query = { _id: { $nin: loggedShopIds } };
         if (req.user.role === 'admin') {
@@ -204,7 +221,8 @@ const exportUnloggedWaste = async (req, res) => {
         });
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=Unlogged_Shops_${today.toDateString()}.xlsx`);
+        const rangeLabel = days === 1 ? 'Today' : `Past_${days}_Days`;
+        res.setHeader('Content-Disposition', `attachment; filename=Defaulters_List_${rangeLabel}.xlsx`);
 
         await workbook.xlsx.write(res);
         res.end();

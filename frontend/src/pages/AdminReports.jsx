@@ -5,11 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const AdminReports = () => {
   const [exporting, setExporting] = useState(null);
+  const [selectedRange, setSelectedRange] = useState('1'); // '1', '7', '30'
 
   const handleExport = async (type) => {
     setExporting(type);
     try {
-      const response = await axios.get(`/api/wastelogs/export/${type}`, { responseType: 'blob' });
+      const response = await axios.get(`/api/wastelogs/export/${type}?days=${selectedRange}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -54,6 +55,24 @@ const AdminReports = () => {
         <p className="text-[#607D8B] font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
           Generate and download Excel reports for waste collection and compliance monitoring.
         </p>
+
+        <div className="pt-6 flex justify-center">
+            <div className="relative group min-w-[200px]">
+                <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#2E7D32] transition-colors" size={18} />
+                <select 
+                    value={selectedRange}
+                    onChange={(e) => setSelectedRange(e.target.value)}
+                    className="w-full !pl-12 pr-10 h-14 bg-white border border-[#E0E0E0] rounded-2xl text-xs font-bold font-medium tracking-widest appearance-none outline-none focus:border-[#2E7D32]/50 focus:ring-4 focus:ring-[#2E7D32]/5 transition-all cursor-pointer uppercase"
+                >
+                    <option value="1">Today Only</option>
+                    <option value="7">Past 7 Days</option>
+                    <option value="30">Past 30 Days</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                    <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-700" />
+                </div>
+            </div>
+        </div>
       </motion.header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -75,8 +94,8 @@ const AdminReports = () => {
             </div>
             
             <div className="flex gap-4 w-full pt-6 relative z-10">
-              <div className="flex-1 flex items-center justify-center gap-3 bg-[#F5F7F6]/50 rounded-2xl px-4 py-4 text-xs font-semibold text-slate-600 border border-white/[0.02] shadow-inner font-medium">
-                <Calendar size={16} /> Operative: Today
+              <div className="flex-1 flex items-center justify-center gap-3 bg-[#F9FBF7]/50 rounded-2xl px-4 py-4 text-xs font-semibold text-[#2E7D32] border border-[#2E7D32]/10 shadow-inner font-medium uppercase tracking-tighter">
+                <Calendar size={16} /> Operative: {selectedRange === '1' ? 'Today' : `Past ${selectedRange} Days`}
               </div>
               <button 
                 onClick={() => handleExport(report.id)}

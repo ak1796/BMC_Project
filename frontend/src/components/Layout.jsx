@@ -70,7 +70,7 @@ const Layout = ({ children }) => {
   const links = user?.role === 'admin' ? adminLinks : shopkeeperLinks;
 
   return (
-    <div className="min-h-screen bg-[#F5F7F6] text-[#263238] flex font-inter overflow-x-hidden">
+    <div className="min-h-screen bg-[#F9FBF7] text-[#263238] flex font-inter overflow-x-hidden">
       <aside className="hidden lg:flex flex-col w-72 bg-white border-r border-[#E0E0E0]/60 p-5 fixed inset-y-0 z-50">
         <motion.div 
           initial={{ opacity: 0, x: -10 }}
@@ -143,7 +143,7 @@ const Layout = ({ children }) => {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 lg:ml-72 min-h-screen relative bg-[#F5F7F6]">
+      <main className="flex-1 lg:ml-72 min-h-screen relative bg-[#F9FBF7]">
         
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between p-4 bg-white border-b border-[#E0E0E0]/60 sticky top-0 z-40">
@@ -209,7 +209,7 @@ const Layout = ({ children }) => {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-[#F5F7F6]/60 backdrop-blur-md z-[60] lg:hidden"
+              className="fixed inset-0 bg-[#F9FBF7]/60 backdrop-blur-md z-[60] lg:hidden"
             />
             <motion.div 
               initial={{ x: '100%', skewX: 5 }} 

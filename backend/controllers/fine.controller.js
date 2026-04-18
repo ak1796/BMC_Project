@@ -18,7 +18,12 @@ const performFineSync = async (adminId = null) => {
     // 2. Find shops that HAVEN'T logged
     let shopFilter = { _id: { $nin: recentShopIds } };
     if (adminId) {
-        shopFilter.admin_id = adminId;
+        // Find shops assigned to this admin OR shops that have no admin assigned yet
+        shopFilter.$or = [
+            { admin_id: adminId },
+            { admin_id: { $exists: false } },
+            { admin_id: null }
+        ];
     }
 
     const shops = await Shopkeeper.find(shopFilter);

@@ -92,7 +92,7 @@ const ShopkeeperHistory = () => {
       </motion.header>
 
       <div className="saas-card overflow-hidden border-[#E0E0E0]">
-        <div className="p-5 border-b border-[#E0E0E0] bg-[#F5F7F6]/50 flex flex-wrap items-center gap-4">
+        <div className="p-5 border-b border-[#E0E0E0] bg-[#F9FBF7]/50 flex flex-wrap items-center gap-4">
            {[
               { l: 'Today' },
               { l: 'Last 7 Days' },

@@ -309,7 +309,7 @@ const AdminQRGenerator = () => {
                  <button 
                    type="button"
                    onClick={generateRandomID}
-                   style={{ backgroundColor: '#F5F7F6', borderColor: '#E0E0E0' }}
+                   style={{ backgroundColor: '#F9FBF7', borderColor: '#E0E0E0' }}
                    className="px-4 hover:bg-slate-200 rounded-xl border transition-colors group/refresh"
                    title="Generate New ID"
                  >

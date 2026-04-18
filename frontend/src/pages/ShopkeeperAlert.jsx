@@ -31,8 +31,9 @@ const ShopkeeperAlert = () => {
   const fetchMyAlerts = async () => {
     try {
       const { data } = await axios.get('/api/alerts');
-      // Filter out bulky requests so it only shows manual reports here, OR show all? We will show all for full transparency.
-      setAlerts(data.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
+      // Filter out bulky requests so it only shows manual reports here
+      const filtered = data.filter(alert => !alert.comments?.includes('BULKY'));
+      setAlerts(filtered.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)));
     } catch (err) {
       console.error('Failed to fetch alerts', err);
     }
@@ -199,7 +200,7 @@ const ShopkeeperAlert = () => {
             exit={{ opacity: 0, scale: 0.97 }}
             className="saas-card p-4 space-y-4"
           >
-            <div className="relative rounded-2xl overflow-hidden bg-[#F5F7F6] aspect-square max-h-72 mx-auto flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-[#F9FBF7] aspect-square max-h-72 mx-auto flex items-center justify-center">
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
@@ -360,15 +361,11 @@ const ShopkeeperAlert = () => {
                                         Ticket #{alert._id.slice(-6).toUpperCase()}
                                     </h3>
                                     <span className={`px-2.5 py-1 rounded-md text-xs font-semibold tracking-widest border uppercase ${
-                                        alert.status === 'Resolved' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
+                                        alert.status === 'Resolved' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 
+                                        alert.status === 'Dispatched' ? 'bg-[#E65100]/10 text-[#E65100] border-[#E65100]/20' : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
                                     }`}>
-                                        {alert.status}
+                                        {alert.status === 'Dispatched' ? 'In Progress' : alert.status}
                                     </span>
-                                    {alert.comments?.includes('BULKY') && (
-                                        <span className="px-2 py-1 bg-[#E65100]/10 text-[#E65100] border border-[#E65100]/20 rounded-md text-xs font-semibold tracking-widest uppercase">
-                                            Bulky Request
-                                        </span>
-                                    )}
                                 </div>
                                 <p className="text-xs font-bold text-[#607D8B]">BIN: <span className="text-[#607D8B]">{alert.dustbin_id?.dustbin_id || 'N/A'}</span></p>
                                 <p className="text-sm text-[#607D8B] mt-2 bg-white/50 p-3 rounded-xl border border-[#E0E0E0]">
@@ -385,7 +382,7 @@ const ShopkeeperAlert = () => {
 
                         {/* Resolution Message Box */}
                         <AnimatePresence>
-                            {alert.status === 'Resolved' && alert.resolution_message && (
+                            {(alert.status === 'Resolved' || alert.status === 'Dispatched') && alert.resolution_message && (
                                 <motion.div 
                                     initial={{ opacity: 0, height: 0 }}
                                     animate={{ opacity: 1, height: 'auto' }}

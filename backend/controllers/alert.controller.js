@@ -71,7 +71,11 @@ const getAlerts = async (req, res) => {
     try {
         let query = {};
         if (req.user.role === 'admin') {
-            query.admin_id = req.user._id;
+            query.$or = [
+                { admin_id: req.user._id },
+                { admin_id: null },
+                { admin_id: { $exists: false } }
+            ];
         } else {
             query.shop_id = req.user._id;
         }
@@ -118,6 +122,11 @@ const updateAlertStatus = async (req, res) => {
             if (status === 'Generated') {
                 alert.timestamp = Date.now();
                 alert.resolution_message = '';
+            } else if (status === 'Dispatched') {
+                // If it's a dispatch, we can set a default message if none provided
+                alert.resolution_message = req.body.resolution_message || 'An officer has been assigned to your request and is on the way.';
+                // Automatically assign to this admin if not already assigned
+                if (!alert.admin_id) alert.admin_id = req.user._id;
             } else if (req.body.resolution_message !== undefined) {
                 alert.resolution_message = req.body.resolution_message;
             }

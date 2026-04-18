@@ -201,21 +201,21 @@ const AdminOverview = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 pt-4">
-             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
                 <Server size={18} className="text-[#0D47A1]" />
                 <div>
                    <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">System Status</p>
                    <p className="text-sm font-bold text-[#263238] mt-1">Operational</p>
                 </div>
              </div>
-             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
                 <Globe size={18} className="text-purple-500" />
                 <div>
                    <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">Zonal Registry</p>
                    <p className="text-sm font-bold text-[#263238] mt-1">{data.shops.length} Units</p>
                 </div>
              </div>
-             <div className="flex items-center gap-3 px-6 py-4 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
+             <div className="flex items-center gap-3 px-6 py-4 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] shadow-inner">
                 <Zap size={18} className="text-[#E65100]" />
                 <div>
                    <p className="text-xs font-semibold text-[#607D8B] font-medium leading-none">Today's Load</p>
@@ -310,7 +310,7 @@ const AdminOverview = () => {
                     <span>Weekly Activity (Mon - Sun Distribution)</span>
                     <span className="text-[#2E7D32]">Live Feedback</span>
                 </div>
-                <div className="h-44 saas-card bg-[#F5F7F6]/50 p-6 flex items-end justify-between items-stretch gap-4 transition-all">
+                <div className="h-44 saas-card bg-[#F9FBF7]/50 p-6 flex items-end justify-between items-stretch gap-4 transition-all">
                     {processedMetrics.stream.map((h, i) => (
                         <div key={i} className="flex-1 flex flex-col justify-end gap-2 group/bar">
                             <motion.div 
@@ -332,7 +332,7 @@ const AdminOverview = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8 }}
-            className="saas-card p-8 bg-[#F5F7F6] border border-[#E0E0E0] flex flex-col gap-8 shadow-[0_0_100px_rgba(16,185,129,0.02)]"
+            className="saas-card p-8 bg-[#F9FBF7] border border-[#E0E0E0] flex flex-col gap-8 shadow-[0_0_100px_rgba(16,185,129,0.02)]"
          >
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl border border-purple-500/20 shadow-inner">
@@ -356,7 +356,7 @@ const AdminOverview = () => {
                             <span className="text-xs font-semibold text-[#607D8B] uppercase tracking-tighter group-hover:text-[#263238] transition-colors">{item.l}</span>
                             <span className={`text-sm font-semibold text-${item.color}-500`}>{item.v}</span>
                         </div>
-                        <div className="h-2 w-full bg-[#F5F7F6] rounded-full border border-[#E0E0E0] overflow-hidden">
+                        <div className="h-2 w-full bg-[#F9FBF7] rounded-full border border-[#E0E0E0] overflow-hidden">
                             <motion.div 
                                 initial={{ width: 0 }} animate={{ width: item.p }}
                                 transition={{ delay: 1.2, duration: 1.5 }}

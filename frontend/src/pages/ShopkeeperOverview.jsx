@@ -134,7 +134,7 @@ const ShopkeeperOverview = () => {
 
   const containerStats = [
     { label: 'Total Entries', val: logs.length, icon: <ClipboardList size={22} />, color: 'emerald', path: '/shopkeeper/history' },
-    { label: 'Pending Fines', val: processedMetrics.pendingFinesCount, icon: <AlertCircle size={22} />, color: 'rose', path: '/shopkeeper/overview' },
+    { label: 'Pending Fines', val: processedMetrics.pendingFinesCount, icon: <AlertCircle size={22} />, color: 'rose', path: '/shopkeeper/fines' },
     { label: 'Account Health', val: processedMetrics.compliance, icon: <BarChart3 size={22} />, color: 'blue', path: '/shopkeeper/history' },
   ];
 
@@ -155,7 +155,7 @@ const ShopkeeperOverview = () => {
           onClick={() => setShowLogForm(true)}
           className="btn-primary group flex items-center gap-3 px-8 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
         >
-          <div className="p-1 bg-[#F5F7F6]/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
+          <div className="p-1 bg-[#F9FBF7]/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
             <Plus size={20} className="stroke-[3px]" />
           </div>
           <span className="text-sm font-semibold font-medium">Add Waste Entry</span>
@@ -348,7 +348,7 @@ const ShopkeeperOverview = () => {
                 {showStatement && (
                     <motion.div 
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F5F7F6]/90 backdrop-blur-xl"
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F9FBF7]/90 backdrop-blur-xl"
                         onClick={() => setShowStatement(false)}
                     >
                         <motion.div 
@@ -372,7 +372,7 @@ const ShopkeeperOverview = () => {
                                     </div>
                                 ) : (
                                     fines.map(f => (
-                                        <div key={f._id} className="p-5 bg-[#F5F7F6]/50 rounded-2xl border border-[#E0E0E0] flex items-center justify-between group">
+                                        <div key={f._id} className="p-5 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] flex items-center justify-between group">
                                             <div className="flex items-center gap-5">
                                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
                                                     f.status === 'Paid' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
@@ -429,9 +429,10 @@ const ShopkeeperOverview = () => {
                                         {a.comments?.includes('BULKY') ? 'Bulky Waste Request' : 'Emergency Report'}
                                     </h4>
                                     <span className={`px-2 py-1 rounded text-[8px] font-semibold tracking-widest ${
-                                        a.status === 'Resolved' ? 'bg-[#2E7D32]/20 text-[#2E7D32]' : 'bg-[#0D47A1]/20 text-[#0D47A1]'
+                                        a.status === 'Resolved' ? 'bg-[#2E7D32]/20 text-[#2E7D32]' : 
+                                        a.status === 'Dispatched' ? 'bg-[#E65100]/20 text-[#E65100]' : 'bg-[#0D47A1]/20 text-[#0D47A1]'
                                     }`}>
-                                        {a.status === 'Resolved' ? 'RESOLVED' : 'QUEUE'}
+                                        {a.status === 'Resolved' ? 'RESOLVED' : a.status === 'Dispatched' ? 'IN PROGRESS' : 'QUEUE'}
                                     </span>
                                 </div>
                                 <p className="text-xs text-[#607D8B] mb-3 truncate">{a.comments || 'No description provided.'}</p>
@@ -455,7 +456,7 @@ const ShopkeeperOverview = () => {
         {showLogForm && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F5F7F6]/80 backdrop-blur-xl"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F9FBF7]/80 backdrop-blur-xl"
             onClick={() => setShowLogForm(false)}
           >
             <motion.div 

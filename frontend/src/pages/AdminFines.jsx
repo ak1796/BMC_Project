@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
   AlertCircle, Search, Filter, ShieldCheck, 
-  TrendingUp, Download, RefreshCw, CheckCircle2, History
+  TrendingUp, Download, RefreshCw, CheckCircle2, History, X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -92,7 +92,7 @@ const AdminFines = () => {
 
             {/* STATS CARDS */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="saas-card p-8 bg-[#F5F7F6] border border-[#E0E0E0] to-rose-500/5 border-rose-500/10 relative overflow-hidden group">
+                <div className="saas-card p-8 bg-[#F9FBF7] border border-[#E0E0E0] to-rose-500/5 border-rose-500/10 relative overflow-hidden group">
                     <div className="relative z-10">
                         <p className="text-xs font-semibold text-[#607D8B] font-medium mb-2 flex items-center gap-2">
                            <AlertCircle size={14} className="text-rose-500" /> Outstanding Penalties
@@ -102,7 +102,7 @@ const AdminFines = () => {
                     </div>
                 </div>
 
-                <div className="saas-card p-8 bg-[#F5F7F6] border border-[#E0E0E0] to-emerald-500/5 border-[#2E7D32]/10 relative overflow-hidden group">
+                <div className="saas-card p-8 bg-[#F9FBF7] border border-[#E0E0E0] to-emerald-500/5 border-[#2E7D32]/10 relative overflow-hidden group">
                     <div className="relative z-10">
                         <p className="text-xs font-semibold text-[#607D8B] font-medium mb-2 flex items-center gap-2">
                            <TrendingUp size={14} className="text-[#2E7D32]" /> Total Collected
@@ -112,7 +112,7 @@ const AdminFines = () => {
                     </div>
                 </div>
 
-                <div className="saas-card p-8 bg-[#F5F7F6] border border-[#E0E0E0] to-blue-500/5 border-[#0D47A1]/10 relative overflow-hidden group">
+                <div className="saas-card p-8 bg-[#F9FBF7] border border-[#E0E0E0] to-blue-500/5 border-[#0D47A1]/10 relative overflow-hidden group">
                     <div className="relative z-10">
                         <p className="text-xs font-semibold text-[#607D8B] font-medium mb-2 flex items-center gap-2">
                            <History size={14} className="text-[#0D47A1]" /> Violation Count
@@ -125,27 +125,40 @@ const AdminFines = () => {
 
             {/* SEARCH & FILTERS */}
             <div className="flex flex-col md:flex-row gap-6 items-center">
-                <div className="relative flex-1 group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-                        <Search size={18} className="text-slate-600 transition-colors group-hover:text-[#2E7D32]" />
+                <div className="flex-1 w-full group relative">
+                    <div className="flex items-center bg-white border border-[#E0E0E0] focus-within:border-[#2E7D32]/50 focus-within:shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] px-8 h-20 transition-all duration-300">
+                        <Search size={20} className="text-slate-400 group-focus-within:text-[#2E7D32] transition-colors mr-6 shrink-0" />
+                        <input 
+                            type="text" 
+                            placeholder="Find records by shop name, ID or reason..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-transparent border-none p-0 text-lg font-bold font-medium text-[#263238] focus:ring-0 w-full placeholder:text-slate-400 placeholder:font-medium tracking-wide"
+                        />
+                        <AnimatePresence>
+                            {searchTerm && (
+                                <motion.button
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    onClick={() => setSearchTerm('')}
+                                    className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-rose-500 transition-colors shrink-0 ml-4"
+                                >
+                                    <X size={20} />
+                                </motion.button>
+                            )}
+                        </AnimatePresence>
                     </div>
-                    <input 
-                        type="text" 
-                        placeholder="SEARCH BY SHOP NAME, ID OR REASON..." 
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-white/50 border border-[#E0E0E0] focus:border-[#2E7D32]/50 rounded-3xl py-5 pl-16 pr-8 text-sm font-bold text-[#263238] tracking-wider outline-none transition-all placeholder:text-slate-600 focus:shadow-[0_0_50px_-12px_rgba(16,185,129,0.1)]"
-                    />
                 </div>
-                <div className="flex bg-white/50 p-1.5 rounded-2xl border border-[#E0E0E0] shrink-0">
+                <div className="flex bg-white/50 p-1.5 rounded-2xl border border-[#E0E0E0] shrink-0 h-20 items-center">
                     {['All', 'Pending', 'Paid'].map(status => (
                         <button
                             key={status}
                             onClick={() => setFilterStatus(status)}
-                            className={`px-6 py-3 rounded-xl text-xs font-semibold font-medium transition-all ${
+                            className={`px-8 h-full rounded-xl text-xs font-semibold font-medium transition-all ${
                                 filterStatus === status 
-                                ? 'bg-slate-100 text-[#263238] shadow-lg' 
-                                : 'text-[#607D8B] hover:text-[#607D8B]'
+                                ? 'bg-slate-100 text-[#263238] shadow-lg border border-[#E0E0E0]/50' 
+                                : 'text-[#607D8B] hover:text-[#263238]'
                             }`}
                         >
                             {status}
