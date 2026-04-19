@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
+import bgTexture from '../assets/bg_texture.png';
 
 const generateShopId = () => {
   const hex = "0123456789ABCDEF";
@@ -122,7 +123,7 @@ const Signup = () => {
       {/* Background Texture Overlay */}
       <div 
         className="absolute inset-0 z-0 opacity-40 bg-cover bg-center bg-no-repeat blur-[100px]"
-        style={{ backgroundImage: `url('/C:/Users/admin/.gemini/antigravity/brain/32f2f293-18f2-4136-813e-72585536a434/login_bg_texture_1775586565594.png')` }}
+        style={{ backgroundImage: `url(${bgTexture})` }}
       />
       
       {/* Decoration */}

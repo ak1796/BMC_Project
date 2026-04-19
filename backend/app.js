@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { notFound, errorHandler } = require('./middlewares/error.middleware');
 
 // Routes
@@ -23,10 +24,7 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
-// Main entry point for routes
-app.get('/', (req, res) => {
-    res.send('Smart Waste Management API is running...');
-});
+// Initial health check removed to favor static/wildcard serving
 
 app.use('/api/auth', authRoutes);
 app.use('/api/shopkeepers', shopkeeperRoutes);
@@ -38,16 +36,16 @@ app.use('/api/admins', adminRoutes);
 app.use('/api/payment', paymentRoutes);
 
 
-// Serve Frontend in Production
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve Frontend
+const frontendDistPath = path.resolve(__dirname, '../frontend/dist');
+if (fs.existsSync(frontendDistPath)) {
+    app.use(express.static(frontendDistPath));
     
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
-    });
-} else {
-    app.get('/', (req, res) => {
-        res.send('Smart Waste Management API is running...');
+    // Catch-all route to serve the SPA (handles direct navigation/refresh)
+    app.get('*', (req, res, next) => {
+        // Only serve index.html if it's not an API call
+        if (req.url.startsWith('/api')) return next();
+        res.sendFile(path.join(frontendDistPath, 'index.html'));
     });
 }
 
