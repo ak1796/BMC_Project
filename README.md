@@ -11,12 +11,12 @@ NagarVaani is a high-performance, real-time waste management and compliance plat
 - **Real-Time Waste Logging**: Seamless logging for Dry, Wet, and Electronic waste with automatic volume estimation.
 - **Service Hub & Tracker**: A centralized "Dispatch Hub" to track collections, emergency tickets, and bulky waste requests in one view.
 - **Smart Issue Reporting**: Report overflows or bin anomalies using a built-in QR scanner or manual entry.
-- **Financial Transparency**: View penalty history and settle outstanding dues directly through an integrated statement view.
+- **Financial Transparency & Payments**: View penalty history and settle outstanding dues instantly using the built-in **Razorpay Checkout Gateway**. Complete with cryptographically verified digital receipt identifiers.
 
 ### 🛡️ For Market Administrators
 - **Executive Dashboard**: Real-time insights into market-wide compliance, collection ETAs, and active alerts via Socket.io.
 - **Dynamic System Reports**: Generate and export targeted Excel reports for **Today**, **Last 7 Days**, or **Last 30 Days**.
-- **Automated Fine Management**: Intelligent tracking systems that identify non-compliant shops and automate penalty issuance.
+- **Automated Fine Management & Analytics**: Intelligent tracking systems automate penalty issuance, while a dedicated Finance Hub offers date-ranged metric filtering to view exact fine collection revenues.
 - **QR Asset Management**: Generate and manage unique QR codes for market bin nodes.
 - **Priority Dispatch**: Delegate and track emergency waste collection protocols with real-time status updates for shopkeepers.
 
@@ -32,6 +32,7 @@ NagarVaani is a high-performance, real-time waste management and compliance plat
 | **Backend** | **Node.js / Express** | Scalable and robust API backbone. |
 | **Database** | **MongoDB (Mongoose)** | Flexible document storage for logs and users. |
 | **Real-time** | **Socket.io** | Low-latency bi-directional event streaming. |
+| **Payments** | **Razorpay** | Complete e-commerce and cryptographically secure payment pipeline. |
 | **Reports** | **ExcelJS** | Server-side generation of high-quality `.xlsx` reports. |
 
 ---
@@ -55,6 +56,8 @@ Configure your environment in `.env`:
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secure_jwt_secret
 PORT=5000
+RAZORPAY_KEY_ID=your_razorpay_key
+RAZORPAY_KEY_SECRET=your_razorpay_secret
 ```
 **Start the server:**
 ```bash
