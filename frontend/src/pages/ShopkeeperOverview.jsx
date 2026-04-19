@@ -139,26 +139,26 @@ const ShopkeeperOverview = () => {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row md:items-center justify-between gap-6"
+        className="flex flex-col lg:flex-row lg:items-end justify-between gap-6"
       >
-        <div className="space-y-1">
-          <h1 className="text-4xl font-semibold font-outfit tracking-tight text-[#263238] capitalize">
-            Shopkeeper Dashboard
+        <div className="space-y-1.5">
+          <h1 className="text-4xl font-bold font-outfit tracking-tight text-[#263238]">
+            Dashboard
           </h1>
-          <p className="text-[#607D8B] font-medium tracking-wide">Manage your daily waste compliance and pickup logistics.</p>
+          <p className="text-sm text-[#607D8B] font-medium tracking-wide">Welcome back. Monitoring your waste logistics in real-time.</p>
         </div>
         <button 
           onClick={() => setShowLogForm(true)}
-          className="btn-primary group flex items-center gap-3 px-8 shadow-[0_0_30px_rgba(16,185,129,0.1)]"
+          className="btn-primary group flex items-center gap-2.5 px-6 py-4 shadow-xl shadow-emerald-500/10"
         >
-          <div className="p-1 bg-[#F9FBF7]/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
-            <Plus size={20} className="stroke-[3px]" />
+          <div className="p-1 bg-white/20 rounded-lg group-hover:rotate-90 transition-transform duration-500">
+            <Plus size={18} className="stroke-[3px]" />
           </div>
-          <span className="text-sm font-semibold font-medium">Add Waste Entry</span>
+          <span className="text-sm font-bold tracking-tight">Add Waste Entry</span>
         </button>
       </motion.header>
 
@@ -170,91 +170,186 @@ const ShopkeeperOverview = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.1 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className={`saas-card p-8 border-l-[6px] border-${stat.color}-500 group relative overflow-hidden active:scale-95 transition-all`}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className={`saas-card bg-white p-6 border-l-[5px] border-${stat.color}-500 group relative overflow-hidden active:scale-[0.98] transition-all`}
             >
                <div className="flex items-center justify-between relative z-10">
                   <div>
-                     <p className="text-sm font-semibold font-medium text-[#607D8B] mb-2">{stat.label}</p>
-                     <p className="text-4xl font-semibold font-outfit text-[#263238] group-hover:scale-110 transition-transform origin-left duration-500">{stat.val}</p>
+                     <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#607D8B] mb-1.5">{stat.label}</p>
+                     <p className="text-3xl font-bold font-outfit text-[#263238] group-hover:translate-x-1 transition-transform duration-500">{stat.val}</p>
                   </div>
-                  <div className={`p-4 rounded-2xl bg-${stat.color}-500/10 text-${stat.color}-500 border border-${stat.color}-500/20`}>
-                     {stat.icon}
+                  <div className={`p-3 rounded-xl bg-${stat.color}-500/10 text-${stat.color}-500 border border-${stat.color}-500/5`}>
+                     {/* Scale icon down slightly */}
+                     <span className="scale-90 block">{stat.icon}</span>
                   </div>
                </div>
-               <div className={`absolute bottom-0 right-0 w-24 h-24 bg-${stat.color}-500/5  pointer-events-none group-hover:bg-${stat.color}-500/10 transition-colors`} />
+               <div className={`absolute -bottom-4 -right-4 w-20 h-20 bg-${stat.color}-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-${stat.color}-500/10 transition-colors`} />
             </motion.div>
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-         <section className="xl:col-span-2 space-y-6">
-            <div className="flex items-center justify-between px-2">
-               <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238]">Recent Waste Logs</h3>
-               <Link to="/shopkeeper/history" className="text-xs font-semibold text-[#2E7D32] hover:text-[#2E7D32] flex items-center gap-2 tracking-widest uppercase">
-                  View Full History <ArrowRight size={14} />
-               </Link>
-            </div>
-            
-            <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden">
-               {logs.slice(0, 5).map((log, idx) => (
-                  <motion.div 
-                    key={log._id} 
-                    initial={{ opacity: 0 }} 
-                    animate={{ opacity: 1 }} 
-                    transition={{ delay: 0.3 + idx * 0.1 }}
-                    className="p-6 flex items-center justify-between hover:bg-slate-50 group transition-all"
-                  >
-                     <div className="flex items-center gap-6">
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-semibold border transition-all duration-500 group-hover:scale-110 ${
-                           log.waste_type === 'Wet' 
-                             ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' 
-                             : 'bg-[#0D47A1]/10 text-[#0D47A1] border-[#0D47A1]/20'
-                        }`}>
-                           {log.waste_type[0]}
-                        </div>
-                        <div>
-                           <p className="font-bold text-[#263238] text-lg">{log.waste_type} Waste • {log.no_of_bags} Bags</p>
-                           <div className="flex items-center gap-3 mt-1.5 font-bold text-xs font-medium text-slate-600">
-                             <span className="flex items-center gap-1.5"><Clock size={12} /> {new Date(log.timestamp).toLocaleTimeString()}</span>
-                             <span className="w-1 h-1 bg-slate-100 rounded-full" />
-                             <span>Bin: {log.dustbin_id?.dustbin_id || 'XN-001'}</span>
-                           </div>
-                        </div>
-                     </div>
-                     <div className="flex flex-col items-end gap-2">
-                        {log.bulky_request && (
-                           <span className="px-3 py-1 bg-[#E65100]/10 text-[#E65100] border border-[#E65100]/20 rounded-lg text-xs font-semibold tracking-widest uppercase">
-                              Bulky Action
-                           </span>
-                        )}
-                        <span className="text-xs font-bold text-slate-700">{new Date(log.timestamp).toLocaleDateString()}</span>
-                     </div>
-                  </motion.div>
-               ))}
-               {logs.length === 0 && (
-                  <div className="p-20 text-center space-y-4">
-                     <div className="w-16 h-16 bg-white border border-[#E0E0E0] rounded-[2rem] flex items-center justify-center mx-auto text-slate-700 animate-bounce">
-                        <ClipboardList size={32} />
-                     </div>
-                     <p className="text-[#607D8B] font-bold font-medium text-xs">No active data stream</p>
-                  </div>
-               )}
-            </div>
-         </section>
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+         {/* MAIN COLUMN */}
+         <div className="xl:col-span-8 space-y-8">
+            <section className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                   <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#607D8B]">Recent Logs</h3>
+                   <Link to="/shopkeeper/history" className="text-[10px] font-bold text-[#2E7D32] hover:underline flex items-center gap-1.5 uppercase tracking-widest">
+                      View All <ArrowRight size={12} />
+                   </Link>
+                </div>
+                
+                <div className="saas-card bg-white divide-y divide-slate-100 overflow-hidden border-slate-100 shadow-sm">
+                   {logs.slice(0, 5).map((log, idx) => (
+                      <motion.div 
+                        key={log._id} 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }} 
+                        transition={{ delay: 0.3 + idx * 0.1 }}
+                        className="p-5 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                      >
+                         <div className="flex items-center gap-5">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold border transition-all duration-300 ${
+                               log.waste_type === 'Wet' 
+                                 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                                 : 'bg-blue-50 text-blue-600 border-blue-100'
+                            }`}>
+                               {log.waste_type[0]}
+                            </div>
+                            <div>
+                               <p className="font-bold text-[#263238] text-base">{log.waste_type} Waste • {log.no_of_bags} Bags</p>
+                               <div className="flex items-center gap-3 mt-1 text-[10px] font-bold text-slate-400">
+                                 <span className="flex items-center gap-1.5 uppercase"><Clock size={10} /> {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                 <span className="w-1 h-1 bg-slate-200 rounded-full" />
+                                 <span className="uppercase tracking-tighter">BIN: {log.dustbin_id?.dustbin_id || 'XN-001'}</span>
+                               </div>
+                            </div>
+                         </div>
+                         <div className="flex flex-col items-end gap-1.5">
+                            {log.bulky_request && (
+                               <span className="px-2 py-0.5 bg-orange-50 text-orange-600 border border-orange-100 rounded text-[9px] font-black tracking-tighter uppercase mb-1">
+                                  BULKY ACTION
+                               </span>
+                            )}
+                            <span className="text-[10px] font-bold text-slate-500">{new Date(log.timestamp).toLocaleDateString()}</span>
+                         </div>
+                      </motion.div>
+                   ))}
+                   {logs.length === 0 && (
+                      <div className="p-12 text-center space-y-4">
+                         <div className="w-16 h-16 bg-white border border-[#E0E0E0] rounded-[2rem] flex items-center justify-center mx-auto text-slate-700 animate-bounce">
+                            <ClipboardList size={32} />
+                         </div>
+                         <p className="text-[#607D8B] font-bold font-medium text-xs">No active data stream</p>
+                      </div>
+                   )}
+                </div>
+            </section>
 
-         <section className="space-y-6">
-            <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238] px-2">Performance Summary</h3>
-            <div className="saas-card p-8 bg-white border-[#E0E0E0] relative overflow-hidden h-[400px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+               {/* Penalties & Dues */}
+               <section className="space-y-4">
+                  <div className="flex items-center justify-between px-1">
+                      <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#607D8B]">Penalties</h3>
+                      <button 
+                          onClick={() => setShowStatement(true)}
+                          className="text-[10px] font-bold text-[#2E7D32] hover:underline uppercase tracking-widest"
+                      >
+                          Full Statement
+                      </button>
+                  </div>
+                  
+                  <div className="saas-card bg-white overflow-hidden border-slate-100 shadow-sm min-h-[240px] flex flex-col">
+                      {fines.filter(f => f.status === 'Pending').length === 0 ? (
+                          <div className="flex-1 p-10 text-center bg-slate-50/30 flex flex-col items-center justify-center gap-3">
+                              <ShieldCheck size={28} className="text-emerald-500/30" />
+                              <p className="text-[10px] font-bold uppercase tracking-[0.05em] text-slate-400">Zero Outstanding</p>
+                          </div>
+                      ) : (
+                          fines.filter(f => f.status === 'Pending').map(f => (
+                              <div key={f._id} className="p-5 flex-1 flex flex-col justify-between">
+                                  <div className="space-y-4">
+                                      <div className="flex justify-between items-start">
+                                          <div>
+                                              <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1">Unpaid Fine</p>
+                                              <h4 className="text-2xl font-bold text-[#263238]">
+                                                  Rs. {f.amount}
+                                              </h4>
+                                          </div>
+                                          <span className="px-2 py-1 rounded bg-rose-50 text-rose-600 text-[8px] font-black tracking-widest uppercase animate-pulse">
+                                              Overdue
+                                          </span>
+                                      </div>
+                                      <p className="text-[11px] font-semibold text-slate-500 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-slate-100">{f.reason}</p>
+                                  </div>
+                                  
+                                  <button 
+                                      onClick={async () => {
+                                          try {
+                                              await axios.put(`/api/fines/${f._id}/pay`);
+                                              fetchFines();
+                                          } catch (err) {
+                                              alert('Payment failed');
+                                          }
+                                      }}
+                                      className="mt-6 w-full py-3 bg-[#263238] hover:bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg active:scale-95"
+                                  >
+                                      Clear Due Now
+                                  </button>
+                              </div>
+                          ))
+                      )}
+                  </div>
+               </section>
+
+               {/* Service Tickets & ETA */}
+               <section className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#607D8B] px-1">Service Tickets</h3>
+                  <div className="saas-card bg-white divide-y divide-slate-100 overflow-hidden border-slate-100 shadow-sm max-h-[240px] overflow-y-auto custom-scrollbar">
+                      {alerts.length === 0 ? (
+                          <div className="p-10 text-center text-slate-400 text-[10px] font-bold uppercase tracking-widest">No active cases.</div>
+                      ) : (
+                          alerts.map(a => (
+                              <div key={a._id || a.alert_id} className="p-4 hover:bg-slate-50 transition-colors">
+                                  <div className="flex justify-between items-center mb-1">
+                                      <h4 className="text-[11px] font-bold uppercase text-[#263238] tracking-tight truncate max-w-[120px]">
+                                          {a.comments?.includes('BULKY') ? 'Bulky Pickup' : 'General Ticket'}
+                                      </h4>
+                                      <span className={`px-2 py-0.5 rounded-[4px] text-[8px] font-black tracking-tight ${
+                                          a.status === 'Resolved' ? 'bg-emerald-50 text-emerald-600' : 
+                                          a.status === 'Dispatched' ? 'bg-orange-50 text-orange-600' : 'bg-blue-50 text-blue-600'
+                                      }`}>
+                                          {a.status === 'Resolved' ? 'DONE' : a.status === 'Dispatched' ? 'ACTIVE' : 'QUEUE'}
+                                      </span>
+                                  </div>
+                                  <p className="text-[10px] font-semibold text-slate-400 truncate mb-2">{a.comments || 'Manual alert entry'}</p>
+                                  
+                                  {a.status === 'Resolved' && a.resolution_message && (
+                                      <div className="p-2.5 bg-emerald-50/50 border border-emerald-100/50 rounded-lg">
+                                          <p className="text-[9px] font-bold text-emerald-600 tracking-tight leading-tight">{a.resolution_message}</p>
+                                      </div>
+                                  )}
+                              </div>
+                          ))
+                      )}
+                  </div>
+               </section>
+            </div>
+         </div>
+
+         {/* SIDEBAR COLUMN */}
+         <div className="xl:col-span-4 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#607D8B] px-1">Performance</h3>
+            <div className="saas-card bg-white p-6 border-slate-100 shadow-sm relative overflow-hidden">
                <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 bg-[#2E7D32]/10 text-[#2E7D32] rounded-2xl flex items-center justify-center border border-[#2E7D32]/20">
-                        <BarChart3 size={24} />
+                  <div className="flex items-center gap-3">
+                     <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100">
+                        <BarChart3 size={20} />
                      </div>
                      <div>
-                        <p className="text-xs font-semibold text-[#607D8B] font-medium">Personal Tracking</p>
-                        <p className="text-lg font-bold text-[#263238] uppercase">Compliance Matrix</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Compliance</p>
+                        <p className="text-base font-bold text-[#263238]">Active Matrix</p>
                      </div>
                   </div>
                   
@@ -266,8 +361,8 @@ const ShopkeeperOverview = () => {
                      ].map(item => (
                         <div key={item.l} className="space-y-2">
                            <div className="flex justify-between text-xs font-semibold uppercase text-slate-600 tracking-tighter">
-                              <span>{item.l}</span>
-                              <span className={`text-${item.c}-500`}>{item.v}</span>
+                               <span>{item.l}</span>
+                               <span className={`text-${item.c}-500`}>{item.v}</span>
                            </div>
                            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden border border-white/[0.02]">
                               <motion.div 
@@ -283,173 +378,86 @@ const ShopkeeperOverview = () => {
 
                   <div className="mt-6 p-4 bg-[#2E7D32]/5 border border-[#2E7D32]/10 rounded-2xl flex items-center gap-4">
                      <TrendingUp className="text-[#2E7D32]" size={24} />
-                     <p className="text-sm font-medium text-[#607D8B]">Your compliance is <span className="text-[#2E7D32] font-semibold">Top 5%</span> in this sector.</p>
+                     <p className="text-sm font-medium text-[#607D8B]">Your compliance is <span className="text-[#2E7D32] font-semibold">Top 5%</span>.</p>
                   </div>
                </div>
                <div className="absolute top-0 right-0 w-48 h-48 bg-[#2E7D32]/[0.03]  pointer-events-none" />
             </div>
-
-            {/* NEW TICKET AND ETA SECTION */}
-            {/* FINES SECTION */}
-            <div className="pt-6">
-                <div className="flex items-center justify-between px-2 mb-6">
-                    <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238]">Penalties & Dues</h3>
-                    <button 
-                        onClick={() => setShowStatement(true)}
-                        className="text-xs font-semibold text-[#2E7D32] hover:text-[#2E7D32] font-medium flex items-center gap-2"
-                    >
-                        View Statement <ClipboardList size={14} />
-                    </button>
-                </div>
-                
-                <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden">
-                    {fines.filter(f => f.status === 'Pending').length === 0 ? (
-                        <div className="p-12 text-center bg-[#2E7D32]/5 items-center flex flex-col gap-3">
-                            <ShieldCheck size={32} className="text-[#2E7D32]/30" />
-                            <p className="text-[#607D8B] text-xs font-semibold font-medium">No outstanding penalties.</p>
-                        </div>
-                    ) : (
-                        fines.filter(f => f.status === 'Pending').map(f => (
-                            <div key={f._id} className="p-6 hover:bg-rose-500/[0.02] transition-colors relative group">
-                                <div className="flex justify-between items-start mb-3">
-                                    <div>
-                                        <h4 className="text-sm font-semibold uppercase tracking-tight text-rose-500">
-                                            Rs. {f.amount} Penalty
-                                        </h4>
-                                        <p className="text-xs font-bold text-[#607D8B] mt-1 font-medium">Issued: {new Date(f.issuedAt).toLocaleDateString()}</p>
-                                    </div>
-                                    <span className="px-2 py-1 rounded text-[8px] font-semibold tracking-widest bg-rose-500/20 text-rose-500 animate-pulse">
-                                        OVERDUE
-                                    </span>
-                                </div>
-                                <p className="text-xs font-bold text-[#607D8B] leading-relaxed">{f.reason}</p>
-                                
-                                <button 
-                                    onClick={async () => {
-                                        try {
-                                            await axios.put(`/api/fines/${f._id}/pay`);
-                                            fetchFines();
-                                        } catch (err) {
-                                            alert('Payment failed');
-                                        }
-                                    }}
-                                    className="mt-4 w-full py-3 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-[#263238] border border-rose-500/20 rounded-xl text-xs font-semibold font-medium transition-all"
-                                >
-                                    Settle Penalty Now
-                                </button>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-
-            {/* STATEMENT MODAL */}
-            <AnimatePresence>
-                {showStatement && (
-                    <motion.div 
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F9FBF7]/90 backdrop-blur-xl"
-                        onClick={() => setShowStatement(false)}
-                    >
-                        <motion.div 
-                            initial={{ scale: 0.9, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 40 }}
-                            className="w-full max-w-2xl bg-white border border-[#E0E0E0] rounded-[2.5rem] shadow-2xl overflow-hidden"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <div className="p-8 border-b border-[#E0E0E0] flex justify-between items-center bg-slate-100/50">
-                                <div>
-                                    <h3 className="text-2xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Financial Statement</h3>
-                                    <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Transaction History & Penalties</p>
-                                </div>
-                                <button onClick={() => setShowStatement(false)} className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-xl text-[#607D8B] hover:text-[#263238] transition-all">✕</button>
-                            </div>
-                            
-                            <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar space-y-4">
-                                {fines.length === 0 ? (
-                                    <div className="py-20 text-center opacity-30">
-                                        <ClipboardList size={48} className="mx-auto mb-4" />
-                                        <p className="font-semibold font-medium text-xs">No transactions recorded</p>
-                                    </div>
-                                ) : (
-                                    fines.map(f => (
-                                        <div key={f._id} className="p-5 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] flex items-center justify-between group">
-                                            <div className="flex items-center gap-5">
-                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                                                    f.status === 'Paid' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
-                                                }`}>
-                                                    <AlertCircle size={20} />
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-[#263238] text-sm">{f.reason}</p>
-                                                    <p className="text-xs font-semibold text-slate-600 font-medium mt-1">
-                                                        {new Date(f.issuedAt).toLocaleDateString()} • {f.status === 'Paid' ? 'SETTLED' : 'PENDING'}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-lg font-semibold text-[#263238] font-outfit tracking-tighter">Rs. {f.amount}</p>
-                                                <p className={`text-[8px] font-semibold font-medium ${f.status === 'Paid' ? 'text-[#2E7D32]' : 'text-rose-500'}`}>
-                                                    {f.status === 'Paid' ? 'Transaction Success' : 'Awaiting Payment'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                            
-                            <div className="p-8 bg-slate-100/30 border-t border-[#E0E0E0] flex justify-between items-center">
-                                <div>
-                                    <p className="text-xs font-semibold text-[#607D8B] font-medium">Total Outstanding</p>
-                                    <p className="text-2xl font-semibold text-rose-500 font-outfit tracking-tighter">
-                                        Rs. {fines.filter(f => f.status === 'Pending').reduce((acc, curr) => acc + curr.amount, 0)}
-                                    </p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-xs font-semibold text-[#607D8B] font-medium">Lifetime Settled</p>
-                                    <p className="text-2xl font-semibold text-[#2E7D32] font-outfit tracking-tighter">
-                                        Rs. {fines.filter(f => f.status === 'Paid').reduce((acc, curr) => acc + curr.amount, 0)}
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <div className="pt-6">
-                <h3 className="text-lg font-semibold font-outfit uppercase tracking-wider text-[#263238] px-2 mb-6">Service Tickets & ETA</h3>
-                <div className="saas-card divide-y divide-[#E0E0E0] overflow-hidden max-h-[400px] overflow-y-auto">
-                    {alerts.length === 0 ? (
-                        <div className="p-12 text-center text-[#607D8B] text-xs font-bold font-medium">No active tickets.</div>
-                    ) : (
-                        alerts.map(a => (
-                            <div key={a._id || a.alert_id} className="p-5 hover:bg-slate-50 transition-colors relative group">
-                                <div className="flex justify-between items-start mb-2">
-                                    <h4 className="text-xs font-semibold uppercase text-[#263238] truncate max-w-[200px]" title={a.comments}>
-                                        {a.comments?.includes('BULKY') ? 'Bulky Waste Request' : 'Emergency Report'}
-                                    </h4>
-                                    <span className={`px-2 py-1 rounded text-[8px] font-semibold tracking-widest ${
-                                        a.status === 'Resolved' ? 'bg-[#2E7D32]/20 text-[#2E7D32]' : 
-                                        a.status === 'Dispatched' ? 'bg-[#E65100]/20 text-[#E65100]' : 'bg-[#0D47A1]/20 text-[#0D47A1]'
-                                    }`}>
-                                        {a.status === 'Resolved' ? 'RESOLVED' : a.status === 'Dispatched' ? 'IN PROGRESS' : 'QUEUE'}
-                                    </span>
-                                </div>
-                                <p className="text-xs text-[#607D8B] mb-3 truncate">{a.comments || 'No description provided.'}</p>
-                                
-                                {a.status === 'Resolved' && a.resolution_message && (
-                                    <div className="p-3 bg-[#2E7D32]/10 border border-[#2E7D32]/20 rounded-xl">
-                                        <p className="text-xs font-semibold font-medium text-[#2E7D32]/70 mb-1">Admin ETA Message</p>
-                                        <p className="text-xs font-bold text-[#2E7D32]">{a.resolution_message}</p>
-                                    </div>
-                                )}
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-         </section>
+         </div>
       </div>
+
+      {/* STATEMENT MODAL */}
+      <AnimatePresence>
+          {showStatement && (
+              <motion.div 
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#F9FBF7]/90 backdrop-blur-xl"
+                  onClick={() => setShowStatement(false)}
+              >
+                  <motion.div 
+                      initial={{ scale: 0.9, opacity: 0, y: 40 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 40 }}
+                      className="w-full max-w-2xl bg-white border border-[#E0E0E0] rounded-[2.5rem] shadow-2xl overflow-hidden"
+                      onClick={(e) => e.stopPropagation()}
+                  >
+                      <div className="p-8 border-b border-[#E0E0E0] flex justify-between items-center bg-slate-100/50">
+                          <div>
+                              <h3 className="text-2xl font-semibold font-outfit uppercase tracking-tight text-[#263238]">Financial Statement</h3>
+                              <p className="text-xs font-bold text-[#607D8B] font-medium mt-1">Transaction History & Penalties</p>
+                          </div>
+                          <button onClick={() => setShowStatement(false)} className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-xl text-[#607D8B] hover:text-[#263238] transition-all">✕</button>
+                      </div>
+                      
+                      <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar space-y-4">
+                          {fines.length === 0 ? (
+                              <div className="py-20 text-center opacity-30">
+                                  <ClipboardList size={48} className="mx-auto mb-4" />
+                                  <p className="font-semibold font-medium text-xs">No transactions recorded</p>
+                              </div>
+                          ) : (
+                              fines.map(f => (
+                                  <div key={f._id} className="p-5 bg-[#F9FBF7]/50 rounded-2xl border border-[#E0E0E0] flex items-center justify-between group">
+                                      <div className="flex items-center gap-5">
+                                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                                              f.status === 'Paid' ? 'bg-[#2E7D32]/10 text-[#2E7D32] border-[#2E7D32]/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+                                          }`}>
+                                              <AlertCircle size={20} />
+                                          </div>
+                                          <div>
+                                              <p className="font-bold text-[#263238] text-sm">{f.reason}</p>
+                                              <p className="text-xs font-semibold text-slate-600 font-medium mt-1">
+                                                  {new Date(f.issuedAt).toLocaleDateString()} • {f.status === 'Paid' ? 'SETTLED' : 'PENDING'}
+                                              </p>
+                                          </div>
+                                      </div>
+                                      <div className="text-right">
+                                          <p className="text-lg font-semibold text-[#263238] font-outfit tracking-tighter">Rs. {f.amount}</p>
+                                          <p className={`text-[8px] font-semibold font-medium ${f.status === 'Paid' ? 'text-[#2E7D32]' : 'text-rose-500'}`}>
+                                              {f.status === 'Paid' ? 'Transaction Success' : 'Awaiting Payment'}
+                                          </p>
+                                      </div>
+                                  </div>
+                              ))
+                          )}
+                      </div>
+                      
+                      <div className="p-8 bg-slate-100/30 border-t border-[#E0E0E0] flex justify-between items-center">
+                          <div>
+                              <p className="text-xs font-semibold text-[#607D8B] font-medium">Total Outstanding</p>
+                              <p className="text-2xl font-semibold text-rose-500 font-outfit tracking-tighter">
+                                  Rs. {fines.filter(f => f.status === 'Pending').reduce((acc, curr) => acc + curr.amount, 0)}
+                              </p>
+                          </div>
+                          <div className="text-right">
+                              <p className="text-xs font-semibold text-[#607D8B] font-medium">Lifetime Settled</p>
+                              <p className="text-2xl font-semibold text-[#2E7D32] font-outfit tracking-tighter">
+                                  Rs. {fines.filter(f => f.status === 'Paid').reduce((acc, curr) => acc + curr.amount, 0)}
+                              </p>
+                          </div>
+                      </div>
+                  </motion.div>
+              </motion.div>
+          )}
+      </AnimatePresence>
 
       {/* Log Form Modal */}
       <AnimatePresence>
