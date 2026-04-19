@@ -96,6 +96,13 @@ const getFines = async (req, res) => {
             }
         }
 
+        if (req.query.startDate && req.query.endDate) {
+            filter.issuedAt = {
+                $gte: new Date(req.query.startDate),
+                $lte: new Date(req.query.endDate)
+            };
+        }
+
         const fines = await Fine.find(filter)
             .populate('shop_id', 'shop_name shop_id location')
             .sort({ issuedAt: -1 });
@@ -141,8 +148,17 @@ const getFineStats = async (req, res) => {
         let shops = await Shopkeeper.find({ admin_id: req.user._id }).select('_id');
         let shopIds = shops.map(s => s._id);
 
+        let matchStage = { shop_id: { $in: shopIds } };
+
+        if (req.query.startDate && req.query.endDate) {
+            matchStage.issuedAt = {
+                $gte: new Date(req.query.startDate),
+                $lte: new Date(req.query.endDate)
+            };
+        }
+
         const stats = await Fine.aggregate([
-            { $match: { shop_id: { $in: shopIds } } },
+            { $match: matchStage },
             {
                 $group: {
                     _id: "$status",

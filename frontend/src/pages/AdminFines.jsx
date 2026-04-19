@@ -12,17 +12,32 @@ const AdminFines = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('All'); // 'All', 'Pending', 'Paid'
     const [stats, setStats] = useState({ total_pending: 0, total_collected: 0, count: 0 });
+    const [dateRange, setDateRange] = useState({ start: '', end: '' });
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        // Prevent partial queries
+        if ((!dateRange.start && !dateRange.end) || (dateRange.start && dateRange.end)) {
+            fetchData();
+        }
+    }, [dateRange]);
 
     const fetchData = async () => {
         setLoading(true);
         try {
+            const queryParams = new URLSearchParams();
+            if (dateRange.start && dateRange.end) {
+                // Ensure endDate captures the full day
+                const endDate = new Date(dateRange.end);
+                endDate.setHours(23, 59, 59, 999);
+                
+                queryParams.append('startDate', new Date(dateRange.start).toISOString());
+                queryParams.append('endDate', endDate.toISOString());
+            }
+            const query = queryParams.toString() ? `?${queryParams.toString()}` : '';
+
             const [finesRes, statsRes] = await Promise.all([
-                axios.get('/api/fines'),
-                axios.get('/api/fines/stats')
+                axios.get(`/api/fines${query}`),
+                axios.get(`/api/fines/stats${query}`)
             ]);
             setFines(finesRes.data);
             setStats(statsRes.data);
@@ -150,7 +165,33 @@ const AdminFines = () => {
                         </AnimatePresence>
                     </div>
                 </div>
-                <div className="flex bg-white/50 p-1.5 rounded-2xl border border-[#E0E0E0] shrink-0 h-20 items-center">
+                <div className="flex bg-white border border-[#E0E0E0] rounded-[1.5rem] overflow-hidden items-center p-2 hidden lg:flex">
+                    <input 
+                        type="date"
+                        value={dateRange.start}
+                        onChange={(e) => setDateRange(p => ({ ...p, start: e.target.value }))}
+                        className="border-none text-xs font-semibold text-[#607D8B] bg-transparent focus:ring-0 p-2"
+                        title="Start Date"
+                    />
+                    <span className="text-[#607D8B] text-xs px-2">to</span>
+                    <input 
+                        type="date"
+                        value={dateRange.end}
+                        min={dateRange.start}
+                        onChange={(e) => setDateRange(p => ({ ...p, end: e.target.value }))}
+                        className="border-none text-xs font-semibold text-[#607D8B] bg-transparent focus:ring-0 p-2"
+                        title="End Date"
+                    />
+                    {(dateRange.start || dateRange.end) && (
+                        <button 
+                            onClick={() => setDateRange({ start: '', end: '' })}
+                            className="ml-2 w-6 h-6 flex items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-100 rounded-lg transition-colors"
+                        >
+                            <X size={12} />
+                        </button>
+                    )}
+                </div>
+                <div className="flex bg-white/50 p-1.5 rounded-2xl border border-[#E0E0E0] shrink-0 h-20 lg:h-16 items-center">
                     {['All', 'Pending', 'Paid'].map(status => (
                         <button
                             key={status}

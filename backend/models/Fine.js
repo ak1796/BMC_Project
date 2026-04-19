@@ -23,6 +23,18 @@ const fineSchema = new mongoose.Schema({
     issuedAt: {
         type: Date,
         default: Date.now
+    },
+    razorpay_order_id: {
+        type: String,
+        default: null
+    },
+    razorpay_payment_id: {
+        type: String,
+        default: null
+    },
+    razorpay_signature: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 

@@ -5,11 +5,16 @@ import {
   TrendingDown, CheckCircle2, ArrowRight, CreditCard, Receipt
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
+import { loadScript } from '../utils/loadScript';
+
 
 const ShopkeeperFines = () => {
+    const { user } = useAuth();
     const [fines, setFines] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ total_pending: 0, total_settled: 0 });
+    const [payingId, setPayingId] = useState(null);
 
     useEffect(() => {
         fetchFines();
@@ -32,12 +37,67 @@ const ShopkeeperFines = () => {
         }
     };
 
-    const handleSettleFine = async (fineId) => {
+    const handleSettleFine = async (fine) => {
+        setPayingId(fine._id);
+        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+        if (!res) {
+            alert('Razorpay SDK failed to load. Are you online?');
+            setPayingId(null);
+            return;
+        }
+
         try {
-            await axios.put(`/api/fines/${fineId}/pay`);
-            fetchFines();
+            const { data: orderData } = await axios.post('/api/payment/create-order', {
+                fineId: fine._id
+            });
+
+            const options = {
+                key: orderData.keyId,
+                amount: orderData.amount,
+                currency: 'INR',
+                name: 'BMC Smart Waste Manager',
+                description: 'Fine Settlement',
+                order_id: orderData.orderId,
+                handler: async function (response) {
+                    try {
+                        await axios.post('/api/payment/verify', {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            fineId: fine._id
+                        });
+                        alert('Payment Successful!');
+                        fetchFines();
+                    } catch (err) {
+                        alert('Payment verification failed.');
+                        console.error('Verify error:', err);
+                    } finally {
+                        setPayingId(null);
+                    }
+                },
+                modal: {
+                    ondismiss: function() {
+                        setPayingId(null);
+                    }
+                },
+                prefill: {
+                    name: user?.name || 'Shopkeeper',
+                    email: user?.email || 'shopkeeper@example.com',
+                    contact: user?.phone || '9999999999'
+                },
+                theme: {
+                    color: '#2E7D32'
+                }
+            };
+
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+
         } catch (err) {
-            alert('Payment failed. Please try again.');
+            console.error('Payment Error:', err);
+            alert('Could not initiate payment. ' + (err.response?.data?.message || err.message));
+            setPayingId(null);
         }
     };
 
@@ -107,6 +167,11 @@ const ShopkeeperFines = () => {
                                             <p className="text-xs font-semibold text-[#607D8B] font-medium">
                                                 {new Date(fine.issuedAt).toLocaleDateString()} • REF: #{fine._id.slice(-6).toUpperCase()}
                                             </p>
+                                            {fine.razorpay_payment_id && (
+                                                <p className="text-[10px] font-bold text-[#2E7D32] mt-1 bg-[#2E7D32]/10 inline-block px-2 py-0.5 rounded uppercase tracking-widest">
+                                                    Payment ID: {fine.razorpay_payment_id}
+                                                </p>
+                                            )}
                                             <h4 className="text-lg font-bold text-[#263238] tracking-tight">{fine.reason}</h4>
                                         </div>
                                         <div className="text-right">
@@ -123,10 +188,24 @@ const ShopkeeperFines = () => {
                                     
                                     {fine.status === 'Pending' && (
                                         <button 
-                                            onClick={() => handleSettleFine(fine._id)}
-                                            className="w-full mt-2 py-4 bg-rose-500 text-[#263238] rounded-2xl text-xs font-semibold uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20 active:scale-95"
+                                            onClick={() => handleSettleFine(fine)}
+                                            disabled={payingId === fine._id}
+                                            className={`w-full mt-2 py-4 rounded-2xl text-xs font-semibold uppercase tracking-[0.3em] flex items-center justify-center gap-3 transition-all active:scale-95 ${
+                                                payingId === fine._id 
+                                                ? 'bg-slate-200 text-slate-500 cursor-not-allowed'
+                                                : 'bg-rose-500 text-white hover:bg-rose-600 shadow-xl shadow-rose-500/20'
+                                            }`}
                                         >
-                                            <CreditCard size={16} /> Settle Penalty Now <ArrowRight size={14} />
+                                            {payingId === fine._id ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full animate-spin" />
+                                                    Processing...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <CreditCard size={16} /> Settle Penalty Now <ArrowRight size={14} />
+                                                </>
+                                            )}
                                         </button>
                                     )}
                                 </div>

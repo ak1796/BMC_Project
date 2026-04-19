@@ -4,6 +4,7 @@ import { QrCode, ClipboardList, Send, Trash2, ArrowRight, Clock, Plus, BarChart3
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { loadScript } from '../utils/loadScript';
 
 const ShopkeeperOverview = () => {
   const { user } = useAuth();
@@ -106,6 +107,64 @@ const ShopkeeperOverview = () => {
       alert('Submission failed: ' + (err.response?.data?.message || 'Server error'));
     }
     setLoading(false);
+  };
+
+  const handlePayment = async (fine) => {
+    const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      return;
+    }
+
+    try {
+      // 1. Create Order through Backend
+      const { data: orderData } = await axios.post('/api/payment/create-order', {
+        fineId: fine._id
+      });
+
+      // 2. Setup Razorpay Options
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: 'INR',
+        name: 'BMC Smart Waste Manager',
+        description: 'Fine Settlement',
+        order_id: orderData.orderId,
+        handler: async function (response) {
+          // 3. Verify Payment
+          try {
+            await axios.post('/api/payment/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              fineId: fine._id
+            });
+            alert('Payment Successful!');
+            fetchFines(); // Re-fetch all data safely on success
+            // Option to also fetch overall stats if needed
+          } catch (err) {
+            alert('Payment verification failed.');
+            console.error('Verify error:', err);
+          }
+        },
+        prefill: {
+          name: user?.name || 'Shopkeeper',
+          email: user?.email || 'shopkeeper@example.com',
+          contact: user?.phone || '9999999999'
+        },
+        theme: {
+          color: '#2E7D32' // Emerald Match
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
+    } catch (err) {
+      console.error('Payment Error:', err);
+      alert('Could not initiate payment. ' + (err.response?.data?.message || err.message));
+    }
   };
 
   // REAL DATA CALCULATIONS
@@ -285,14 +344,7 @@ const ShopkeeperOverview = () => {
                                   </div>
                                   
                                   <button 
-                                      onClick={async () => {
-                                          try {
-                                              await axios.put(`/api/fines/${f._id}/pay`);
-                                              fetchFines();
-                                          } catch (err) {
-                                              alert('Payment failed');
-                                          }
-                                      }}
+                                      onClick={() => handlePayment(f)}
                                       className="mt-6 w-full py-3 bg-[#263238] hover:bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg active:scale-95"
                                   >
                                       Clear Due Now
