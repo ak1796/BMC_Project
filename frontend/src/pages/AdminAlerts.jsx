@@ -23,7 +23,7 @@ const AdminAlerts = () => {
     };
     fetchAlerts();
 
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io(import.meta.env.VITE_API_URL || '/');
     setSocket(newSocket);
     newSocket.on('new_alert', (newAlert) => {
       setAlerts(prev => [newAlert, ...prev]);

@@ -1,0 +1,13 @@
+{
+  "name": "smart-market-waste-management",
+  "version": "1.0.0",
+  "description": "Smart Market Waste Management System",
+  "scripts": {
+    "postinstall": "cd backend && npm install --no-fund && cd ../frontend && npm install --no-fund",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

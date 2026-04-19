@@ -32,7 +32,7 @@ const Layout = ({ children }) => {
     fetchPendingFines();
 
     if (user && user.role !== 'admin') {
-       const newSocket = io('http://localhost:5000');
+       const newSocket = io(import.meta.env.VITE_API_URL || '/');
        newSocket.on('alert_resolved', (alert) => {
           if (alert.shop_id === user._id || (alert.shop_id && alert.shop_id._id === user._id)) {
               setResolutionToast(alert.resolution_message || 'Your issue has been resolved and pickup is scheduled.');
