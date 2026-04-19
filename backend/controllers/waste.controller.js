@@ -114,7 +114,8 @@ const getWasteLogs = async (req, res) => {
 
         const logs = await WasteLog.find(filter)
             .populate('dustbin_id')
-            .populate('shop_id', 'shop_id shop_name location');
+            .populate('shop_id', 'shop_id shop_name location')
+            .sort({ timestamp: -1 });
         res.json(logs);
     } catch (error) {
         res.status(500).json({ message: error.message });
