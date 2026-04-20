@@ -4,7 +4,7 @@
   "description": "Smart Market Waste Management System",
   "scripts": {
     "postinstall": "cd backend && npm install --no-fund && cd ../frontend && npm install --include=dev --no-fund",
-    "build": "cd frontend && npm run build",
+    "build": "npm install && cd frontend && npm run build",
     "start": "cd backend && npm start"
   },
   "engines": {
