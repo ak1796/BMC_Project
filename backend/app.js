@@ -42,7 +42,7 @@ if (fs.existsSync(frontendDistPath)) {
     app.use(express.static(frontendDistPath));
     
     // Catch-all route to serve the SPA (handles direct navigation/refresh)
-    app.get('*', (req, res, next) => {
+    app.get('(.*)', (req, res, next) => {
         // Only serve index.html if it's not an API call
         if (req.url.startsWith('/api')) return next();
         res.sendFile(path.join(frontendDistPath, 'index.html'));
