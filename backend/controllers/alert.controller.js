@@ -178,4 +178,66 @@ const deleteAlert = async (req, res) => {
     }
 };
 
-module.exports = { generateAlert, getAlerts, updateAlertStatus, deleteAlert };
+const scanAlert = async (req, res) => {
+    try {
+        const { dustbin } = req.query;
+        const normalizedSearch = dustbin.replace(/-/g, '').toLowerCase();
+        
+        const dustbinData = await Dustbin.findOne({
+            $expr: {
+                $eq: [
+                    { $toLower: { $replaceAll: { input: "$dustbin_id", find: "-", replacement: "" } } },
+                    normalizedSearch
+                ]
+            }
+        });
+
+        if (!dustbinData) {
+            return res.status(404).send('<h1>Invalid QR Code</h1><p>This waste node is not registered in our system.</p>');
+        }
+
+        // Redirect to frontend report page
+        const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+        res.redirect(`${clientUrl}/report?dustbin=${dustbinData.dustbin_id}&location=${encodeURIComponent(dustbinData.location)}`);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const createPublicAlert = async (req, res) => {
+    try {
+        const { dustbin_id, comments } = req.body;
+        
+        const normalizedSearch = dustbin_id.replace(/-/g, '').toLowerCase();
+        const dustbin = await Dustbin.findOne({
+            $expr: {
+                $eq: [
+                    { $toLower: { $replaceAll: { input: "$dustbin_id", find: "-", replacement: "" } } },
+                    normalizedSearch
+                ]
+            }
+        });
+
+        if (!dustbin) {
+            return res.status(404).json({ message: 'Dustbin not found' });
+        }
+
+        const alert = await Alert.create({
+            alert_id: uuidv4(),
+            dustbin_id: dustbin._id,
+            admin_id: dustbin.admin_id,
+            comments: comments || 'Public Report via QR Scan',
+            status: 'Generated'
+        });
+
+        if (req.io) {
+            req.io.emit('new_alert', alert);
+        }
+
+        res.status(201).json(alert);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { generateAlert, getAlerts, updateAlertStatus, deleteAlert, scanAlert, createPublicAlert };

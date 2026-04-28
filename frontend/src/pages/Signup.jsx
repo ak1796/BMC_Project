@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Store, User, Lock, ArrowRight, Loader2, ShieldCheck, MapPin, 
-  Phone, Trash2, Mail, Briefcase, QrCode, BellRing, Tablet, Database, CheckCircle2
+  Phone, Trash2, Mail, Briefcase, QrCode, BellRing, Tablet, Database, CheckCircle2,
+  Navigation
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from '../assets/logo.png';
@@ -24,6 +25,9 @@ const Signup = () => {
     shop_name: '',
     shopkeeper_name: '',
     location: '',
+    ward: '',
+    marketArea: '',
+    shopLocation: '',
     admin_id: '',
     dustbin_id: '',
     contact_number: '',
@@ -120,6 +124,7 @@ const Signup = () => {
 
   return (
     <div className="h-screen flex flex-col lg:flex-row bg-[#F9FBF7] relative overflow-hidden font-inter">
+<<<<<<< HEAD
       {/* Background Texture Overlay */}
       <div 
         className="absolute inset-0 z-0 opacity-40 bg-cover bg-center bg-no-repeat blur-[100px]"
@@ -127,6 +132,9 @@ const Signup = () => {
       />
       
       {/* Decoration */}
+=======
+      {/* Background Decoration */}
+>>>>>>> e2d6bff (feat: scaffold full-stack BMC waste management application including user reporting, admin dashboards, and backend services)
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-100/30 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-emerald-100/30 rounded-full blur-[120px] pointer-events-none" />
 
@@ -154,7 +162,7 @@ const Signup = () => {
           </div>
 
           {/* Glass Card Form */}
-          <div className="glass-card p-6 lg:p-8">
+          <div className="glass-card p-6 lg:p-8 bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl">
             <form onSubmit={handleSubmit} className="space-y-5 lg:space-y-6">
               <AnimatePresence mode="wait">
                 {error && (
@@ -174,7 +182,7 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => setRole('shopkeeper')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs lg:text-sm font-bold rounded-lg transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs lg:text-sm font-bold rounded-lg transition-all ${
                     role === 'shopkeeper' 
                       ? 'bg-white text-slate-900 shadow-sm' 
                       : 'text-slate-500 hover:text-slate-700'
@@ -185,7 +193,7 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => setRole('admin')}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs lg:text-sm font-bold rounded-lg transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-xs lg:text-sm font-bold rounded-lg transition-all ${
                     role === 'admin' 
                       ? 'bg-white text-slate-900 shadow-sm' 
                       : 'text-slate-500 hover:text-slate-700'
@@ -199,34 +207,44 @@ const Signup = () => {
               <div className="space-y-4 lg:space-y-5">
                 {role === 'admin' ? (
                   <div className="space-y-4 lg:space-y-5">
-                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Admin Identity</label>
-                        <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
-                          <User className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
-                          <input
-                            name="username" type="text" required placeholder="Select username"
-                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700 placeholder:text-slate-400"
-                            value={formData.username} onChange={handleInputChange}
-                          />
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Admin Username</label>
+                           <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
+                             <User className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
+                             <input
+                               name="username" type="text" required placeholder="Select username"
+                               className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
+                               value={formData.username} onChange={handleInputChange}
+                             />
+                           </div>
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Assigned Ward</label>
+                           <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
+                             <Navigation className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
+                             <input
+                               name="ward" type="text" required placeholder="EX: A, B, C-01"
+                               className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
+                               value={formData.ward} onChange={handleInputChange}
+                             />
+                           </div>
                         </div>
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
-                        <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
-                          <Star className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
-                          <input
-                            name="admin_name" type="text" required placeholder="Official name"
-                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700 placeholder:text-slate-400"
-                            value={formData.admin_name} onChange={handleInputChange}
-                          />
-                        </div>
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Full Legal Name</label>
+                        <input
+                          name="admin_name" type="text" required placeholder="Official name"
+                          className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
+                          value={formData.admin_name} onChange={handleInputChange}
+                        />
                      </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Work Contact</label>
                          <input
                            name="contact_number" type="text" required placeholder="Phone"
-                           className="w-full glass-form-input py-3 px-4"
+                           className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
                            value={formData.contact_number} onChange={handleInputChange}
                          />
                       </div>
@@ -234,18 +252,18 @@ const Signup = () => {
                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Official Email</label>
                          <input
                            name="email" type="email" required placeholder="Email"
-                           className="w-full glass-form-input py-3 px-4"
+                           className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
                            value={formData.email} onChange={handleInputChange}
                          />
                       </div>
                     </div>
                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">BMC Zone Location</label>
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Office Location</label>
                         <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
                           <MapPin className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
                           <input
-                            name="office_location" type="text" required placeholder="Office location"
-                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700 placeholder:text-slate-400"
+                            name="office_location" type="text" required placeholder="BMC Zonal Office"
+                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
                             value={formData.office_location} onChange={handleInputChange}
                           />
                         </div>
@@ -253,56 +271,83 @@ const Signup = () => {
                   </div>
                 ) : (
                    <div className="space-y-4 lg:space-y-5">
-                     <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Shop identifier</label>
-                        <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
-                          <QrCode className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
-                          <input
-                            name="shop_id" type="text" required
-                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
-                            value={formData.shop_id} readOnly
-                          />
-                          <button 
-                            type="button"
-                            onClick={() => setFormData(prev => ({ ...prev, shop_id: generateShopId() }))}
-                            className="text-emerald-600 hover:text-emerald-700 transition-colors p-1"
-                            title="Regenerate ID"
-                          >
-                            <Trash2 size={16} className="rotate-45" />
-                          </button>
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Shop ID</label>
+                           <div className="glass-form-input flex items-center gap-4 bg-slate-50">
+                             <QrCode className="text-slate-400" size={18} />
+                             <input
+                               name="shop_id" type="text" required
+                               className="w-full bg-transparent border-none p-0 focus:ring-0 text-[10px] font-bold text-slate-600"
+                               value={formData.shop_id} readOnly
+                             />
+                           </div>
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Assigned Ward</label>
+                           <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
+                             <Navigation className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
+                             <input
+                               name="ward" type="text" required placeholder="EX: A-01"
+                               className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
+                               value={formData.ward} onChange={handleInputChange}
+                             />
+                           </div>
                         </div>
                      </div>
+                     
                      <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Daily Username</label>
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Login Username</label>
                         <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
                           <User className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
                           <input
-                            name="username" type="text" required placeholder="Login name"
-                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700 placeholder:text-slate-400"
+                            name="username" type="text" required placeholder="Select username"
+                            className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
                             value={formData.username} onChange={handleInputChange}
                           />
                         </div>
                      </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Market Name</label>
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Establishment Name</label>
                            <input
                              name="shop_name" type="text" required placeholder="Shop name"
-                             className="w-full glass-form-input py-3 px-4"
+                             className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
                              value={formData.shop_name} onChange={handleInputChange}
                            />
                         </div>
                         <div className="space-y-1.5">
-                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Zone Area</label>
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Street Address</label>
                            <input
-                             name="location" type="text" required placeholder="Location"
-                             className="w-full glass-form-input py-3 px-4"
+                             name="location" type="text" required placeholder="Address"
+                             className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
                              value={formData.location} onChange={handleInputChange}
                            />
                         </div>
-                    </div>
-                    <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Assigned BMC Admin</label>
+                     </div>
+
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Market Area</label>
+                           <input
+                             name="marketArea" type="text" placeholder="EX: Crawford Market"
+                             className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
+                             value={formData.marketArea} onChange={handleInputChange}
+                           />
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Shop Specific Location</label>
+                           <input
+                             name="shopLocation" type="text" placeholder="EX: Shop No 4, Block B"
+                             className="w-full glass-form-input py-3.5 px-4 bg-white/50 border-slate-200 rounded-2xl text-sm font-bold"
+                             value={formData.shopLocation} onChange={handleInputChange}
+                           />
+                        </div>
+                     </div>
+
+                     <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Supervising BMC Admin</label>
                         <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
                            <Briefcase className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
                            <select
@@ -322,34 +367,16 @@ const Signup = () => {
                            </select>
                         </div>
                      </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       <div className="space-y-1.5">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Shopkeeper</label>
-                          <input
-                            name="shopkeeper_name" type="text" placeholder="Full name"
-                            className="w-full glass-form-input py-3 px-4"
-                            value={formData.shopkeeper_name} onChange={handleInputChange}
-                          />
-                       </div>
-                       <div className="space-y-1.5">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Mobile No</label>
-                          <input
-                            name="contact_number" type="text" placeholder="Phone"
-                            className="w-full glass-form-input py-3 px-4"
-                            value={formData.contact_number} onChange={handleInputChange}
-                          />
-                       </div>
-                    </div>
                   </div>
                 )}
 
                  <div className="space-y-1.5">
-                   <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Security Password</label>
+                   <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Secure Password</label>
                    <div className="glass-form-input flex items-center gap-4 group transition-all duration-300">
                      <Lock className="text-slate-400 group-focus-within:text-emerald-500 transition-colors shrink-0" size={18} />
                      <input
                        name="password" type="password" required placeholder="••••••••"
-                       className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700 placeholder:text-slate-400"
+                       className="w-full bg-transparent border-none p-0 focus:ring-0 text-sm font-bold text-slate-700"
                        value={formData.password} onChange={handleInputChange}
                      />
                    </div>
@@ -359,11 +386,11 @@ const Signup = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-900/10 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                className="w-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-bold py-4 rounded-2xl shadow-lg shadow-emerald-900/10 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
               >
                 {loading ? <Loader2 className="animate-spin text-white" size={20} /> : (
                   <>
-                    <span className="text-sm">Register to Grid</span>
+                    <span className="text-sm">Authenticate Registration</span>
                     <ArrowRight size={18} />
                   </>
                 )}
@@ -372,7 +399,7 @@ const Signup = () => {
 
             <div className="mt-8 text-center border-t border-slate-100 pt-6">
               <p className="text-slate-500 text-xs font-bold uppercase tracking-tight">
-                Member? <a href="/login" className="text-emerald-600 hover:underline">Sign In Now</a>
+                Already Registered? <a href="/login" className="text-emerald-600 hover:underline">Sign In Here</a>
               </p>
             </div>
           </div>
@@ -380,7 +407,7 @@ const Signup = () => {
       </section>
 
       {/* Right Section: Infographic */}
-      <section className="relative z-10 hidden lg:flex w-[55%] landing-side-panel items-center justify-center p-12 overflow-hidden">
+      <section className="relative z-10 hidden lg:flex w-[55%] landing-side-panel items-center justify-center p-12 overflow-hidden bg-slate-50">
         <div className="max-w-xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -392,7 +419,7 @@ const Signup = () => {
               <CheckCircle2 size={12} /> Compliance Guaranteed
             </div>
             <h2 className="text-4xl xl:text-5xl font-extrabold text-slate-800 leading-[1.1] tracking-tighter">
-              Advanced Waste <span className="text-emerald-600">Traceability.</span>
+              Unified Municipal <span className="text-emerald-600">Waste Logistics.</span>
             </h2>
           </motion.div>
 
@@ -426,15 +453,16 @@ const Signup = () => {
 
 export default Signup;
 
-// Custom Star icon helper since Lucide Star might conflict or not be imported
-const Star = ({ size, className }) => (
+// Custom AlertCircle icon helper
+const AlertCircle = ({ size, className }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" width={size} height={size} 
     viewBox="0 0 24 24" fill="none" stroke="currentColor" 
     strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
     className={className}
   >
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
   </svg>
 );
-

@@ -13,6 +13,7 @@ const alertRoutes = require('./routes/alert.routes');
 const fineRoutes = require('./routes/fine.routes');
 const adminRoutes = require('./routes/admin.routes');
 const paymentRoutes = require('./routes/payment.routes');
+const officerRoutes = require('./routes/officer.routes');
 
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/alerts', alertRoutes);
 app.use('/api/fines', fineRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/officers', officerRoutes);
 
 
 // Serve Frontend

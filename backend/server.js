@@ -4,12 +4,14 @@ const app = require('./app');
 const connectDB = require('./config/db');
 const { initSocket } = require('./config/socket');
 const { initFineCron } = require('./utils/fineCron');
+const { initOfficerCron } = require('./utils/officerCron');
 
 // Connect to database
 connectDB();
 
 // Initialize Cron Jobs
 initFineCron();
+initOfficerCron();
 
 const server = http.createServer(app);
 

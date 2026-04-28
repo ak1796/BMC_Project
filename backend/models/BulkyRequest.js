@@ -1,29 +1,29 @@
 const mongoose = require('mongoose');
 
-const alertSchema = new mongoose.Schema({
-    alert_id: {
+const bulkyRequestSchema = new mongoose.Schema({
+    request_id: {
         type: String,
         required: true,
         unique: true
     },
-    dustbin_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Dustbin',
-        required: true
-    },
     shop_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Shopkeeper',
-        required: false
+        required: true
     },
     admin_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin'
     },
-    comments: {
-        type: String
+    waste_type: {
+        type: String,
+        required: true
     },
-    resolution_message: {
+    no_of_bags: {
+        type: Number,
+        default: 1
+    },
+    comments: {
         type: String
     },
     status: {
@@ -54,4 +54,4 @@ const alertSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Alert', alertSchema);
+module.exports = mongoose.model('BulkyRequest', bulkyRequestSchema);

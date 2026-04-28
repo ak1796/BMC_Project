@@ -20,6 +20,14 @@ import AdminFines from './pages/AdminFines';
 import AdminReports from './pages/AdminReports';
 import AdminQRGenerator from './pages/AdminQRGenerator';
 import AdminSettings from './pages/AdminSettings';
+import AdminOfficers from './pages/AdminOfficers';
+
+// Officer Pages
+import OfficerLogin from './pages/OfficerLogin';
+import OfficerDashboard from './pages/OfficerDashboard';
+
+// Public Pages
+import CitizenReport from './pages/CitizenReport';
 
 function App() {
   return (
@@ -28,6 +36,13 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/report" element={<CitizenReport />} />
+          
+          {/* Officer Routes */}
+          <Route path="/officer/login" element={<OfficerLogin />} />
+          <Route element={<ProtectedRoute role="officer" />}>
+            <Route path="/officer/dashboard" element={<OfficerDashboard />} />
+          </Route>
           
           {/* Shopkeeper Routes */}
           <Route element={<ProtectedRoute role="shopkeeper" />}>
@@ -49,6 +64,7 @@ function App() {
             <Route path="/admin/fines" element={<AdminFines />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/qr-generator" element={<AdminQRGenerator />} />
+            <Route path="/admin/officers" element={<AdminOfficers />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Route>
 

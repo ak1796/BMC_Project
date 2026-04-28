@@ -24,9 +24,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password, role) => {
     try {
+      // If the first argument is an object, assume it's already authenticated data (e.g. from OfficerLogin)
+      if (typeof username === 'object' && username !== null) {
+        const { token, ...userData } = username;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        setUser(userData);
+        return { success: true };
+      }
+
       let response;
       if (role === 'admin') {
          response = await axios.post('/api/auth/admin/login', { username, password });
+      } else if (role === 'officer') {
+         response = await axios.post('/api/officers/login', { employeeId: username, password });
       } else {
          response = await axios.post('/api/auth/login', { shop_id: username, password });
       }

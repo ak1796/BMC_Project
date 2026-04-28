@@ -9,6 +9,7 @@ const AdminSettings = () => {
   const [formData, setFormData] = useState({
     username: user?.username || '',
     admin_name: user?.admin_name || '',
+    ward: user?.ward || '',
     office_location: user?.office_location || '',
     contact_number: user?.contact_number || '',
     email: user?.email || '',
@@ -25,6 +26,7 @@ const AdminSettings = () => {
         ...prev,
         username: user.username || prev.username,
         admin_name: user.admin_name || prev.admin_name,
+        ward: user.ward || prev.ward,
         office_location: user.office_location || prev.office_location,
         contact_number: user.contact_number || prev.contact_number,
         email: user.email || prev.email
@@ -138,16 +140,29 @@ const AdminSettings = () => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Assigned Ward</label>
+              <div className="relative group/input">
+                <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
+                <input
+                  type="text"
+                  placeholder="EX: A, B, K-East"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide"
+                  value={formData.ward}
+                  onChange={(e) => setFormData({...formData, ward: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <label className="text-xs font-semibold text-[#607D8B] font-medium ml-1">Office Location</label>
               <div className="relative group/input">
                 <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 transition-colors group-focus-within/input:text-[#2E7D32]" />
                 <input
                   type="text"
-                  readOnly
-                  disabled
                   placeholder="Zone / Sector / Building"
-                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide bg-white/50 cursor-not-allowed opacity-70"
+                  className="w-full !pl-12 h-14 text-sm font-semibold tracking-wide"
                   value={formData.office_location}
+                  onChange={(e) => setFormData({...formData, office_location: e.target.value})}
                 />
               </div>
             </div>

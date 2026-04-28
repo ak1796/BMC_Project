@@ -61,6 +61,7 @@ const Layout = ({ children }) => {
     { to: '/admin/overview', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
     { to: '/admin/alerts', label: 'Alerts', icon: <AlertCircle size={20} /> },
     { to: '/admin/shops', label: 'Shops', icon: <Users size={20} /> },
+    { to: '/admin/officers', label: 'Field Officers', icon: <ShieldCheck size={20} /> },
     { to: '/admin/fines', label: 'Fines & Dues', icon: <ShieldCheck size={20} /> },
     { to: '/admin/reports', label: 'Reports', icon: <FileBarChart size={20} /> },
     { to: '/admin/qr-generator', label: 'QR Generator', icon: <QrCode size={20} />, eco: true },

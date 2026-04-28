@@ -11,6 +11,11 @@ const adminSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    ward: {
+        type: String,
+        required: true,
+        trim: true
+    },
     office_location: {
         type: String,
         trim: true

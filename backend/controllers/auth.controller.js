@@ -11,10 +11,10 @@ const generateToken = (id) => {
 
 const registerUser = async (req, res) => {
     try {
-        const { username, shop_id, shop_name, shopkeeper_name, location, admin_id, dustbin_id, contact_number, password, role } = req.body;
+        const { username, shop_id, shop_name, shopkeeper_name, location, ward, marketArea, shopLocation, admin_id, dustbin_id, contact_number, password, role } = req.body;
 
-        if (!username) {
-            return res.status(400).json({ message: 'Username is required' });
+        if (!username || !ward) {
+            return res.status(400).json({ message: 'Username and Ward are required' });
         }
 
         // Check if username taken by shopkeeper
@@ -46,6 +46,9 @@ const registerUser = async (req, res) => {
             shop_name,
             shopkeeper_name,
             location,
+            ward,
+            marketArea,
+            shopLocation,
             contact_number,
             password: hashedPassword,
             dustbin_id,
@@ -66,6 +69,9 @@ const registerUser = async (req, res) => {
                 shop_name: user.shop_name,
                 shopkeeper_name: user.shopkeeper_name,
                 location: user.location,
+                ward: user.ward,
+                marketArea: user.marketArea,
+                shopLocation: user.shopLocation,
                 contact_number: user.contact_number,
                 role: user.role,
                 admin_id: user.admin_id,
@@ -100,6 +106,9 @@ const loginUser = async (req, res) => {
                 shop_name: user.shop_name,
                 shopkeeper_name: user.shopkeeper_name,
                 location: user.location,
+                ward: user.ward,
+                marketArea: user.marketArea,
+                shopLocation: user.shopLocation,
                 contact_number: user.contact_number,
                 role: user.role,
                 admin_id: user.admin_id,
@@ -114,11 +123,14 @@ const loginUser = async (req, res) => {
     }
 };
 
-
-
 const registerAdmin = async (req, res) => {
     try {
-        const { username, admin_name, office_location, contact_number, email, password } = req.body;
+        const { username, admin_name, ward, office_location, contact_number, email, password } = req.body;
+        
+        if (!ward) {
+            return res.status(400).json({ message: 'Ward assignment is required for administrators' });
+        }
+
         const adminExists = await Admin.findOne({ username });
         if (adminExists) return res.status(400).json({ message: 'Admin exists' });
 
@@ -126,6 +138,7 @@ const registerAdmin = async (req, res) => {
         const admin = await Admin.create({
             username,
             admin_name,
+            ward,
             office_location,
             contact_number,
             email,
@@ -135,6 +148,7 @@ const registerAdmin = async (req, res) => {
             _id: admin._id, 
             username: admin.username, 
             admin_name: admin.admin_name,
+            ward: admin.ward,
             office_location: admin.office_location,
             contact_number: admin.contact_number,
             email: admin.email,
@@ -153,6 +167,7 @@ const loginAdmin = async (req, res) => {
                 _id: admin._id, 
                 username: admin.username, 
                 admin_name: admin.admin_name,
+                ward: admin.ward,
                 office_location: admin.office_location,
                 contact_number: admin.contact_number,
                 email: admin.email,

@@ -318,24 +318,31 @@ const AdminShops = () => {
 
                     <div className="grid grid-cols-2 gap-8">
                       <div>
-                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Full Legal Entity</label>
-                        <div className="text-base font-bold text-[#263238] tracking-wide">{selectedShop.shop_name || selectedShop.admin_name || 'Not Provided'}</div>
+                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Ward & Sector</label>
+                        <div className="text-base font-bold text-[#2E7D32] tracking-wide">Ward {selectedShop.ward || 'N/A'}</div>
                       </div>
                       <div>
-                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Operational Territory</label>
-                        <div className="text-base font-bold text-[#263238] tracking-wide">{selectedShop.location || selectedShop.office_location || 'Not Provided'}</div>
+                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Market Area</label>
+                        <div className="text-base font-bold text-[#263238] tracking-wide">{selectedShop.marketArea || 'N/A'}</div>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-8">
                       <div>
+                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Specific Shop Location</label>
+                        <div className="text-base font-bold text-[#263238] tracking-wide">{selectedShop.shopLocation || 'N/A'}</div>
+                      </div>
+                      <div>
                         <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Contact Personnel</label>
                         <div className="text-base font-bold text-[#607D8B] tracking-wide">{selectedShop.shopkeeper_name || selectedShop.username || 'Not Provided'}</div>
                       </div>
-                      <div>
-                        <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Direct Communication</label>
-                        <div className="text-base font-bold text-[#607D8B] tracking-wide">{selectedShop.contact_number || 'Not Provided'}</div>
-                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-8">
+                       <div>
+                         <label className="text-xs font-semibold text-[#607D8B] font-medium block mb-2">Direct Communication</label>
+                         <div className="text-base font-bold text-[#607D8B] tracking-wide">{selectedShop.contact_number || 'Not Provided'}</div>
+                       </div>
                     </div>
                   </div>
                 )}

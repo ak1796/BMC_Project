@@ -26,6 +26,19 @@ const shopkeeperSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    ward: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    marketArea: {
+        type: String,
+        trim: true
+    },
+    shopLocation: {
+        type: String,
+        trim: true
+    },
     admin_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin'

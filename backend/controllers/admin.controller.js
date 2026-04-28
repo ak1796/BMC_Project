@@ -10,6 +10,7 @@ const updateProfile = async (req, res) => {
             if (req.body.office_location !== undefined) user.office_location = req.body.office_location;
             if (req.body.contact_number !== undefined) user.contact_number = req.body.contact_number;
             if (req.body.email !== undefined) user.email = req.body.email;
+            if (req.body.ward !== undefined) user.ward = req.body.ward;
             
             if (req.body.password) {
                 const salt = await bcrypt.genSalt(10);
@@ -22,6 +23,7 @@ const updateProfile = async (req, res) => {
                 _id: updatedUser._id,
                 username: updatedUser.username,
                 admin_name: updatedUser.admin_name,
+                ward: updatedUser.ward,
                 office_location: updatedUser.office_location,
                 contact_number: updatedUser.contact_number,
                 email: updatedUser.email,

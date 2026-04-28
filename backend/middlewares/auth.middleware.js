@@ -9,11 +9,15 @@ const protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
-            // Try Shopkeeper first, then Admin
+            // Try Shopkeeper, then Admin, then Officer
             req.user = await Shopkeeper.findById(decoded.id).select('-password');
             if (!req.user) {
                 const Admin = require('../models/Admin');
                 req.user = await Admin.findById(decoded.id).select('-password');
+            }
+            if (!req.user) {
+                const Officer = require('../models/officer.model');
+                req.user = await Officer.findById(decoded.id).select('-password');
             }
             
             if (!req.user) {
