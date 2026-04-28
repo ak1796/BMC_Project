@@ -124,17 +124,13 @@ const Signup = () => {
 
   return (
     <div className="h-screen flex flex-col lg:flex-row bg-[#F9FBF7] relative overflow-hidden font-inter">
-<<<<<<< HEAD
       {/* Background Texture Overlay */}
       <div 
         className="absolute inset-0 z-0 opacity-40 bg-cover bg-center bg-no-repeat blur-[100px]"
         style={{ backgroundImage: `url(${bgTexture})` }}
       />
       
-      {/* Decoration */}
-=======
       {/* Background Decoration */}
->>>>>>> e2d6bff (feat: scaffold full-stack BMC waste management application including user reporting, admin dashboards, and backend services)
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-100/30 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-emerald-100/30 rounded-full blur-[120px] pointer-events-none" />
 
