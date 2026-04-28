@@ -2,6 +2,7 @@ const Alert = require('../models/Alert');
 const Dustbin = require('../models/Dustbin');
 const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
+const { resetOfficerStatus } = require('./officer.controller');
 
 const generateAlert = async (req, res) => {
     try {
@@ -140,6 +141,11 @@ const updateAlertStatus = async (req, res) => {
                 req.io.emit('new_alert', updatedAlert);
             }
 
+            // If the alert is resolved, reset the assigned officer's status
+            if (status === 'Resolved' && alert.assignedOfficer) {
+                await resetOfficerStatus(alert.assignedOfficer);
+            }
+
             res.json(updatedAlert);
         } else {
             res.status(404).json({ message: 'Alert not found' });
@@ -168,7 +174,14 @@ const deleteAlert = async (req, res) => {
             if (req.user.role !== 'admin' && alert.shop_id.toString() !== req.user._id.toString()) {
                 return res.status(403).json({ message: 'Unauthorized' });
             }
+            const officerId = alert.assignedOfficer;
             await alert.deleteOne();
+            
+            // If an officer was assigned to this deleted alert, reset their status
+            if (officerId) {
+                await resetOfficerStatus(officerId);
+            }
+
             res.json({ message: 'Alert removed' });
         } else {
             res.status(404).json({ message: 'Alert not found' });

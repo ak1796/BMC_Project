@@ -1,26 +1,47 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
+const dotenv = require('dotenv');
 const Officer = require('./models/officer.model');
+const Alert = require('./models/Alert');
+const BulkyRequest = require('./models/BulkyRequest');
 
-async function test() {
+dotenv.config();
+
+async function debugOfficer() {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('Connected to DB');
-        
-        const res = await Officer.create({
-            officerName: 'Debug Unit',
-            employeeId: 'DEBUG-' + Date.now(),
-            email: 'debug@bmc.gov.in',
-            phoneNumber: '0000000000',
-            ward: 'K-East'
+        console.log('Connected to MongoDB');
+
+        const officer = await Officer.findOne({ officerName: /R\.KHAN/i });
+        if (!officer) {
+            console.log('Officer R.KHAN not found');
+            process.exit(0);
+        }
+
+        console.log('Officer found:', {
+            id: officer._id,
+            name: officer.officerName,
+            status: officer.availabilityStatus,
+            currentAssignment: officer.currentAssignment,
+            assignmentModel: officer.assignmentModel,
+            busyUntil: officer.busyUntil
         });
-        
-        console.log('Successfully created officer:', res);
-        process.exit(0);
+
+        if (officer.currentAssignment) {
+            let task;
+            if (officer.assignmentModel === 'Alert') {
+                task = await Alert.findById(officer.currentAssignment);
+            } else if (officer.assignmentModel === 'BulkyRequest') {
+                task = await BulkyRequest.findById(officer.currentAssignment);
+            }
+            console.log('Task found:', task);
+        } else {
+            console.log('No current assignment ID on officer.');
+        }
+
+        await mongoose.disconnect();
     } catch (err) {
-        console.error('Error creating officer:', err.message);
-        process.exit(1);
+        console.error(err);
     }
 }
 
-test();
+debugOfficer();

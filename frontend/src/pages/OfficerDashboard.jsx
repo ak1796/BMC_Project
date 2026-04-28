@@ -78,12 +78,22 @@ const OfficerDashboard = () => {
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Duty: {officer.officerName}</p>
           </div>
         </div>
-        <button 
-          onClick={handleLogout}
-          className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all text-slate-300 hover:text-white"
-        >
-          <LogOut size={20} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={fetchProfile}
+            disabled={loading}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all text-slate-300 hover:text-white"
+            title="Refresh Dashboard"
+          >
+            <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button 
+            onClick={handleLogout}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all text-slate-300 hover:text-white"
+          >
+            <LogOut size={20} />
+          </button>
+        </div>
       </nav>
 
       <main className="max-w-4xl mx-auto p-8 space-y-10">
@@ -138,6 +148,16 @@ const OfficerDashboard = () => {
                 <div className="space-y-2">
                    <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight">No Active Tasks</h3>
                    <p className="text-sm font-bold text-slate-400">You are currently on standby. New assignments will appear here.</p>
+                   {officer.availabilityStatus === 'Busy' && (
+                     <div className="pt-4">
+                       <button 
+                         onClick={fetchProfile}
+                         className="px-6 py-3 bg-orange-100 text-orange-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-200 transition-all"
+                       >
+                         Sync Status with HQ
+                       </button>
+                     </div>
+                   )}
                 </div>
               </motion.div>
             ) : (

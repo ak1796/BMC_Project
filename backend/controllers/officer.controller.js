@@ -201,7 +201,13 @@ const assignTaskToOfficer = async (req, res) => {
         const busyUntil = new Date();
         busyUntil.setHours(busyUntil.getHours() + estimatedHours);
 
-        // 3. Update the Task
+        // 3. Reassignment Logic: If already assigned, reset the previous officer
+        if (task.assignedOfficer) {
+            console.log(`[Officer System] Task ${task._id} was assigned to ${task.assignedOfficer}. Resetting previous officer.`);
+            await resetOfficerStatus(task.assignedOfficer);
+        }
+
+        // 4. Update the Task
         task.assignedOfficer = officerId;
         task.assignedAt = new Date();
         task.dispatchStatus = 'Assigned';
@@ -291,6 +297,23 @@ const completeTask = async (req, res) => {
         res.json({ message: 'Task marked as completed and your status is now Available' });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * @desc    Helper to reset an officer's availability status when a task is resolved/deleted
+ */
+const resetOfficerStatus = async (officerId) => {
+    if (!officerId) return;
+    try {
+        await Officer.findByIdAndUpdate(officerId, {
+            availabilityStatus: 'Available',
+            currentAssignment: null,
+            assignmentModel: null
+        });
+        console.log(`[Officer System] Reset officer ${officerId} to Available.`);
+    } catch (err) {
+        console.error('Failed to reset officer status:', err.message);
     }
 };
 
@@ -396,6 +419,15 @@ const getOfficerMe = async (req, res) => {
             } else {
                 currentTask = await BulkyRequest.findById(officer.currentAssignment).populate('shop_id');
             }
+
+            // SELF-HEALING: If assignment ID exists but task is missing, reset officer status
+            if (!currentTask && officer.availabilityStatus === 'Busy') {
+                console.log(`[Self-Healing] Missing task ${officer.currentAssignment} for officer ${officer.officerName}. Resetting to Available.`);
+                officer.availabilityStatus = 'Available';
+                officer.currentAssignment = null;
+                officer.assignmentModel = null;
+                await officer.save();
+            }
         }
 
         res.json({
@@ -416,5 +448,6 @@ module.exports = {
     assignTaskToOfficer,
     resendAssignmentEmail,
     bulkCreateOfficers,
-    completeTask
+    completeTask,
+    resetOfficerStatus
 };
