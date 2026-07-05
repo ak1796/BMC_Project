@@ -130,4 +130,3 @@ BMC_Project/
 > [!IMPORTANT]
 > **Pinpoint Accuracy Protocol**: Administrators should capture GPS coordinates at the physical deployment site to ensure field officers are routed to the exact side of the district, bypassing common address-string ambiguities.
 
-*Developed with focus on Municipal Productivity and Sustainable Urban Management.*
